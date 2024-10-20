@@ -1,35 +1,169 @@
 \documentclass[12pt,onecolumn,a4paper]{article}
-\usepackage{epsfig,graphicx,subfigure,amsthm,amsmath}
+\usepackage{epsfig,graphicx,subcaption,amsthm,amsmath}
+\usepackage{float}
 \usepackage{color,xcolor}
+\usepackage{fmtcount}
+\usepackage{placeins}
+\usepackage{adjustbox}
+\usepackage{tikz}
 
 
-\usepackage{xepersian}
-\settextfont[Scale=1.2]{B Nazanin}
-\setlatintextfont[Scale=1]{Times New Roman}
-\setmathdigitfont{Yas}
-
-\newcommand\question{\section{سوال \tartibi{section}}}
 
 
-\title{گزارش تمرینات سری اول}
-\author{محمد رضیئی}
+
+%\usepackage{xepersian}
+%\settextfont[Scale=1.2]{B Nazanin}
+%\setlatintextfont[Scale=1]{Times New Roman}
+%\setmathdigitfont{Yas}
+
+%\newcommand\question{\section{سوال \tartibi{section}}}
+\newcommand\question{\section{Question \numberstringnum{\thesection}:}}
+
+
+
+\author{Mohammad Raziei}
+\title{Solutions to the First Series of Exercises}
 \date{\today}
 
 \begin{document}
-\maketitle
+	\maketitle
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\FloatBarrier
+	\question%1
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
 
+	
+	
+	\begin{figure}[h]
+		
+		\begin{subfigure}{\linewidth}
+			\centering
+			\begin{adjustbox}{scale=1.2}
+				\begin{tikzpicture}[scale=1, every node/.style={scale=1}]
+					\def\dscale{1}
+					\foreach \vertexold/\vertex in {0/0, 0/1, 1/4, 4/6} {
+						\node[draw,circle,fill=black, inner sep=2pt,line width=.7] (\vertex) at (\dscale*\vertex, 0) {};
+						
+						% Draw a line and add the difference label if vertexold is less than vertex
+						\ifnum\vertexold<\vertex
+						\pgfmathsetmacro\difference{\vertex - \vertexold} % Calculate the difference
+						
+						% Format the output based on whether it is an integer or not
+						% Format the output based on whether it is an integer or not
+						\pgfmathsetmacro\differenceDisplay{int(\difference) == \difference ? int(\difference) : \difference}
+						
+						% Decide on what to display
+						\pgfmathsetmacro\displayText{\differenceDisplay == 1 ? "" : \differenceDisplay}
+						
+						
+						% Draw the line and display the difference
+						\draw (\vertexold) -- (\vertex) node[midway, below, red] {$\displayText d$};
+						\fi
+					}
+				\end{tikzpicture}
+			\end{adjustbox}
+			\caption{}
+		\end{subfigure}
+		
+		\vspace{1.5em}
+		
+		\begin{subfigure}{\linewidth}
+			\centering
+			\begin{adjustbox}{scale=1.2}
+				\begin{tikzpicture}[scale=1, every node/.style={scale=1}]
+					\def\dscale{1}
+					\foreach \vertexold/\vertex in {0/0, 0/1, 1/2, 2/3, 3/4, 4/5, 5/6} {
+						\node[draw,circle,fill=black, inner sep=2pt,line width=.7] (\vertex) at (\dscale*\vertex, 0) {};
+						
+						% Draw a line and add the difference label if vertexold is less than vertex
+						\ifnum\vertexold<\vertex
+						\pgfmathsetmacro\difference{\vertex - \vertexold} % Calculate the difference
+						
+						% Format the output based on whether it is an integer or not
+						% Format the output based on whether it is an integer or not
+						\pgfmathsetmacro\differenceDisplay{int(\difference) == \difference ? int(\difference) : \difference}
+						
+						% Decide on what to display
+						\pgfmathsetmacro\displayText{\differenceDisplay == 1 ? "" : \differenceDisplay}
+						
+						
+						% Draw the line and display the difference
+						\draw (\vertexold) -- (\vertex) node[midway, below, red] {$\displayText d$};
+						\fi
+					}
+				\end{tikzpicture}
+			\end{adjustbox}
+			\caption{}
+		\end{subfigure}
+		\caption{}
+	\end{figure}
+	
+	
+	\begin{figure}[h]
+		\begin{subfigure}{.48\linewidth}
+			\centering
+			\includegraphics[width=\linewidth]{Q1/results/AF-plot}
+			\caption{}
+			\label{fig:af-plot}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}{.48\linewidth}
+			\centering
+			\includegraphics[width=\linewidth]{Q1/results/AF-plot-logy}
+			\caption{}
+			\label{fig:af-plot-logy}
+		\end{subfigure}
+		\caption{
+			\space
+		}
+	\end{figure}
+	
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=.6\linewidth]{Q1/results/AF-polarplot}
+		\caption{}
+		\label{fig:af-polarplot}
+	\end{figure}
+	
+	
+	
+\begin{figure}
+	\centering
+	\begin{subfigure}{\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{Q1/results/AF-plot-localmaxmin-a}
+		\caption{}
+		\label{fig:af-plot-localmaxmin-a}
+	\end{subfigure}
+	
+	\begin{subfigure}{\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{Q1/results/AF-plot-localmaxmin-b}
+		\caption{}
+		\label{fig:af-plot-localmaxmin-b}
+	\end{subfigure}
+	
+	\caption{
+	\space
+	}
+\end{figure}
+	
 
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\FloatBarrier
+	\question%2
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-\question%1
-
-
-
-\question%2
-
-
-\bibliographystyle{plainnat-fa}
-%\nocite{*}
-\bibliography{references}
-
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\newpage
+	\bibliographystyle{plainnat}
+	%\nocite{*}
+	\bibliography{references}
+	
 \end{document}
