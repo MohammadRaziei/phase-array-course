@@ -60,14 +60,14 @@ jobs:
             main.log
 
       - name: Rename output
-        run: mv main.pdf ${{ github.actor }}-${{ steps.branch-names.outputs.base_ref_branch }}.pdf
+        run: mv main.pdf ${{ github.actor }}-${{ steps.branch-names.outputs.current_branch }}.pdf
         
 
       - name: Upload PDF file
         uses: actions/upload-artifact@v3
         with:
           name: PDF
-          path: ${{ github.actor }}-${{ steps.branch-names.outputs.base_ref_branch }}.pdf
+          path: ${{ github.actor }}-${{ steps.branch-names.outputs.current_branch }}.pdf
           if-no-files-found: error
 
   preview:
@@ -82,7 +82,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           prerelease: true
-          tag_name: "preview"
+          tag_name: "__preview__"
           files: |
             *.pdf
 
