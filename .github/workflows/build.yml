@@ -19,6 +19,10 @@ jobs:
     if: ${{!startsWith(github.event.head_commit.message, 'skip-build') }}
     
     steps:
+      - name: Get branch names.
+        id: branch-names
+        uses: tj-actions/branch-names@v8
+
       - name: Set up Git repository
         uses: actions/checkout@v3
 
@@ -55,14 +59,15 @@ jobs:
             main.xdv
             main.log
 
-      - name:
+      - name: Rename output
+        run: mv main.pdf ${{ github.actor }}-${{ steps.branch-names.outputs.base_ref_branch }}.pdf
         
 
       - name: Upload PDF file
         uses: actions/upload-artifact@v3
         with:
           name: PDF
-          path: main.pdf
+          path: ${{ github.actor }}-${{ steps.branch-names.outputs.base_ref_branch }}.pdf
           if-no-files-found: error
 
   preview:
