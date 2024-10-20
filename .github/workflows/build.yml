@@ -60,14 +60,14 @@ jobs:
             main.log
 
       - name: Rename output
-        run: mv main.pdf ${{ github.actor }}-${{ steps.branch-names.outputs.current_branch }}.pdf
+        run: mv main.pdf ${{ steps.branch-names.outputs.current_branch }}-${{ github.actor }}-report.pdf
         
 
       - name: Upload PDF file
         uses: actions/upload-artifact@v3
         with:
           name: PDF
-          path: ${{ github.actor }}-${{ steps.branch-names.outputs.current_branch }}.pdf
+          path: ${{ steps.branch-names.outputs.current_branch }}-${{ github.actor }}-report.pdf
           if-no-files-found: error
 
   preview:
