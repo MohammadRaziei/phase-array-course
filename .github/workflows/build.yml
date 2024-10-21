@@ -26,27 +26,30 @@ jobs:
       - name: Set up Git repository
         uses: actions/checkout@v3
 
-      - name: Download Fonts
-        uses: robinraju/release-downloader@v1.8
-        with:
-          tag: "Latex-lite"
-          # Choose what fonts you need from https://github.com/MohammadRaziei/fonts/releases
-          repository: "mohammadraziei/fonts"
-          fileName: "fonts.zip"
-          out-file-path: "fonts"
-          extract: true
+      # - name: Download Fonts
+      #   uses: robinraju/release-downloader@v1.8
+      #   with:
+      #     tag: "Latex-lite"
+      #     # Choose what fonts you need from https://github.com/MohammadRaziei/fonts/releases
+      #     repository: "mohammadraziei/fonts"
+      #     fileName: "fonts.zip"
+      #     out-file-path: "fonts"
+      #     extract: true
 
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v3
         continue-on-error: true
         with:
-          root_file: |
-            main.tex
+          root_file: main.tex
           latexmk_use_xelatex: true
           latexmk_shell_escape: true
-          extra_fonts: ./fonts/*.ttf
-          # args: -synctex=1 -interaction=nonstopmode -pdfxe
+          # extra_fonts: ./fonts/*.ttf
+#          compiler: pdflatex
+#          args: -synctex=1 -interaction=nonstopmode
+#          args: -pdf -synctex=1 -interaction=nonstopmode -f -recorder-
           post_compile: echo ">> DONE <<" && cat main.log
+  
+
 
       # - name: Preview files
         # run: tree --du -shaC .
