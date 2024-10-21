@@ -66,12 +66,8 @@ idx2 = MinIdx([floor(length(MinIdx) * 3 / 4), floor(length(MinIdx) * 3 / 4) + 1]
 text(mean(theta(idx1)), mean(af_a(idx1))-1.4, sprintf("BW_{nn} = %.2f\\pi", diff(theta(idx1))/pi), "HorizontalAlignment", "center", "Color", .3*ones(1,3));
 text(mean(theta(idx2)), mean(af_a(idx2))-1.4,  sprintf("BW_{nn} = %.2f\\pi", diff(theta(idx2))/pi), "HorizontalAlignment", "center", "Color", .3*ones(1,3));
 
-quiver(theta(idx1(1)),af_a(idx1(1))-1.1,theta(idx1(2))-theta(idx1(1)),af_a(idx1(2))-af_a(idx1(1)),1, "Color", "blue")
-quiver(theta(idx1(2)),af_a(idx1(2))-1.1,theta(idx1(1))-theta(idx1(2)),af_a(idx1(1))-af_a(idx1(2)),1, "Color", "blue")
-
-quiver(theta(idx2(1)),af_a(idx2(1))-1.1,theta(idx2(2))-theta(idx2(1)),af_a(idx2(2))-af_a(idx2(1)),1, "Color", "blue")
-quiver(theta(idx2(2)),af_a(idx2(2))-1.1,theta(idx2(1))-theta(idx2(2)),af_a(idx2(1))-af_a(idx2(2)),1, "Color", "blue")
-
+drawbrace([theta(idx1(2)),af_a(idx1(2))-.8], [theta(idx1(1)),af_a(idx1(1))-.8], 0.006, "Color", "blue")
+drawbrace([theta(idx2(2)),af_a(idx2(2))-.8], [theta(idx2(1)),af_a(idx2(1))-.8], 0.006, "Color", "blue")
 
 exportgraphics(gcf, 'results/AF-plot-localmaxmin-a.pdf', 'Append', false);
 
@@ -109,11 +105,8 @@ idx2 = MinIdx([floor(length(MinIdx) * 3 / 4), floor(length(MinIdx) * 3 / 4) + 1]
 text(mean(theta(idx1)), mean(af_b(idx1))-1.4, sprintf("BW_{nn} = %.2f\\pi", diff(theta(idx1))/pi), "HorizontalAlignment", "center", "Color", .3*ones(1,3));
 text(mean(theta(idx2)), mean(af_b(idx2))-1.4,  sprintf("BW_{nn} = %.2f\\pi", diff(theta(idx2))/pi), "HorizontalAlignment", "center", "Color", .3*ones(1,3));
 
-quiver(theta(idx1(1)),af_b(idx1(1))-1.1,theta(idx1(2))-theta(idx1(1)),af_b(idx1(2))-af_b(idx1(1)),1, "Color", "blue")
-quiver(theta(idx1(2)),af_b(idx1(2))-1.1,theta(idx1(1))-theta(idx1(2)),af_b(idx1(1))-af_b(idx1(2)),1, "Color", "blue")
-
-quiver(theta(idx2(1)),af_b(idx2(1))-1.1,theta(idx2(2))-theta(idx2(1)),af_b(idx2(2))-af_b(idx2(1)),1, "Color", "blue")
-quiver(theta(idx2(2)),af_b(idx2(2))-1.1,theta(idx2(1))-theta(idx2(2)),af_b(idx2(1))-af_b(idx2(2)),1, "Color", "blue")
+drawbrace([theta(idx1(2)),af_b(idx1(2))-.8], [theta(idx1(1)),af_b(idx1(1))-.8], 0.006, "Color", "blue")
+drawbrace([theta(idx2(2)),af_b(idx2(2))-.8], [theta(idx2(1)),af_b(idx2(1))-.8], 0.006, "Color", "blue")
 
 exportgraphics(gcf, 'results/AF-plot-localmaxmin-b.pdf', 'Append', false);
 
