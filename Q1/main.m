@@ -1,5 +1,6 @@
 clear; close all; clc;
 mkdir results
+addpath ../common/
 
 w_n = [1, 1, 0, 0, 1, 0, 1];
 d_lambda = 0.5;
