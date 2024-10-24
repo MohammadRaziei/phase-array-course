@@ -46,12 +46,12 @@ jobs:
         continue-on-error: true
         with:
           root_file: main.tex HW*.tex
-          latexmk_use_xelatex: true
+          # latexmk_use_xelatex: true
           latexmk_shell_escape: true
           # extra_fonts: ./fonts/*.ttf
 #          compiler: pdflatex
 #          args: -synctex=1 -interaction=nonstopmode
-#          args: -pdf -synctex=1 -interaction=nonstopmode -f -recorder-
+          args: -pdf -synctex=1 -interaction=nonstopmode -f -recorder-
           post_compile: echo ">> DONE <<" && cat main.log
   
 
@@ -59,13 +59,13 @@ jobs:
       # - name: Preview files
         # run: tree --du -shaC .
         
-      - name: Upload LOG files
-        uses: actions/upload-artifact@v3
-        with:
-          name: LOG
-          path: |
-            main.xdv
-            main.log
+      # - name: Upload LOG files
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: LOG
+      #     path: |
+      #       main.xdv
+      #       main.log
 
       - name: Rename output
         run: |
@@ -77,7 +77,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: PDF
-          path: ${{ steps.branch-names.outputs.current_branch }}-${{ github.actor }}-report.pdf
+          path: |
+            ${{ steps.branch-names.outputs.current_branch }}.pdf
+            ${{ steps.branch-names.outputs.current_branch }}-${{ github.actor }}-report.pdf
           if-no-files-found: error
 
   preview:
