@@ -68,7 +68,7 @@ R3=(5e-3)*...
 -2+0.5*randn() 0 0
 -3+0.5*randn() 0 0];
 
-csvwrite('results/R3-1.csv', R3);
+csvwrite('results/R3-2.csv', R3);
 
 
 [arrayfactor, fig1, fig2, MinIdx, MaxIdx] = run_array_beam(R3,4);

@@ -8,51 +8,61 @@
 \usepackage{tikz}
 \usepackage{csvsimple}
 \usepackage[top=1in, left=1in, right=1in, bottom=1in]{geometry}
+\usepackage{nicefrac}
+\usepackage{fancyhdr}
+\usepackage{listings}
+
+\usepackage{listings}
+
+\makeatletter
+\let\old@lstKV@SwitchCases\lstKV@SwitchCases
+\def\lstKV@SwitchCases#1#2#3{}
+\makeatother
+\usepackage{lstlinebgrd}
+\makeatletter
+\let\lstKV@SwitchCases\old@lstKV@SwitchCases
+
+\lst@Key{numbers}{none}{%
+	\def\lst@PlaceNumber{\lst@linebgrd}%
+	\lstKV@SwitchCases{#1}%
+	{none:\\%
+		left:\def\lst@PlaceNumber{\llap{\normalfont
+				\lst@numberstyle{\thelstnumber}\kern\lst@numbersep}\lst@linebgrd}\\%
+		right:\def\lst@PlaceNumber{\rlap{\normalfont
+				\kern\linewidth \kern\lst@numbersep
+				\lst@numberstyle{\thelstnumber}}\lst@linebgrd}%
+	}{\PackageError{Listings}{Numbers #1 unknown}\@ehc}}
+\makeatother
+\newcounter{subListing}[subfigure]
+
+\lstset{language=matlab,%
+	%backgroundcolor=\color{gray!10},
+	basicstyle=\tt\scriptsize,
+	frame = LBtr,
+	%frameround=T,
+	rulecolor=\color{gray},
+	showstringspaces=false,
+	numbers=left,%
+	numberstyle={\tiny\color{gray}},
+	numbersep=8pt,
+	breaklines=true,
+	%postbreak=\mbox{\textcolor{yellow}{$\hookrightarrow$}\space},
+	tabsize=2,
+	escapechar=`,
+	xleftmargin=1.8 em, 
+	framexleftmargin=2em,
+}
 
 
 
-
-%\usepackage{lmodern}
-%\usepackage[T1]{fontenc}
-%\usepackage[utf8]{i.nputenc}
-
-
-%\definecolor{seccolor}{RGB}{41,48,57}
-%\titleformat{\section}
-%[hang]
-%{\Large\bfseries}
-%{}
-%{0pt}
-%{\tikz{
-		%		\node[draw, rounded corners=1mm,text depth=0.2ex,line width=2pt,anchor=west](a){\Large\bfseries\textcolor{seccolor}{}#1};
-		%		\coordinate (b) at (\textwidth-2em,0);
-		%		\draw[line width=2pt] (a)--(b);}}
-
-
-%\titleformat{\section}
-%{\titlerule     
-	%	\vspace{0.5ex}%
-	%	\sectionfont}
-%{\bfseries\thesection}{1em}
-%{\sectionfont}[\titlerule]
-
-%\usepackage[utf8]{inputenc}
 \usepackage{titlesec}
 \titleformat{\section}[block]
 {\titlerule\addvspace{4pt}\normalfont\fontsize{14}{16}\bfseries}
 {\thesection\enspace}{0pt}{}[\vspace{2pt}\titlerule]
 
 
-%\usepackage{xepersian}
-%\settextfont[Scale=1.2]{B Nazanin}
-%\setlatintextfont[Scale=1]{Times New Roman}
-%\setmathdigitfont{Yas}
-
-%\newcommand\question{\section{سوال \tartibi{section}}}
 \newcommand\question{
-	%	\noindent\rule{\linewidth}{1}
-	\section{Question \numberstringnum{\thesection}:}
-	%	\rule{\linewidth}{1}
+	\section{Question \numberstringnum{\thesection}}
 }
 
 
@@ -60,7 +70,22 @@
 \title{Solutions to the First Series of Exercises}
 \date{\today}
 
+
+
+
+\newcounter{rownum} % Define a counter for the row number
 \begin{document}
+	
+	
+	% Set the page style to "fancy"...
+	\pagestyle{fancy}
+	%... then configure it.
+	%		\fancyhead{} % clear all header fields
+	%		\fancyhead[RO,LE]{\textbf{The performance of new graduates}}
+	%		\fancyfoot{} % clear all footer fields
+	%		\fancyfoot[LE,RO]{\thepage}
+	%		\fancyfoot[LO,CE]{From: K. Grant}
+	%		\fancyfoot[CO,RE]{To: Dean A. Smith}
 	\maketitle
 	
 	
@@ -69,8 +94,11 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
 	
+	\subsection{part a, b:}
 	
-	\begin{figure}[h]
+	
+	
+		\begin{figure}[h]
 		
 		\begin{subfigure}{\linewidth}
 			\centering
@@ -134,6 +162,24 @@
 		\caption{}
 	\end{figure}
 	
+	
+	
+	\begin{equation}
+		\frac{d}{\lambda} = \nicefrac12
+	\end{equation}
+	
+
+\begin{lstlisting}
+AF_theta =@(w_n, d_lambda, theta_0) w_n * exp(1j*(0:length(w_n)-1).'* (2*pi*d_lambda * cos(theta_0)));
+AF = @(w_n, d_lambda, theta) arrayfun(@(theta_0) AF_theta(w_n, d_lambda, theta_0), theta,'UniformOutput',true);
+\end{lstlisting}
+	
+\begin{lstlisting}
+w_n = [1, 1, 0, 0, 1, 0, 1];
+d_lambda = 0.5;
+\end{lstlisting}
+	
+
 	
 	\begin{figure}[h]
 		\begin{subfigure}{.48\linewidth}
@@ -201,6 +247,7 @@
 	
 	
 	\begin{figure}[h]
+		\centering
 		\begin{subfigure}{.43\linewidth}
 			\centering
 			\includegraphics[width=\linewidth]{Q2/results/2d-plot-angles}
@@ -214,6 +261,8 @@
 			\caption{}
 			\label{fig:3d-plot-angles}
 		\end{subfigure}
+		\caption{
+		}
 	\end{figure}
 	
 	
@@ -280,12 +329,12 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
 	
-		
+	
 	\FloatBarrier
 	\subsection{part a:}
 	
 	
-		
+	
 	\FloatBarrier
 	\subsection{part b:}
 	
@@ -331,12 +380,12 @@
 	\end{figure}
 	
 	
-		
+	
 	
 	\FloatBarrier
 	\subsection{part c:}
 	
-		
+	
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=.5\linewidth]{Q3/results/s11-10db}
@@ -353,6 +402,14 @@
 	\question%4
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
+	
+	\begin{equation}
+		f_0 = 60 \times 10^9 Hz
+	\end{equation}
+	
+	\begin{equation}
+		\lambda_0 = \frac{c}{f_0} = \frac{3 \times 10^8}{60 \times 10^9} = 5 \times 10^{-3}\ (m) = 5\ (mm)
+	\end{equation}
 	
 	
 	\FloatBarrier
@@ -377,6 +434,32 @@
 		\end{bmatrix}
 	\end{equation}
 	
+	\begin{equation}
+		d = 2.5 \times 10^{-3} = \frac{\lambda_0}2
+	\end{equation}
+	
+	
+	\begin{figure}[h]
+		\centering
+		\begin{adjustbox}{scale=1.2}
+			\begin{tikzpicture}[scale=1, every node/.style={scale=1}]
+				\def\dscale{300} % Set the scaling factor to 300
+				\setcounter{rownum}{1} % Initialize the counter
+				\coordinate (o) (0,0);		
+				\csvreader[head=false]{Q4/results/R1.csv}{}%
+				{%
+					% Draw the node at the scaled position
+					\node[draw, circle, fill=black, inner sep=2pt, line width=.7] 
+					(\arabic{rownum}) at (\csvcoli*\dscale, \csvcolii*\dscale) {};
+					% Add the row number above each node
+					\node[above] at (\arabic{rownum}) {\arabic{rownum}};
+					\draw (o) -- (\arabic{rownum});
+					\stepcounter{rownum} % Increment the counter after each row
+				}%
+			\end{tikzpicture}
+		\end{adjustbox}
+		\caption{\space}
+	\end{figure}
 	
 	\begin{figure}[h]
 		\centering
@@ -415,6 +498,48 @@
 		\end{bmatrix}
 	\end{equation}
 	
+	
+	
+	\begin{equation}
+		d = 5 \times 10^{-3} = \lambda_0
+	\end{equation}
+	
+%	\begin{adjustbox}{scale=1.2}
+%		\begin{tikzpicture}[scale=1, every node/.style={scale=1}]
+%			\def\dscale{1}
+%			\csvreader[head=false]{Q4/results/R2.csv}{}%
+%			{%
+%				\node[draw,circle,fill=black, inner sep=2pt,line width=.7] (????) at (\csvcoli*\dscale, \csvcolii*\dscale) {};%
+%			}%
+%			
+%		\end{tikzpicture}
+%	\end{adjustbox}
+%	
+	
+\begin{figure}[h]
+	\centering
+	\begin{adjustbox}{scale=1.2}
+		\begin{tikzpicture}[scale=1, every node/.style={scale=1}]
+			\def\dscale{300} % Set the scaling factor to 300
+			\setcounter{rownum}{1} % Initialize the counter
+			
+			\coordinate (o) (0,0);		
+			\csvreader[head=false]{Q4/results/R2.csv}{}%
+			{%
+				% Draw the node at the scaled position
+				\node[draw, circle, fill=black, inner sep=2pt, line width=.7] 
+				(\arabic{rownum}) at (\csvcoli*\dscale, \csvcolii*\dscale) {};
+				
+				% Add the row number above each node
+				\node[above] at (\arabic{rownum}) {\arabic{rownum}};
+				\draw (o) -- (\arabic{rownum});
+				\stepcounter{rownum} % Increment the counter after each row
+			}%
+			\let\rownum\relax
+		\end{tikzpicture}
+	\end{adjustbox}
+	\caption{\space}
+\end{figure}
 	
 	
 	\begin{figure}[h]
@@ -456,6 +581,31 @@
 		\end{bmatrix}
 	\end{equation}
 	
+	
+		
+	\begin{figure}[h]
+		\centering
+		\begin{adjustbox}{scale=1.2}
+			\begin{tikzpicture}[scale=1, every node/.style={scale=1}]
+				\def\dscale{300} % Set the scaling factor to 300
+				\setcounter{rownum}{1} % Initialize the counter
+				\coordinate (o) (0,0);		
+				\csvreader[head=false]{Q4/results/R3.csv}{}%
+				{%
+					% Draw the node at the scaled position
+					\node[draw, circle, fill=black, inner sep=2pt, line width=.7] 
+					(\arabic{rownum}) at (\csvcoli*\dscale, \csvcolii*\dscale) {};
+					% Add the row number above each node
+					\node[above] at (\arabic{rownum}) {\arabic{rownum}};
+					\draw (o) -- (\arabic{rownum});
+					\stepcounter{rownum} % Increment the counter after each row
+				}%
+			\end{tikzpicture}
+		\end{adjustbox}
+		\caption{\space}
+	\end{figure}
+	
+	
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.5\linewidth]{Q4/results/array-beam-polar-R3}
@@ -490,10 +640,34 @@
 		= 
 		\begin{bmatrix}
 			% Read the CSV file and insert the values into the matrix
-			\csvreader[head=false, late after line=\\]{Q4/results/R3-1.csv}{}%
+			\csvreader[head=false, late after line=\\]{Q4/results/R3-2.csv}{}%
 			{\csvcoli & \csvcolii & \csvcoliii}
 		\end{bmatrix}
 	\end{equation}
+	
+	
+	
+		\begin{figure}[h]
+		\centering
+		\begin{adjustbox}{scale=1.2}
+			\begin{tikzpicture}[scale=1, every node/.style={scale=1}]
+				\def\dscale{300} % Set the scaling factor to 300
+				\setcounter{rownum}{1} % Initialize the counter
+				\coordinate (o) (0,0);		
+				\csvreader[head=false]{Q4/results/R3-2.csv}{}%
+				{%
+					% Draw the node at the scaled position
+					\node[draw, circle, fill=black, inner sep=2pt, line width=.7] 
+					(\arabic{rownum}) at (\csvcoli*\dscale, \csvcolii*\dscale) {};
+					% Add the row number above each node
+					\node[above] at (\arabic{rownum}) {\arabic{rownum}};
+					\draw (o) -- (\arabic{rownum});
+					\stepcounter{rownum} % Increment the counter after each row
+				}%
+			\end{tikzpicture}
+		\end{adjustbox}
+		\caption{\space}
+	\end{figure}
 	
 	\begin{figure}[h]
 		\centering
@@ -511,7 +685,7 @@
 	
 	
 	
-
+	
 	
 	
 	
@@ -522,7 +696,7 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
 	
-
+	
 	
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
