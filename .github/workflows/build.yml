@@ -25,6 +25,8 @@ jobs:
 
       - name: Set up Git repository
         uses: actions/checkout@v3
+        with:
+          lfs: true
 
       # - name: Download Fonts
       #   uses: robinraju/release-downloader@v1.8
