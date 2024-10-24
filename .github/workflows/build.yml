@@ -38,11 +38,14 @@ jobs:
       #     out-file-path: "fonts"
       #     extract: true
 
+      - name: Move HW files
+        run: mv HW/* .
+
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v3
         continue-on-error: true
         with:
-          root_file: main.tex HW/*.tex
+          root_file: main.tex HW*.tex
           latexmk_use_xelatex: true
           latexmk_shell_escape: true
           # extra_fonts: ./fonts/*.ttf
@@ -65,7 +68,9 @@ jobs:
             main.log
 
       - name: Rename output
-        run: mv main.pdf ${{ steps.branch-names.outputs.current_branch }}-${{ github.actor }}-report.pdf
+        run: |
+          mv main.pdf ${{ steps.branch-names.outputs.current_branch }}-${{ github.actor }}-report.pdf
+          mv HW*.pdf ${{ steps.branch-names.outputs.current_branch }}.pdf
         
 
       - name: Upload PDF file
