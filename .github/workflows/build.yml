@@ -70,7 +70,7 @@ jobs:
       - name: Rename output
         run: |
           mv main.pdf ${{ steps.branch-names.outputs.current_branch }}-${{ github.actor }}-report.pdf
-          mv HW*.pdf ${{ steps.branch-names.outputs.current_branch }}.pdf
+          mv $(find . -name "HW*.pdf") ${{ steps.branch-names.outputs.current_branch }}.pdf
         
 
       - name: Upload PDF file
