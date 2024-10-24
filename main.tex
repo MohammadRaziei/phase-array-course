@@ -6,9 +6,41 @@
 \usepackage{placeins}
 \usepackage{adjustbox}
 \usepackage{tikz}
+\usepackage{csvsimple}
+\usepackage[top=1in, left=1in, right=1in, bottom=1in]{geometry}
 
 
 
+
+%\usepackage{lmodern}
+%\usepackage[T1]{fontenc}
+%\usepackage[utf8]{i.nputenc}
+
+
+%\definecolor{seccolor}{RGB}{41,48,57}
+%\titleformat{\section}
+%[hang]
+%{\Large\bfseries}
+%{}
+%{0pt}
+%{\tikz{
+		%		\node[draw, rounded corners=1mm,text depth=0.2ex,line width=2pt,anchor=west](a){\Large\bfseries\textcolor{seccolor}{}#1};
+		%		\coordinate (b) at (\textwidth-2em,0);
+		%		\draw[line width=2pt] (a)--(b);}}
+
+
+%\titleformat{\section}
+%{\titlerule     
+	%	\vspace{0.5ex}%
+	%	\sectionfont}
+%{\bfseries\thesection}{1em}
+%{\sectionfont}[\titlerule]
+
+%\usepackage[utf8]{inputenc}
+\usepackage{titlesec}
+\titleformat{\section}[block]
+{\titlerule\addvspace{4pt}\normalfont\fontsize{14}{16}\bfseries}
+{\thesection\enspace}{0pt}{}[\vspace{2pt}\titlerule]
 
 
 %\usepackage{xepersian}
@@ -17,7 +49,11 @@
 %\setmathdigitfont{Yas}
 
 %\newcommand\question{\section{سوال \tartibi{section}}}
-\newcommand\question{\section{Question \numberstringnum{\thesection}:}}
+\newcommand\question{
+	%	\noindent\rule{\linewidth}{1}
+	\section{Question \numberstringnum{\thesection}:}
+	%	\rule{\linewidth}{1}
+}
 
 
 \author{Mohammad Raziei}
@@ -29,10 +65,8 @@
 	
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\FloatBarrier
-	\question%1
+	\FloatBarrier\question%1
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	
 	
 	
 	
@@ -154,8 +188,7 @@
 	
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\FloatBarrier
-	\question%2
+	\FloatBarrier\question%2
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
 	
@@ -247,6 +280,69 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
 	
+		
+	\FloatBarrier
+	\subsection{part a:}
+	
+	
+		
+	\FloatBarrier
+	\subsection{part b:}
+	
+	\begin{figure}[h]
+		\centering
+		\begin{subfigure}{.45\linewidth}
+			\centering
+			\includegraphics[width=\linewidth]{Q3/results/s11}
+			\caption{$S_{11}$}
+			\label{fig:s11}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}{.45\linewidth}
+			\centering
+			\includegraphics[width=\linewidth]{Q3/results/s12}
+			\caption{$S_{12}$}
+			\label{fig:s12}
+		\end{subfigure}
+		
+		\begin{subfigure}{.45\linewidth}
+			\centering
+			\includegraphics[width=\linewidth]{Q3/results/s21}
+			\caption{$S_{21}$}
+			\label{fig:s21}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}{.45\linewidth}
+			\centering
+			\includegraphics[width=\linewidth]{Q3/results/s22}
+			\caption{$S_{22}$}
+			\label{fig:s22}
+		\end{subfigure}
+		\caption{\space}
+	\end{figure}	
+	
+	
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=.5\linewidth]{Q3/results/S-param}
+		\caption{$S$}
+		\label{fig:S-param}
+	\end{figure}
+	
+	
+		
+	
+	\FloatBarrier
+	\subsection{part c:}
+	
+		
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=.5\linewidth]{Q3/results/s11-10db}
+		\caption{10db-Band Width}
+		\label{fig:s11-10db}
+	\end{figure}
 	
 	
 	
@@ -254,6 +350,163 @@
 	\FloatBarrier
 	\question%4
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	
+	
+	\FloatBarrier
+	\subsection{part a:}
+	
+	\begin{equation}
+		R_1 = (2.5 \times 10^{-3}) 
+		\begin{bmatrix}
+			3 & 0 & 0 \\
+			2 & 0 & 0 \\
+			1 & 0 & 0 \\
+			0 & 0 & 0 \\
+			-1 & 0 & 0 \\
+			-2 & 0 & 0 \\
+			-3 & 0 & 0
+		\end{bmatrix}
+		=
+		\begin{bmatrix}
+			% Read the CSV file and insert the values into the matrix
+			\csvreader[head=false, late after line=\\]{Q4/results/R1.csv}{}%
+			{\csvcoli & \csvcolii & \csvcoliii}
+		\end{bmatrix}
+	\end{equation}
+	
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.5\linewidth]{Q4/results/array-beam-polar-R1}
+		\caption{}
+		\label{fig:array-beam-polar-r1}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\linewidth]{Q4/results/array-beam-R1}
+		\caption{}
+		\label{fig:array-beam-r1}
+	\end{figure}
+	
+	
+	\FloatBarrier
+	\subsection{part b:}
+	
+	\begin{equation}
+		R_2 = (5 \times 10^{-3}) 
+		\begin{bmatrix}
+			3 & 0 & 0 \\
+			2 & 0 & 0 \\
+			1 & 0 & 0 \\
+			0 & 0 & 0 \\
+			-1 & 0 & 0 \\
+			-2 & 0 & 0 \\
+			-3 & 0 & 0
+		\end{bmatrix}
+		=
+		\begin{bmatrix}
+			% Read the CSV file and insert the values into the matrix
+			\csvreader[head=false, late after line=\\]{Q4/results/R2.csv}{}%
+			{\csvcoli & \csvcolii & \csvcoliii}
+		\end{bmatrix}
+	\end{equation}
+	
+	
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.5\linewidth]{Q4/results/array-beam-polar-R2}
+		\caption{}
+		\label{fig:array-beam-polar-r2}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\linewidth]{Q4/results/array-beam-R2}
+		\caption{}
+		\label{fig:array-beam-r2}
+	\end{figure}
+	
+	
+	\FloatBarrier
+	\subsection{part c:}
+	
+	
+	
+	\begin{equation}
+		R_3 = (5 \times 10^{-3})
+		\begin{bmatrix}
+			3 + 0.5 \times \text{randn()} & 0 & 0 \\
+			2 + 0.5 \times \text{randn()} & 0 & 0 \\
+			1 + 0.5 \times \text{randn()} & 0 & 0 \\
+			0 + 0.5 \times \text{randn()} & 0 & 0 \\
+			-1 + 0.5 \times \text{randn()} & 0 & 0 \\
+			-2 + 0.5 \times \text{randn()} & 0 & 0 \\
+			-3 + 0.5 \times \text{randn()} & 0 & 0
+		\end{bmatrix}
+		= 
+		\begin{bmatrix}
+			% Read the CSV file and insert the values into the matrix
+			\csvreader[head=false, late after line=\\]{Q4/results/R3.csv}{}%
+			{\csvcoli & \csvcolii & \csvcoliii}
+		\end{bmatrix}
+	\end{equation}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.5\linewidth]{Q4/results/array-beam-polar-R3}
+		\caption{}
+		\label{fig:array-beam-polar-r3}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\linewidth]{Q4/results/array-beam-R3}
+		\caption{}
+		\label{fig:array-beam-r3}
+	\end{figure}
+	
+	
+	
+	\FloatBarrier
+	\subsection{part d:}
+	
+	
+	\begin{equation}
+		R_3 = (5 \times 10^{-3})
+		\begin{bmatrix}
+			3 + 0.5 \times \text{randn()} & 0 & 0 \\
+			2 + 0.5 \times \text{randn()} & 0 & 0 \\
+			1 + 0.5 \times \text{randn()} & 0 & 0 \\
+			0 + 0.5 \times \text{randn()} & 0 & 0 \\
+			-1 + 0.5 \times \text{randn()} & 0 & 0 \\
+			-2 + 0.5 \times \text{randn()} & 0 & 0 \\
+			-3 + 0.5 \times \text{randn()} & 0 & 0
+		\end{bmatrix}
+		= 
+		\begin{bmatrix}
+			% Read the CSV file and insert the values into the matrix
+			\csvreader[head=false, late after line=\\]{Q4/results/R3-1.csv}{}%
+			{\csvcoli & \csvcolii & \csvcoliii}
+		\end{bmatrix}
+	\end{equation}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.5\linewidth]{Q4/results/array-beam-polar-R3-2}
+		\caption{}
+		\label{fig:array-beam-polar-r3-2}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\linewidth]{Q4/results/array-beam-R3-2}
+		\caption{}
+		\label{fig:array-beam-r3-2}
+	\end{figure}
+	
 	
 	
 	
@@ -265,7 +518,7 @@
 	\question%5
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
-
+	
 
 	
 	
@@ -273,8 +526,8 @@
 	\FloatBarrier
 	\question%6
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
+	
+	
 	
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

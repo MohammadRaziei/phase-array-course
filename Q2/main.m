@@ -1,3 +1,4 @@
+%% Q2
 clear; close all; clc;
 mkdir results
 addpath ../common/

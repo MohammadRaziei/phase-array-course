@@ -1,9 +1,12 @@
+%% Q4
 clear; close all; clc;
 mkdir results
 addpath ../common/
 addpath ../HW/
 
+rng(1)
 
+%%
 R1=(2.5e-3)*...
 [3 0 0
  2 0 0
@@ -13,43 +16,31 @@ R1=(2.5e-3)*...
 -2 0 0
 -3 0 0];
 
+[arrayfactor, fig1, fig2, MinIdx, MaxIdx] = run_array_beam(R1, 4);
+exportgraphics(fig1, 'results/array-beam-polar-R1.pdf', 'Append', false);
+exportgraphics(fig2, 'results/array-beam-R1.pdf', 'Append', false);
+
+csvwrite('results/R1.csv', R1);
+
+%%
+
+R2=(5e-3)*...
+[3 0 0
+2 0 0
+1 0 0
+0 0 0
+-1 0 0
+-2 0 0
+-3 0 0];
+
+[arrayfactor, fig1, fig2, MinIdx, MaxIdx] = run_array_beam(R2, 4);
+exportgraphics(fig1, 'results/array-beam-polar-R2.pdf', 'Append', false);
+exportgraphics(fig2, 'results/array-beam-R2.pdf', 'Append', false);
+
+csvwrite('results/R2.csv', R2);
 
 
-phi = 0;
-phases = zeros(1, size(R1, 1));
-fs = 100;
-theta = -180:1/fs:180;
-arrayfactor = arrayfun(@(theta) Array_beam_cal(R1,phases,theta,phi), theta,'UniformOutput',true);
-theta = deg2rad(theta);
-
-figure
-polarplot(theta, arrayfactor)
-
-figure; hold on
-plot(deg2rad(theta), arrayfactor)
-
-
-af_smooth = smooth(arrayfactor, 4*fs);
-plot(deg2rad(theta), af_smooth)
-
-
-[~,MaxIdx] = findpeaks(af_smooth);
-[~,MinIdx] = findpeaks(-af_smooth);
-
-% plot(theta, arrayfactor, 'r')
-% plot(theta(MaxIdx), arrayfactor(MaxIdx), 'xb')
-% plot(theta(MinIdx), arrayfactor(MinIdx), 'ob')
-% 
-% for i = MaxIdx
-%     text(theta(i), arrayfactor(i)+.5, sprintf("%.2f\\pi", theta(i)/pi), "HorizontalAlignment", "center", "Color", .3*ones(1,3))
-% end
-% for i = MinIdx
-%     text(theta(i), arrayfactor(i)-.5, sprintf("%.2f\\pi", theta(i)/pi), "HorizontalAlignment", "center", "Color", .3*ones(1,3))
-% end
-
-MaxIdx
-
-
+%%
 
 R3=(5e-3)*...
 [3+0.5*randn() 0 0
@@ -61,12 +52,34 @@ R3=(5e-3)*...
 -3+0.5*randn() 0 0];
 
 
+[arrayfactor, fig1, fig2, MinIdx, MaxIdx] = run_array_beam(R3, 4);
+exportgraphics(fig1, 'results/array-beam-polar-R3.pdf', 'Append', false);
+exportgraphics(fig2, 'results/array-beam-R3.pdf', 'Append', false);
 
-R2=(5e-3)*...
-[3 0 0
-2 0 0
-1 0 0
-30 0 0
--1 0 0
--2 0 0
--3 0 0];
+csvwrite('results/R3.csv', R3);
+
+%%
+R3=(5e-3)*...
+[3+0.5*randn() 0 0
+2+0.5*randn() 0 0
+1+0.5*randn() 0 0
+0+0.5*randn() 0 0
+-1+0.5*+randn() 0 0
+-2+0.5*randn() 0 0
+-3+0.5*randn() 0 0];
+
+csvwrite('results/R3-1.csv', R3);
+
+
+[arrayfactor, fig1, fig2, MinIdx, MaxIdx] = run_array_beam(R3,4);
+exportgraphics(fig1, 'results/array-beam-polar-R3-2.pdf', 'Append', false);
+exportgraphics(fig2, 'results/array-beam-R3-2.pdf', 'Append', false);
+
+
+
+
+
+
+
+
+

@@ -1,3 +1,4 @@
+%% Q1
 clear; close all; clc;
 mkdir results
 addpath ../common/
@@ -56,10 +57,10 @@ plot(theta(MaxIdx), af_a(MaxIdx), 'xb')
 plot(theta(MinIdx), af_a(MinIdx), 'ob')
 
 for i = MaxIdx
-    text(theta(i), af_a(i)+.5, sprintf("%.2f\\pi", theta(i)/pi), "HorizontalAlignment", "center", "Color", .3*ones(1,3))
+    text(theta(i), af_a(i)+.5, sprintf("(%.2f\\pi, %g)", theta(i)/pi, round(af_a(i),2)), "HorizontalAlignment", "center", "Color", .4*ones(1,3))
 end
 for i = MinIdx
-    text(theta(i), af_a(i)-.5, sprintf("%.2f\\pi", theta(i)/pi), "HorizontalAlignment", "center", "Color", .3*ones(1,3))
+    text(theta(i), af_a(i)-.5, sprintf("(%.2f\\pi, %g)", theta(i)/pi, round(af_a(i),2)), "HorizontalAlignment", "center", "Color", .4*ones(1,3))
 end
 
 idx1 = MinIdx([floor(length(MinIdx) * 1 / 4), floor(length(MinIdx) * 1 / 4) + 1]);
@@ -96,10 +97,10 @@ plot(theta(MaxIdx), af_b(MaxIdx), 'xb')
 plot(theta(MinIdx), af_b(MinIdx), 'ob')
 
 for i = MaxIdx
-    text(theta(i), af_b(i)+.5, sprintf("(%.2f\\pi, %g)", theta(i)/pi, round(af_b(i),2)), "HorizontalAlignment", "center", "Color", .3*ones(1,3))
+    text(theta(i), af_b(i)+.5, sprintf("(%.2f\\pi, %g)", theta(i)/pi, round(af_b(i),2)), "HorizontalAlignment", "center", "Color", .4*ones(1,3))
 end
 for i = MinIdx
-    text(theta(i), af_b(i)-.5, sprintf("(%.2f\\pi, %g)", theta(i)/pi, round(af_b(i),2)), "HorizontalAlignment", "center", "Color", .3*ones(1,3))
+    text(theta(i), af_b(i)-.5, sprintf("(%.2f\\pi, %g)", theta(i)/pi, round(af_b(i),2)), "HorizontalAlignment", "center", "Color", .4*ones(1,3))
 end
 idx1 = MinIdx([floor(length(MinIdx) * 1 / 4), floor(length(MinIdx) * 1 / 4) + 1]);
 idx2 = MinIdx([floor(length(MinIdx) * 3 / 4), floor(length(MinIdx) * 3 / 4) + 1]);
