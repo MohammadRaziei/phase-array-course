@@ -519,13 +519,30 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 	
 	\FloatBarrier
 	\subsection{part a:}
+	As evident from the .csv file data, its frequency range is within 50 GHz to 70 GHz.
 	
 	
 	
 	\FloatBarrier
 	\subsection{part b:}
 	
-	\begin{figure}[h]
+	In the .csv file, there are four columns corresponding to the parameters $S_{21}$, $S_{12}$, $S_{11}$, and $S_{22}$. 
+
+	\begin{itemize}
+		\item The $S_{11}$ parameter indicates how much power is reflected if the power is supplied from the first port to the antenna. 
+		In other words, it is a measure of the matching between the transmission line and the first port. 
+		\item The $S_{22}$ parameter indicates how much power is reflected if the power is supplied from the second port to the antenna. 
+		This parameter is also a measure of the matching between the transmission line and the second port. 
+		\item The $S_{12}$ parameter indicates how much power is transferred from the first port to the second port when power is supplied from the first port to the antenna. 
+		\item Similarly, the $S_{21}$ parameter indicates how much power is transferred from the second port to the first port when power is supplied from the second port to the antenna. 
+	\end{itemize}
+
+	We import the .csv file data into MATLAB and plot all the $S$ parameters in Figure~\ref{fig:S-parametes}. 
+	As evident from Figure~\ref{fig:S-parametes}, the $S_{11}$ and $S_{22}$ curves are similar, and the $S_{12}$ and $S_{21}$ curves are also similar. 
+	This similarity is due to the passive nature of the antenna structure.
+	
+	
+	\begin{figure}[H]
 		\centering
 		\begin{subfigure}{.45\linewidth}
 			\centering
@@ -555,41 +572,60 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 			\label{fig:s22}
 		\end{subfigure}
 		\caption{$S$-parameters}
+		\label{fig:S-parametes}
 	\end{figure}	
 	
 	
 	
-	\begin{figure}
-		\centering
-		\includegraphics[width=.5\linewidth]{Q3/results/S-param}
-		\caption{$S$}
-		\label{fig:S-param}
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=.5\linewidth]{Q3/results/S-param}
+	\caption{$S$-parameters}
+	\label{fig:S-param}
 	\end{figure}
-	
-	
-	
+
+
 	
 	\FloatBarrier
 	\subsection{part c:}
 	
 	
-	\begin{figure}[h]
+	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.5\linewidth]{Q3/results/s11-10db}
 		\caption{10db-Band Width}
 		\label{fig:s11-10db}
 	\end{figure}
 	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{cc}
+			\toprule
+			\textbf{-10 dB impedance band-width (BW)} & 10.2 \\ \midrule		
+			\textbf{Fractional band-width} & 0.1659 \\ \midrule
+			\textbf{Center frequency ($f_0$)}                & 61.5   \\ 
+			\bottomrule
+		\end{tabular}
+	\end{table}
+	
+	
 	\FloatBarrier
 	\subsection{part d:}
 	
+	
+		\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Q3/results/s12-f0}
+		\caption{$S_{12}$ parameter at the center frequency}
+		\label{fig:s12-f0}
+	\end{figure}
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\FloatBarrier
 	\question%4
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
-	
+
 	\begin{equation}
 		f_0 = 60 \times 10^9 Hz
 	\end{equation}
@@ -871,10 +907,181 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 	\end{figure}
 	
 	
+	\subsubsection{Method 1:}
+	
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\linewidth]{Q4/results/array-beam-Ropt}
+		\caption{}
+		\label{fig:array-beam-ropt}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.5\linewidth]{Q4/results/array-beam-polar-Ropt}
+		\caption{}
+		\label{fig:array-beam-polar-ropt}
+	\end{figure}
+	
+	
+	\begin{equation}
+		R_{\text{opt}}
+		= 
+		\begin{bmatrix}
+			% Read the CSV file and insert the values into the matrix
+			\csvreader[head=false, late after line=\\]{Q4/results/Ropt.csv}{}%
+			{\csvcoli & \csvcolii & \csvcoliii}
+		\end{bmatrix}
+		= R_2 + 
+		\begin{bmatrix}
+			% Read the CSV file and insert the values into the matrix
+			\csvreader[head=false, late after line=\\]{Q4/results/Ropt-R2.csv}{}%
+			{\csvcoli & \csvcolii & \csvcoliii}
+		\end{bmatrix}
+	\end{equation}
+	
+		
+	\begin{figure}[H]
+		\centering
+		\begin{adjustbox}{scale=1.2}
+			\begin{tikzpicture}[scale=1, every node/.style={scale=1}]
+				\def\dscale{300} % Set the scaling factor to 300
+				\setcounter{rownum}{1} % Initialize the counter
+				\coordinate (o) (0,0);		
+				\csvreader[head=false]{Q4/results/Ropt.csv}{}%
+				{%
+					% Draw the node at the scaled position
+					\node[draw, circle, fill=black, inner sep=2pt, line width=.7] 
+					(\arabic{rownum}) at (\csvcoli*\dscale, \csvcolii*\dscale) {};
+					% Add the row number above each node
+					\node[above, gray] at (\arabic{rownum}) {\arabic{rownum}};
+					\draw (o) -- (\arabic{rownum});
+					\stepcounter{rownum} % Increment the counter after each row
+				}%
+			\end{tikzpicture}
+		\end{adjustbox}
+		\caption{\space}
+	\end{figure}
+	
+		\begin{table}[h]
+		\centering
+		\caption{Peak Optimization Results}
+		\csvreader[
+		head=false,
+		tabular=|c|c|c|,
+		table head=\hline \textbf{Maximum Peak} & \textbf{Maximu Side lobe's Peak} & \textbf{Peak Ratio} \\ \hline,
+		late after line=\\\hline
+		]{Q4/results/peak-opt.csv}{}%
+		{%
+			\csvcoli & \csvcolii & \csvcoliii
+		}
+	\end{table}
 	
 	
 	
 	
+	\subsubsection{Method 2:}
+	
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\linewidth]{Q4/results/array-beam-Ropt-2}
+		\caption{}
+		\label{fig:array-beam-ropt-2}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.5\linewidth]{Q4/results/array-beam-polar-Ropt-2}
+		\caption{}
+		\label{fig:array-beam-polar-ropt-2}
+	\end{figure}
+	
+	
+	\begin{equation}
+		R_{\text{opt}}
+		= 
+		\begin{bmatrix}
+			% Read the CSV file and insert the values into the matrix
+			\csvreader[head=false, late after line=\\]{Q4/results/Ropt-2.csv}{}%
+			{\csvcoli & \csvcolii & \csvcoliii}
+		\end{bmatrix}
+		= R_2 + 
+		\begin{bmatrix}
+			% Read the CSV file and insert the values into the matrix
+			\csvreader[head=false, late after line=\\]{Q4/results/Ropt-R2-2.csv}{}%
+			{\csvcoli & \csvcolii & \csvcoliii}
+		\end{bmatrix}
+	\end{equation}
+	
+	
+	\begin{figure}[H]
+		\centering
+		\begin{adjustbox}{scale=1.2}
+			\begin{tikzpicture}[scale=1, every node/.style={scale=1}]
+				\def\dscale{300} % Set the scaling factor to 300
+				\setcounter{rownum}{1} % Initialize the counter
+				\coordinate (o) (0,0);		
+				\csvreader[head=false]{Q4/results/Ropt-2.csv}{}%
+				{%
+					% Draw the node at the scaled position
+					\node[draw, circle, fill=black, inner sep=2pt, line width=.7] 
+					(\arabic{rownum}) at (\csvcoli*\dscale, \csvcolii*\dscale) {};
+					% Add the row number above each node
+					\node[above, gray] at (\arabic{rownum}) {\arabic{rownum}};
+					\draw (o) -- (\arabic{rownum});
+					\stepcounter{rownum} % Increment the counter after each row
+				}%
+			\end{tikzpicture}
+		\end{adjustbox}
+		\caption{\space}
+	\end{figure}
+	
+	
+	\begin{table}[h]
+		\centering
+		\caption{Peak Optimization Results}
+		\csvreader[
+		head=false,
+		tabular=|c|c|c|,
+		table head=\hline \textbf{Maximum Peak} & \textbf{Maximu Side lobe's Peak} & \textbf{Peak Ratio} \\ \hline,
+		late after line=\\\hline
+		]{Q4/results/peak-opt-2.csv}{}%
+		{%
+			\csvcoli & \csvcolii & \csvcoliii
+		}
+	\end{table}
+	
+	
+	
+	
+	\subsubsection{Comparing these two methods:}
+	
+		
+		\begin{table}[h]
+			\centering
+			\caption{Merged Peak Optimization Results}
+			\begin{tabular}{cccc}
+				\toprule
+				\textbf{Method} &
+				\textbf{Maximum Peak} & \textbf{Max Side lobe's Peak} & \textbf{Peak Ratio} \\
+				\midrule
+				Method 1 &
+				% First CSV file
+				\csvreader[head=false, late after line=\\]{Q4/results/peak-opt.csv}{}%
+				{%
+					\csvcoli & \csvcolii & \csvcoliii
+				}
+				Method 2 &
+				% Second CSV file
+				\csvreader[head=false, late after line=\\]{Q4/results/peak-opt-2.csv}{}%
+				{%
+					\csvcoli & \csvcolii & \csvcoliii
+				}
+				\bottomrule
+			\end{tabular}
+		\end{table}
+		
+
 	
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

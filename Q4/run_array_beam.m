@@ -1,5 +1,5 @@
 function [arrayfactor, fig1, fig2, MinIdx, MaxIdx] = run_array_beam(R1, N, is_plot)
-if nargin > 2, is_plot = true; end
+if nargin < 3, is_plot = true; end
 phi = 0;
 phases = zeros(1, size(R1, 1));
 fs = 100;
@@ -47,10 +47,10 @@ if is_plot, fig2 = figure('units','normalized','outerposition',[0 .25 1 .5]);
 ax = gca;
 outerpos = ax.OuterPosition;
 ti = ax.TightInset; 
-left = outerpos(1) + ti(1);
-bottom = outerpos(2) + ti(2);
-ax_width = outerpos(3) - ti(1) - ti(3);
-ax_height = outerpos(4) - ti(2) - ti(4);
+left = outerpos(1) + 2.2*ti(1);
+bottom = outerpos(2) + 2.2*ti(2);
+ax_width = outerpos(3) - 2.2*ti(1) - ti(3);
+ax_height = outerpos(4) - 2.2*ti(2) - ti(4);
 ax.Position = [left bottom ax_width ax_height];
 hold on
 
@@ -63,6 +63,7 @@ plot(theta(MaxIdx_), af_smooth(MaxIdx_), '.b')
 ylim([-2, 10])
 xlim([-pi, pi])
 xticks((-1:0.25:1)*pi)
+xlabel("\theta (rad)"); ylabel("Pattern (magnitude)")
 xticklabels(arrayfun(@(s) sprintf("%g \\pi", s), (-1:0.25:1),'UniformOutput',true))
 
 for i = MaxIdx
