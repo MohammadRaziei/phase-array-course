@@ -1,5 +1,5 @@
-function [arrayfactor, fig1, fig2, MinIdx, MaxIdx] = run_array_beam(R1, N)
-
+function [arrayfactor, fig1, fig2, MinIdx, MaxIdx] = run_array_beam(R1, N, is_plot)
+if nargin > 2, is_plot = true; end
 phi = 0;
 phases = zeros(1, size(R1, 1));
 fs = 100;
@@ -8,10 +8,11 @@ arrayfactor = arrayfun(@(theta) Array_beam_cal(R1,phases,theta,phi), theta,'Unif
 
 theta = deg2rad(theta);
 
-fig1 = figure;
+if is_plot, fig1 = figure;
 polarplot(theta, arrayfactor)
 set(gca, 'ThetaZeroLocation', "top");
-
+else,fig1 = []; 
+end
 
 af_smooth = [arrayfactor, arrayfactor, arrayfactor];
 for i = 1:N, af_smooth = smooth(af_smooth, 4*fs); end
@@ -42,7 +43,7 @@ for i = 1:length(MaxIdx)
 end
 MaxIdx = unique(MaxIdx).';
 
-fig2 = figure('units','normalized','outerposition',[0 .25 1 .5]);
+if is_plot, fig2 = figure('units','normalized','outerposition',[0 .25 1 .5]);
 ax = gca;
 outerpos = ax.OuterPosition;
 ti = ax.TightInset; 
@@ -73,4 +74,6 @@ for i = MinIdx
     text(theta(i), arrayfactor(i)-.9, sprintf("\\lfloor%.2g", round(arrayfactor(i),2)), "HorizontalAlignment", "left", "Color", .4*ones(1,3))
 end
 
+else, fig2 = [];
+end
 

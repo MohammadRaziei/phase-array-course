@@ -22,18 +22,22 @@ disp([min(data.freq) max(data.freq)])
 figure
 plot(data.freq, data.s11)
 ylim([-35,0])
+xlabel("Frequency (GHz)"); ylabel("S11 parameter (dB)")
 exportgraphics(gcf, 'results/s11.pdf', 'Append', false);
 figure
 plot(data.freq, data.s12)
 ylim([-35,0])
+xlabel("Frequency (GHz)"); ylabel("S12 parameter (dB)")
 exportgraphics(gcf, 'results/s12.pdf', 'Append', false);
 figure
 plot(data.freq, data.s21)
 ylim([-35,0])
+xlabel("Frequency (GHz)"); ylabel("S21 parameter (dB)")
 exportgraphics(gcf, 'results/s21.pdf', 'Append', false);
 figure
 plot(data.freq, data.s22)
 ylim([-35,0])
+xlabel("Frequency (GHz)"); ylabel("S22 parameter (dB)")
 exportgraphics(gcf, 'results/s22.pdf', 'Append', false);
 %%
 figure; hold on

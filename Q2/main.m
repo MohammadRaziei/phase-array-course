@@ -185,3 +185,88 @@ exportgraphics(gcf, 'results/phi90.pdf', 'Append', false);
 
 %%
 
+N = 4;
+lambda = 3e8 / 60.48e9;
+d_lambda_x = 7e-3 / lambda;
+d_lambda_y = 5e-3 / lambda;
+AF_x =@(theta, phi) sin((N-1) * pi * d_lambda_y * sin(theta) .* cos(phi) )./ sin( pi * d_lambda_y * sin(theta) .* cos(phi) ); 
+AF_y =@(theta, phi) sin((N-1) * pi * d_lambda_y * sin(theta) .* sin(phi) )./ sin( pi * d_lambda_y * sin(theta) .* sin(phi) ); 
+
+
+AF_xy = AF_x(thetaRad, phiRad) .* AF_y(thetaRad, phiRad);
+AF_total = DB + mag2db(AF_xy);
+
+
+figure;
+imagesc(unique(phiRad), unique(thetaRad), mag2db(AF_xy))
+xlabel("\phi (rad)")
+ylabel("\theta (rad)")
+title('2D plot over angles');
+colorbar
+exportgraphics(gcf, 'results/2d-plot-angles-4x4.pdf', 'Append', false);
+
+
+[x,y,z] = sph2cart(phiRad, thetaRad, AF_xy);
+figure
+surf(x,y,z)
+colormap([.5,.5,.5])
+title('Spatial Antenna Pattern (non-dB scale)');
+set(gca, "view", [-15, 15])
+xlabel("x")
+ylabel("y")
+zlabel("z")
+exportgraphics(gcf, 'results/spatial-antenna-pattern-4x4.pdf', 'Append', false);
+
+
+figure;
+surf(phiRad, thetaRad, mag2db(AF_xy))
+shading interp
+set(gca, "view", [-60, 55])
+colorbar
+xlabel("\phi (rad)")
+ylabel("\theta (rad)")
+zlabel("dB")
+title('3D plot over angles');
+exportgraphics(gcf, 'results/3d-plot-angles-4x4.pdf', 'Append', false);
+
+
+
+%%
+
+
+figure;
+imagesc(unique(phiRad), unique(thetaRad), AF_total)
+xlabel("\phi (rad)")
+ylabel("\theta (rad)")
+title('2D plot over angles');
+colorbar
+exportgraphics(gcf, 'results/2d-plot-angles-4x4-total.pdf', 'Append', false);
+
+
+
+
+figure;
+surf(phiRad, thetaRad, AF_total)
+shading interp
+set(gca, "view", [-60, 55])
+colorbar
+xlabel("\phi (rad)")
+ylabel("\theta (rad)")
+zlabel("dB")
+title('3D plot over angles');
+exportgraphics(gcf, 'results/3d-plot-angles-4x4-total.pdf', 'Append', false);
+
+
+
+[x,y,z] = sph2cart(phiRad, thetaRad, 10.^(AF_total/20));
+
+
+figure
+surf(x,y,z)
+colormap([.5,.5,.5])
+title('Spatial Antenna Pattern (non-dB scale)');
+set(gca, "view", [-15, 15])
+xlabel("x")
+ylabel("y")
+zlabel("z")
+exportgraphics(gcf, 'results/spatial-antenna-pattern-4x4-total.pdf', 'Append', false);
