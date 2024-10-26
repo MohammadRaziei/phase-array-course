@@ -41,6 +41,7 @@ csvwrite('results/R2.csv', R2);
 
 
 %%
+rng(1)
 
 R3=(5e-3)*...
     [3+0.5*randn() 0 0
@@ -71,9 +72,17 @@ R3=(5e-3)*...
 csvwrite('results/R3-2.csv', R3);
 
 
-[~, fig1, fig2, ~, ~] = run_array_beam(R3,2);
+[arrayfactor, fig1, fig2, ~, MaxIdx] = run_array_beam(R3,2);
+
+peaks = arrayfactor(MaxIdx);
+peak_max= max(peaks);
+peak_max2 = max(peaks(peaks<.95*peak_max));
+peak_ratio = peak_max / peak_max2;
+
+csvwrite('results/peak-R3-2.csv', [peak_max, peak_max2, peak_ratio]);
 exportgraphics(fig1, 'results/array-beam-polar-R3-2.pdf', 'Append', false);
 exportgraphics(fig2, 'results/array-beam-R3-2.pdf', 'Append', false);
+
 
 
 

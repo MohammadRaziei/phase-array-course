@@ -906,6 +906,23 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 		\label{fig:array-beam-r3-2}
 	\end{figure}
 	
+		
+	\begin{table}[h]
+		\centering
+		\caption{Peak Optimization Results}
+		\csvreader[
+		head=false,
+		tabular=|c|c|c|,
+		table head=\hline \textbf{Maximum Peak} & \textbf{Max Side lobe's Peak} & \textbf{Peak Ratio} \\ \hline,
+		late after line=\\\hline
+		]{Q4/results/peak-R3-2.csv}{}%
+		{%
+			\csvcoli & \csvcolii & \csvcoliii
+		}
+	\end{table}
+	
+	
+	
 	
 	\subsubsection{Method 1:}
 	
@@ -969,7 +986,7 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 		\csvreader[
 		head=false,
 		tabular=|c|c|c|,
-		table head=\hline \textbf{Maximum Peak} & \textbf{Maximu Side lobe's Peak} & \textbf{Peak Ratio} \\ \hline,
+		table head=\hline \textbf{Maximum Peak} & \textbf{Max Side lobe's Peak} & \textbf{Peak Ratio} \\ \hline,
 		late after line=\\\hline
 		]{Q4/results/peak-opt.csv}{}%
 		{%
@@ -1043,7 +1060,7 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 		\csvreader[
 		head=false,
 		tabular=|c|c|c|,
-		table head=\hline \textbf{Maximum Peak} & \textbf{Maximu Side lobe's Peak} & \textbf{Peak Ratio} \\ \hline,
+		table head=\hline \textbf{Maximum Peak} & \textbf{Max Side lobe's Peak} & \textbf{Peak Ratio} \\ \hline,
 		late after line=\\\hline
 		]{Q4/results/peak-opt-2.csv}{}%
 		{%
@@ -1053,7 +1070,7 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 	
 	
 	
-	
+	\FloatBarrier
 	\subsubsection{Comparing these two methods:}
 	
 		
