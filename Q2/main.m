@@ -50,7 +50,7 @@ exportgraphics(gcf, 'results/2d-plot-angles.pdf', 'Append', false);
 
 
 
-[x,y,z] = sph2cart(phiRad, thetaRad, 10.^(DB/20));
+[x,y,z] = sph2cart(phiRad, pi/2-thetaRad, 10.^(DB/20));
 
 
 figure
@@ -206,7 +206,7 @@ colorbar
 exportgraphics(gcf, 'results/2d-plot-angles-4x4.pdf', 'Append', false);
 
 
-[x,y,z] = sph2cart(phiRad, thetaRad, AF_xy);
+[x,y,z] = sph2cart(phiRad, pi/2 - thetaRad, AF_xy);
 figure
 surf(x,y,z)
 colormap([.5,.5,.5])
@@ -258,7 +258,7 @@ exportgraphics(gcf, 'results/3d-plot-angles-4x4-total.pdf', 'Append', false);
 
 
 
-[x,y,z] = sph2cart(phiRad, thetaRad, 10.^(AF_total/20));
+[x,y,z] = sph2cart(phiRad, pi/2 - thetaRad, 10.^(AF_total/20));
 
 
 figure

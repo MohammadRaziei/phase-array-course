@@ -433,7 +433,7 @@ The diagrams of these two array factors are presented in Figures \ref{fig:af-plo
 	&= \sum_{\ell=0}^{3} \sum_{q=0}^{N-1} \mathrm{e}^{\frac{2\pi}{\lambda} \left( \mathrm{j} \, \ell \, d_x \, \sin(\theta) \cos(\phi) + \mathrm{j} \, q \, d_y \, \sin(\theta) \sin(\phi) \right)} \\
 	&= \sum_{\ell=0}^{N-1} \sum_{q=0}^{N-1} \mathrm{e}^{\frac{2\pi}{\lambda} \, \mathrm{j} \, \ell \, d_x \, \sin(\theta) \cos(\phi)} \, \mathrm{e}^{\frac{2\pi}{\lambda} \, \mathrm{j} \, q \, d_y \, \sin(\theta) \sin(\phi)} \\
 	&= \sum_{\ell=0}^{N-1} \mathrm{e}^{\frac{2\pi}{\lambda} \, \mathrm{j} \, \ell \, d_x \, \sin(\theta) \cos(\phi)} \, \sum_{q=0}^{N-1} \mathrm{e}^{\frac{2\pi}{\lambda} \, \mathrm{j} \, q \, d_y \, \sin(\theta) \sin(\phi)} \\
-	\implies |\text{AF}| &= 
+	\implies |\text{AF}_{xy}| &= 
 	\frac{\sin \left( \frac{N-1}{2} \, \frac{2\pi}{\lambda} \, d_x \, \sin(\theta) \cos(\phi) \right)}
 	{\sin \left( \frac{1}{2} \, \frac{2\pi}{\lambda} \, d_x \, \sin(\theta) \cos(\phi) \right)} 
 	\cdot
@@ -468,28 +468,38 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 	
 	
 	\begin{equation}
+		\operatorname{db}(|\text{AF}|) = \operatorname{db}(|\text{AF}_p|) + \operatorname{db}(|\text{AF}_x|) + \operatorname{db}(|\text{AF}_y|)
+	\end{equation}
+	
+	
+	\begin{equation}
 		\lambda = \frac{c}{f_0} = \frac{3 \times 10^8}{60.48 \times 10^9} = 0.00496 \, (\mathrm{m}) = 4.96 \, (\mathrm{mm})
 	\end{equation}
 
-	\begin{figure}[H]
+\begin{figure}[H]
+		\begin{subfigure}{.5\linewidth}
 		\centering
-		\includegraphics[width=0.7\linewidth]{Q2/results/3d-plot-angles-4x4}
-		\caption{}
+		\includegraphics[width=\linewidth]{Q2/results/3d-plot-angles-4x4}
+		\caption{3D plot using \texttt{surf}}
 		\label{fig:3d-plot-angles-4x4}
-	\end{figure}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{.5\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{Q2/results/2d-plot-angles-4x4}
+		\caption{2D plot using \texttt{imagesc}}
+		\label{fig:2d-plot-angles-4x4}
+	\end{subfigure}
+	\caption{$|\text{AF}_{xy}|$ in dB scale}
+\end{figure}
 	
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.7\linewidth]{Q2/results/spatial-antenna-pattern-4x4}
-		\caption{}
+		\caption{$|\text{AF}_{xy}|$ spatial antenna pattern in magnitude scale}
 		\label{fig:spatial-antenna-pattern-4x4}
 	\end{figure}
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.7\linewidth]{Q2/results/2d-plot-angles-4x4}
-		\caption{}
-		\label{fig:2d-plot-angles-4x4}
-	\end{figure}
+
 	
 \begin{figure}[H]
 	\centering
