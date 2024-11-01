@@ -15,6 +15,8 @@
 \usepackage{tabularx, booktabs, makecell}
 \usepackage{hyperref,url}
 \usepackage{listings}
+\usepackage{mathtools} % For \xlongequal
+
 
 \makeatletter
 \let\old@lstKV@SwitchCases\lstKV@SwitchCases
@@ -37,8 +39,19 @@
 \makeatother
 \newcounter{subListing}[subfigure]
 
-\lstset{language=matlab,%
-	%backgroundcolor=\color{gray!10},
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{mygreen}{RGB}{28,172,0} 
+\definecolor{mylilas}{RGB}{170,55,241}
+\definecolor{backcolour}{rgb}{1,1,0.98}
+
+\lstset{language=MATLAB,%
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{blue},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
 	basicstyle=\tt\scriptsize,
 	frame = LBtr,
 	%frameround=T,
@@ -1116,6 +1129,59 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 	\question%5
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.5\linewidth]{Q5/sar}
+		\caption{SAR radar imaging resolution}
+		\label{fig:sar}
+	\end{figure}
+	
+	
+	\FloatBarrier
+	\subsection{part a:}
+	
+	The angular resolution of the antenna is expressed using the half-power beamwidth (HPBW). The radar imaging resolution is equal to the distance $d$ shown in Figure 19. To ensure that the angular resolution is less than our desired and optimal value, the following relationship must hold:
+	\begin{align}
+		d &\geq 2R \sin\left(\frac{\theta}{2}\right) \\ \sin\left(\frac{\theta}{2}\right) &\leq \frac{d}{2R} \\
+		 \theta &\leq 2 \sin^{-1}\left(\frac{d}{2R}\right)
+	\end{align}
+	
+	According to the problem assumption, the desired imaging resolution is 1 meter, and the distance $R = 600$ km. Therefore, the beamwidth is calculated as follows:
+	\begin{gather}
+		\theta \leq 2 \sin^{-1} \left( \frac{1}{2 \times 600000} \right) = 2 \sin^{-1} \left( \frac{1}{1200000} \right) = 2 \times \frac{1}{1200000} = \frac{1}{600000} \\
+		\implies \theta \leq 1.667 \times 10^{-6} \, \text{rad} \approx 9.55 \times 10^{-5} \, \text{deg}
+	\end{gather}
+	
+	\FloatBarrier
+	\subsection{part b:}
+	
+	In this section, to calculate the maximum number of elements required for the antenna array, we use the book \cite{book:RadarHandbook}. Following equation is an approximate relation for the number of antenna elements and beamwidth.
+	\begin{equation}
+		N \approx \frac{10000}{\theta_B^2}
+	\end{equation}
+	
+	Where $\theta_B$ is the beamwidth in degrees. We have previously calculated the beamwidth as:
+	\begin{equation}
+		N \approx \frac{10000}{(9.55 \times 10^{-5})^2} \approx 110 \times 10^{10}
+	\end{equation}
+	
+	
+	\begin{equation}
+		l = N \, d = N \frac{\lambda}{2} = N \frac{c}{f} = 110 \times 10^{10} \frac{3 \times 10^8}{2 \times 10^9} \implies l = 275 \times 10^8 \, \text{m}
+	\end{equation}
+	
+	
+	As a result, approximately $110 \times 1010$ antenna elements are required to achieve such imaging resolution.
+	
+	
+	\FloatBarrier
+	\subsection{part c:}
+
+ Assuming the distance between each two antenna elements is half the wavelength, we calculate the antenna length.
+	
+	
+	
+	
 	
 	
 	
@@ -1126,7 +1192,265 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
 	
+	\begin{equation}
+		\text{AF} = \sum_{n=0}^{N-1} \mathrm{e}^{\mathrm{j}\bm{k}^\transpose\bm{p}_n},
+	\end{equation}
+	where,
+	\begin{equation}
+		\bm{k} =
+		\frac{2\pi}{\lambda}
+		\begin{bmatrix}
+			\sin(\theta)\cos(\phi) \\ 	\sin(\theta)\sin(\phi) \\ \cos(\theta)
+		\end{bmatrix}
+		\quad,\quad
+		\bm{p}_n = 
+		\begin{bmatrix}
+			x_n \\ y_n \\ z_n
+		\end{bmatrix}.
+	\end{equation}
 	
+	\FloatBarrier
+	\subsection{part a:}
+	
+	\begin{figure}[H]
+		\centering
+		\begin{adjustbox}{scale=.8}
+			\begin{tikzpicture}[scale=1, every node/.style={scale=1}]
+				\def\R{.8}
+				\foreach \i in {1,2,...,25} {
+					\node[draw, circle, fill=black, inner sep=2pt, line width=.7] (\i) at (\i*\R,0) {};
+					\node[gray] (label\i) at (\i*\R,.5) {$\i$};
+				}
+				\draw[red,line width=1] (1) -- (2) node[midway, black, xshift=0pt, yshift=-15pt] {$d=\nicefrac{\lambda}{2}$};
+			\end{tikzpicture}
+		\end{adjustbox}
+		\caption{
+		}
+	\end{figure}
+	
+	
+	\begin{equation}
+		\bm{p}_n = \begin{bmatrix}
+			0 \\ 0 \\ n d
+		\end{bmatrix}
+		\quad\implies\quad \bm{k}^\transpose\bm{p}_n = \frac{2\pi}{\lambda}nd\cos(\theta)
+	\end{equation}
+	
+	\begin{align}
+		\text{AF} &= \sum_{n=0}^{N-1} \mathrm{e}^{\mathrm{j}\frac{2\pi}{\lambda}nd\cos(\theta)}
+		= \frac{\mathrm{e}^{\mathrm{j}2\pi(\frac{d}{\lambda})N\cos(\theta)} - 1}
+		{\mathrm{e}^{\mathrm{j}2\pi(\frac{d}{\lambda})\cos(\theta)} - 1} \\
+		\big|\text{AF}\big|_{(\theta, \phi)} &= \frac{\sin\Big(\pi(\frac{d}{\lambda})N\cos(\theta)\Big)}{\sin\Big(\pi(\frac{d}{\lambda})\cos(\theta)\Big)}
+		%
+		\underset{N=25}{\overset{(\frac{d}{\lambda}) = \frac{1}{2}}{=\joinrel=\joinrel=\joinrel=\joinrel=}}
+		%
+		\frac{\sin\Big(12.5\pi\,\cos(\theta)\Big)}{\sin\Big(0.5\pi\,\cos(\theta)\Big)}
+	\end{align}
+	
+	
+	
+	
+	
+	
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\linewidth]{Q6/results/a-imagesc}
+	\caption{}
+	\label{fig:a-imagesc}
+\end{figure}
+
+
+\begin{figure}[H]
+	\begin{subfigure}{.5\linewidth}
+		\centering
+		\includegraphics[width=0.9\linewidth]{Q6/results/a-p-plot3}
+		\caption{}
+		\label{fig:a-p-plot3}
+	\end{subfigure}
+	\begin{subfigure}{.5\linewidth}
+		\centering
+		\includegraphics[width=0.9\linewidth]{Q6/results/a-cart}
+		\caption{}
+		\label{fig:a-cart}
+	\end{subfigure}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{Q6/results/a-phi-0-mag}
+		\caption{Magnitude}
+		\label{fig:a-phi-0-mag}
+	\end{subfigure}
+	
+	\begin{subfigure}{\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{Q6/results/a-phi-0-db}
+		\caption{dB}
+		\label{fig:a-phi-0-db}
+	\end{subfigure}
+\end{figure}
+
+
+
+
+	
+\FloatBarrier
+\subsection{part b:}
+	
+	
+\begin{figure}[H]
+	\centering
+	\begin{adjustbox}{scale=.8}
+		\begin{tikzpicture}[scale=1, every node/.style={scale=1}]
+			\def\R{3.5}
+			\foreach \i in {1,2,...,25} {
+				\node[draw, circle, fill=black, inner sep=2pt, line width=.7] (\i) at ({(\i-1)*360/25}:{\R}) {};
+				\node[gray] (label\i) at ({(\i-1)*360/25}:{\R+0.5}) {$\i$};		
+			}
+			\draw[red,line width=1] (1) -- (2) node[midway, black, xshift=-25pt, yshift=0pt] {$d=\nicefrac{\lambda}{2}$};
+		\end{tikzpicture}
+	\end{adjustbox}
+	\caption{
+	}
+\end{figure}
+
+
+	
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\linewidth]{Q6/results/b-imagesc}
+	\caption{}
+	\label{fig:b-imagesc}
+	\caption{}
+\end{figure}
+
+
+\begin{figure}[H]
+	\begin{subfigure}{.5\linewidth}
+		\centering
+		\includegraphics[width=0.9\linewidth]{Q6/results/b-p-plot3}
+		\caption{}
+		\label{fig:b-p-plot3}
+	\end{subfigure}
+	\begin{subfigure}{.5\linewidth}
+		\centering
+		\includegraphics[width=0.9\linewidth]{Q6/results/b-cart}
+		\caption{}
+		\label{fig:b-cart}
+	\end{subfigure}
+	\caption{}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{Q6/results/b-phi-0-mag}
+		\caption{Magnitude}
+		\label{fig:b-phi-0-mag}
+	\end{subfigure}
+	
+	\begin{subfigure}{\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{Q6/results/b-phi-0-db}
+		\caption{dB}
+		\label{fig:b-phi-0-db}
+	\end{subfigure}
+	\caption{}
+\end{figure}
+
+
+
+\subsection{part c:}
+
+
+
+	\begin{figure}[H]
+	\centering
+\begin{adjustbox}{scale=.8}
+	\begin{tikzpicture}[scale=1, every node/.style={scale=1}]
+		\def\R{1.5}
+		\foreach \i in {1,2,...,5} {
+			\foreach \j in {1,2,...,5} {
+				% Draw the black-filled circle node
+				\node[draw, circle, fill=black, inner sep=2pt, line width=.7] (\i\j) at (\i*\R,\j*\R) {};
+				
+				% Calculate the product and display it in gray above each node
+				\pgfmathsetmacro{\n}{int((6-\j)*5-\i+1)}
+				\node[gray] at (\i*\R,\j*\R+.5) {$\n$};
+			}
+		}
+		\draw[red,line width=1] (55) -- (45) node[midway, black, xshift=0pt, yshift=-10pt] {$d=\nicefrac{\lambda}{2}$};
+	\end{tikzpicture}
+\end{adjustbox}
+	\caption{Uniform Circular Array with 25 elements}
+\end{figure}
+
+
+	\begin{equation}
+	\bm{p}_{n,m} = \begin{bmatrix}
+		n d_x \\ m d_y \\ 0
+	\end{bmatrix}
+	\quad\implies\quad \bm{k}^\transpose\bm{p}_n = \frac{2\pi}{\lambda}nd\cos(\theta)
+\end{equation}
+
+
+	
+	
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\linewidth]{Q6/results/c-imagesc}
+	\caption{}
+	\label{fig:c-imagesc}
+\end{figure}
+
+
+\begin{figure}[H]
+	\begin{subfigure}{.5\linewidth}
+		\centering
+		\includegraphics[width=0.9\linewidth]{Q6/results/c-p-plot3}
+		\caption{}
+		\label{fig:c-p-plot3}
+	\end{subfigure}
+	\begin{subfigure}{.5\linewidth}
+		\centering
+		\includegraphics[width=0.9\linewidth]{Q6/results/c-cart}
+		\caption{}
+		\label{fig:c-cart}
+	\end{subfigure}
+	\caption{}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{Q6/results/c-phi-0-mag}
+		\caption{Magnitude}
+		\label{fig:c-phi-0-mag}
+	\end{subfigure}
+	
+	\begin{subfigure}{\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{Q6/results/c-phi-0-db}
+		\caption{dB}
+		\label{fig:c-phi-0-db}
+	\end{subfigure}
+	\caption{}
+\end{figure}
+
+
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\newpage

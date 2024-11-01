@@ -54,8 +54,7 @@ exportgraphics(gcf, 'results/2d-plot-angles.pdf', 'Append', false);
 
 
 figure
-surf(x,y,z)
-colormap([.5,.5,.5])
+surf(x, y, z,  'EdgeColor', 'black', "EdgeAlpha", .1); colormap(.7*ones(1,3));
 title('Spatial Antenna Pattern (non-dB scale)');
 set(gca, "view", [-15, 15])
 xlabel("x")
@@ -185,15 +184,20 @@ exportgraphics(gcf, 'results/phi90.pdf', 'Append', false);
 
 %%
 
-N = 4;
 lambda = 3e8 / 60.48e9;
-d_lambda_x = 7e-3 / lambda;
-d_lambda_y = 5e-3 / lambda;
-AF_x =@(theta, phi) sin((N-1) * pi * d_lambda_y * sin(theta) .* cos(phi) )./ sin( pi * d_lambda_y * sin(theta) .* cos(phi) ); 
-AF_y =@(theta, phi) sin((N-1) * pi * d_lambda_y * sin(theta) .* sin(phi) )./ sin( pi * d_lambda_y * sin(theta) .* sin(phi) ); 
+d_x = 7e-3; d_y = 5e-3;
+d_lambda_x = d_x / lambda;
+d_lambda_y = d_y / lambda;
+% AF_x =@(theta, phi) sin((N-1) * pi * d_lambda_y * sin(theta) .* cos(phi) )./ sin( pi * d_lambda_y * sin(theta) .* cos(phi) ); 
+% AF_y =@(theta, phi) sin((N-1) * pi * d_lambda_y * sin(theta) .* sin(phi) )./ sin( pi * d_lambda_y * sin(theta) .* sin(phi) ); 
 
+AF = @(P, lambda, theta, phi) abs(cell2mat(arrayfun(@(phi) arrayfun(@(theta) sum(exp(1j*2*pi/lambda *[sin(theta)* cos(phi), sin(theta)* sin(phi), cos(theta)]*P')), theta,'UniformOutput',true)', phi,'UniformOutput',false)));
 
-AF_xy = AF_x(thetaRad, phiRad) .* AF_y(thetaRad, phiRad);
+% AF_xy = AF_x(thetaRad, phiRad) .* AF_y(thetaRad, phiRad);
+N = 16;
+P = cell2mat(arrayfun(@(x) [(mod(x, sqrt(N))-(sqrt(N)-1)/2)*d_x, (floor(x / sqrt(N))-(sqrt(N)-1)/2)*d_y , 0]', 0:N-1,'UniformOutput',false))';
+
+AF_xy = AF(P, lambda, thetaRad(1,:)', phiRad(:, 1));
 AF_total = DB + mag2db(AF_xy);
 
 
@@ -208,8 +212,7 @@ exportgraphics(gcf, 'results/2d-plot-angles-4x4.pdf', 'Append', false);
 
 [x,y,z] = sph2cart(phiRad, pi/2 - thetaRad, AF_xy);
 figure
-surf(x,y,z)
-colormap([.5,.5,.5])
+surf(x, y, z,  'EdgeColor', 'black', "EdgeAlpha", .1); colormap(.7*ones(1,3));
 title('Spatial Antenna Pattern (non-dB scale)');
 set(gca, "view", [-15, 15])
 xlabel("x")
@@ -262,8 +265,7 @@ exportgraphics(gcf, 'results/3d-plot-angles-4x4-total.pdf', 'Append', false);
 
 
 figure
-surf(x,y,z)
-colormap([.5,.5,.5])
+surf(x, y, z,  'EdgeColor', 'black', "EdgeAlpha", .1); colormap(.7*ones(1,3));
 title('Spatial Antenna Pattern (non-dB scale)');
 set(gca, "view", [-15, 15])
 xlabel("x")
