@@ -30,7 +30,7 @@
 
 # PDFLaTeX and other output files
 main.pdf
-HW/*.pdf
+HW/HW*.pdf
 *.dvi
 *.ps
 *.eps
