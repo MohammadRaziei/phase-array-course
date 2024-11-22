@@ -2,117 +2,95 @@
 clear; close all; clc;
 mkdir results
 addpath ../common/
-
-w_n = [1, 1, 0, 0, 1, 0, 1];
-d_lambda = 0.5;
-
-AF_theta =@(w_n, d_lambda, theta_0) w_n * exp(1j*(0:length(w_n)-1).'* (2*pi*d_lambda * cos(theta_0)));
-AF = @(w_n, d_lambda, theta) arrayfun(@(theta_0) AF_theta(w_n, d_lambda, theta_0), theta,'UniformOutput',true);
-
-theta = -pi:0.001:pi;
-af_a = abs(AF(w_n, d_lambda, theta));
-af_b = abs(AF(ones(1,length(w_n)), d_lambda, theta));
+% Initialize parameters
 
 
-figure; hold on; grid on
-plot(theta, af_a, 'r')
-plot(theta, af_b, 'k')
-xlim([-1, 1]*pi);
-xticks((-1:0.25:1)*pi)
-xticklabels(arrayfun(@(s) sprintf("%g \\pi", s), (-1:0.25:1),'UniformOutput',true))
-exportgraphics(gcf, 'results/AF-plot.pdf', 'Append', false);
-set(gca, 'YScale', 'log')
-exportgraphics(gcf, 'results/AF-plot-logy.pdf', 'Append', false);
+M = 4;                 % Modulation order
+bps = log2(M);         % Bits per symbol
+N = 7;                 % RS codeword length
+K = 5;                 % RS message length
 
+% Define simulation parameters
+ebnoVec = (0:0.006:15)'; % Range of Eb/N0 values in dB
+targetBER = 1e-5;      % Target BER threshold
 
-figure; 
-polarplot(theta, af_b, 'k')
+% Calculate BER with Reed-Solomon coding
+berwCoding = bercoding(ebnoVec, 'RS', 'hard', N, K, 'psk', M, 'nondiff');
+
+% Find the index of the last BER value above the threshold
+idx = max(find(berwCoding >= targetBER));
+
+% Plot results
+figure;
 hold on;
-polarplot(theta, af_a, 'r')
-set(gca, 'ThetaZeroLocation', "top");
-exportgraphics(gcf, 'results/AF-polarplot.pdf', 'Append', false);
+set(gca, 'YScale', 'log');
+plot(ebnoVec, berwCoding, 'b', 'LineWidth', 1.5); % BER curve
+plot(ebnoVec(idx), berwCoding(idx), 'ro', 'MarkerSize', 5); % Threshold point
+yline(targetBER, 'r--', 'LineWidth', 1); % Target BER line
 
+% Annotate the threshold point
+text(ebnoVec(idx), berwCoding(idx)*10, ...
+     sprintf('(%g, %g)', ebnoVec(idx), berwCoding(idx)), ...
+     'FontSize', 10, 'HorizontalAlignment', 'left');
 
-%%
-figure('units','normalized','outerposition',[0 .25 1 .5])
-ax = gca;
-outerpos = ax.OuterPosition;
-ti = ax.TightInset; 
-left = outerpos(1) + ti(1);
-bottom = outerpos(2) + ti(2);
-ax_width = outerpos(3) - ti(1) - ti(3);
-ax_height = outerpos(4) - ti(2) - ti(4);
-ax.Position = [left bottom ax_width ax_height];
+% Labels and title
+xlabel('SNR or Eb/N0 (dB)');
+ylabel('Bit Error Rate (BER)');
+title('BER vs SNR with RS Coding');
+grid on;
 
-grid on; hold on
-xlim([-1, 1]*pi)
-xticks((-1:0.25:1)*pi)
-xticklabels(arrayfun(@(s) sprintf("%g \\pi", s), (-1:0.25:1),'UniformOutput',true))
-ylim([-2,8])
-[~,MaxIdx] = findpeaks(af_a);
-[~,MinIdx] = findpeaks(-af_a);
-
-plot(theta, af_a, 'r')
-plot(theta(MaxIdx), af_a(MaxIdx), 'xb')
-plot(theta(MinIdx), af_a(MinIdx), 'ob')
-
-for i = MaxIdx
-    text(theta(i), af_a(i)+.5, sprintf("(%.2f\\pi, %g)", theta(i)/pi, round(af_a(i),2)), "HorizontalAlignment", "center", "Color", .4*ones(1,3))
-end
-for i = MinIdx
-    text(theta(i), af_a(i)-.5, sprintf("(%.2f\\pi, %g)", theta(i)/pi, round(af_a(i),2)), "HorizontalAlignment", "center", "Color", .4*ones(1,3))
-end
-
-idx1 = MinIdx([floor(length(MinIdx) * 1 / 4), floor(length(MinIdx) * 1 / 4) + 1]);
-idx2 = MinIdx([floor(length(MinIdx) * 3 / 4), floor(length(MinIdx) * 3 / 4) + 1]);
-text(mean(theta(idx1)), mean(af_a(idx1))-1.4, sprintf("BW_{nn} = %.2f\\pi", diff(theta(idx1))/pi), "HorizontalAlignment", "center", "Color", .3*ones(1,3));
-text(mean(theta(idx2)), mean(af_a(idx2))-1.4,  sprintf("BW_{nn} = %.2f\\pi", diff(theta(idx2))/pi), "HorizontalAlignment", "center", "Color", .3*ones(1,3));
-
-drawbrace([theta(idx1(2)),af_a(idx1(2))-.8], [theta(idx1(1)),af_a(idx1(1))-.8], 0.006, "Color", "blue")
-drawbrace([theta(idx2(2)),af_a(idx2(2))-.8], [theta(idx2(1)),af_a(idx2(1))-.8], 0.006, "Color", "blue")
-
-exportgraphics(gcf, 'results/AF-plot-localmaxmin-a.pdf', 'Append', false);
+% Export the plot
+exportgraphics(gcf, 'results/ber-snr.pdf', 'Append', false);
 
 %%
-figure('units','normalized','position',[0 .25 1 .5])
-ax = gca;
-outerpos = ax.OuterPosition;
-ti = ax.TightInset; 
-left = outerpos(1) + ti(1);
-bottom = outerpos(2) + ti(2);
-ax_width = outerpos(3) - ti(1) - ti(3);
-ax_height = outerpos(4) - ti(2) - ti(4);
-ax.Position = [left bottom ax_width ax_height];
+saver = [];
+snr_db = ebnoVec(idx);
+saver(1,:) = snr_db;
 
-grid on; hold on
-xlim([-1, 1]*pi)
-xticks((-1:0.25:1)*pi)
-xticklabels(arrayfun(@(s) sprintf("%g \\pi", s), (-1:0.25:1),'UniformOutput',true))
-ylim([-2,8])
-[~,MaxIdx] = findpeaks(af_b);
-[~,MinIdx] = findpeaks(-af_b);
+snr = db2pow(snr_db);
+saver(2,:) = snr;
 
-plot(theta, af_b, 'k')
-plot(theta(MaxIdx), af_b(MaxIdx), 'xb')
-plot(theta(MinIdx), af_b(MinIdx), 'ob')
+R = 1e9;
+C = 1.25*R;
+Bw = C / log2(1+snr);
+saver(3,:) = Bw;
 
-for i = MaxIdx
-    text(theta(i), af_b(i)+.5, sprintf("(%.2f\\pi, %g)", theta(i)/pi, round(af_b(i),2)), "HorizontalAlignment", "center", "Color", .4*ones(1,3))
-end
-for i = MinIdx
-    text(theta(i), af_b(i)-.5, sprintf("(%.2f\\pi, %g)", theta(i)/pi, round(af_b(i),2)), "HorizontalAlignment", "center", "Color", .4*ones(1,3))
-end
-idx1 = MinIdx([floor(length(MinIdx) * 1 / 4), floor(length(MinIdx) * 1 / 4) + 1]);
-idx2 = MinIdx([floor(length(MinIdx) * 3 / 4), floor(length(MinIdx) * 3 / 4) + 1]);
-text(mean(theta(idx1)), mean(af_b(idx1))-1.4, sprintf("BW_{nn} = %.2f\\pi", diff(theta(idx1))/pi), "HorizontalAlignment", "center", "Color", .3*ones(1,3));
-text(mean(theta(idx2)), mean(af_b(idx2))-1.4,  sprintf("BW_{nn} = %.2f\\pi", diff(theta(idx2))/pi), "HorizontalAlignment", "center", "Color", .3*ones(1,3));
+d = 1.2e3;
+L_db = 18;
+L = db2mag(L_db);
+saver(4,:) = L;
 
-drawbrace([theta(idx1(2)),af_b(idx1(2))-.8], [theta(idx1(1)),af_b(idx1(1))-.8], 0.006, "Color", "blue")
-drawbrace([theta(idx2(2)),af_b(idx2(2))-.8], [theta(idx2(1)),af_b(idx2(1))-.8], 0.006, "Color", "blue")
+f = 60e9;
+lambda = 3e8 / f;
+saver(5,:) = lambda;
 
-exportgraphics(gcf, 'results/AF-plot-localmaxmin-b.pdf', 'Append', false);
+Kb = 1.38e-23;
+T0 = 290;
 
-%%
+F = 5;
+Pt = 8;
+
+G2 = Kb * T0 * Bw * snr * L * db2pow(F) / db2pow(Pt) * (4 * pi * d / lambda)^2;
+saver(6,:) = G2;
+G = sqrt(G2);
+saver(7,:) = G;
+G_db = pow2db(G);
+saver(8,:) = G_db;
+
+
+
+
+
+
+csvwrite("results/saver.csv", saver);
+
+
+
+
+
+
+
+
 
 
 

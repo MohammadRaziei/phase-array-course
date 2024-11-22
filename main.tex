@@ -16,11 +16,22 @@
 \usepackage{hyperref,url}
 \usepackage{listings}
 \usepackage{mathtools} % For \xlongequal
-
+\usepackage{siunitx}
 \usepackage{tcolorbox}
+\usepackage[numbers]{natbib}
 
 % Define a custom note environment
 \newtcolorbox{note}{colback=lightgray!10!white, colframe=lightgray!50!black, title=Note}
+
+\usepackage{titlesec}
+
+\setcounter{secnumdepth}{4}
+
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
 
 
 
@@ -83,8 +94,9 @@
 {\thesection\enspace}{0pt}{}[\vspace{2pt}\titlerule]
 
 
-\newcommand\question{
-	\section{Question \numberstringnum{\thesection}}
+\newcommand\question[1][\space]{
+	\section[Question \numberstringnum{\thesection}]
+	{Question \numberstringnum{\thesection}: #1}
 }
 
 
@@ -93,9 +105,23 @@
 \date{\today}
 
 
+\definecolor{questioncolor}{rgb}{0.1, 0.1, 0.5}
 
 
 \newcounter{rownum} % Define a counter for the row number
+\newcounter{csvrownum} % Define a counter for the row number
+
+\newcommand\saverread[2]{
+	%	\(
+	\csvreader[head=false, 
+	before reading=\setcounter{csvrownum}{1}, after line=\stepcounter{csvrownum} 
+	]{#1/results/saver.csv}{}%
+	{\ifnum\thecsvrownum=#2 \num{\csvcoli} \fi}
+	%	\)
+}
+
+
+
 \begin{document}
 	
 	
@@ -112,15 +138,236 @@
 	
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\FloatBarrier\question%1
+	\FloatBarrier\question[Friis link equation and phased array design]%1
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
+	\subsection{Single Antenna Implementation}\label{SISO}
+	\textcolor{questioncolor}{A small-cell backhaul company wants to design a 60 GHz link between two stations which are
+		$1.2 \text{km}$ apart. The objective is to transmit and receive minimum $1 \text{Gbps}$ data.}
 	
+	\subsubsection{Part a}
+	{\color{questioncolor} If CMOS technology is used, what is the minimum antenna gain for a Single antenna at TX
+	and RX (SISO)?
+	\\[1em]
+	\noindent Hints:
+	\begin{enumerate}
+		\item CMOS power amplifiers give an output power ($P_{1\text{dB}}$) of typically 0 to 8 dBm at 60 GHz. 
+		\item Assume QPSK modulation, and find minimum required SNR for BER of $10^{-5}$. 
+		\item Calculate the physical bandwidth assuming $25\%$ coding overhead.
+		\item Find Oxygen ($O_2$) absorption loss at $60 \text{GHz}$ band.
+		\item Assume clear sky condition (no rain). \textcolor{black}{$\rightarrow$ Means \(n = 2\) in Friis equation}
+		\item Assume perfect antenna alignment and matching.  \textcolor{black}{$\rightarrow$ Means \(\eta_r = \eta_t = 1\) }
+		\item Plot antenna gain as a function of $P_{1\text{dB}}$ and receiver noise figure (F ranges from 5 to 10 dB).
+		\item You are allowed to make any reasonable assumption if necessary. But you should clearly justify your assumption.	
+	\end{enumerate}
+	}
+
+
+
+
+
+\paragraph{Antenna Gain Calculation Using Friis and Shannon's Formulas}
 	
+	The signal-to-noise ratio (SNR) for a wireless link is expressed by the Friis link equation:
 	
+	\begin{align}
+		\text{SNR} &= P_t \cdot G_t \cdot G_r \cdot \left( \frac{\lambda}{4 \pi \ell} \right)^n \cdot \frac{1}{K_B \cdot T_0 \cdot B_w \cdot F \cdot \mathcal{L}}
+	\end{align}
+	
+	where:
+	\begin{itemize}
+		\item \(\lambda\): Carrier wavelength,
+		\item \(\ell\): Link range,
+		\item \(K_B = 1.38 \times 10^{-23} \, \text{J/K}\): Boltzmann constant,
+		\item \(T_0 = 290 \, \text{K}\): Absolute room temperature,
+		\item \(B_w\): Channel bandwidth,
+		\item \(F\): Receiver noise figure,
+		\item \(\mathcal{L}\): Losses in the system.
+	\end{itemize}
+	
+	\paragraph{System Model}
+	For a phased array system, the transmit power (\(P_t\)) and antenna gains (\(G_t, G_r\)) are defined as:
+	
+	\begin{align}
+		P_t &= N_t \cdot P_{t1}, \\
+		G_t &= \eta_t \cdot N_t \cdot G_{t1}, \\
+		G_r &= \eta_r \cdot N_r \cdot G_{r1},
+	\end{align}
+	
+	where:
+	\begin{itemize}
+		\item \(N_t\): Number of transmit antennas (\(N_t = 1\) for SISO),
+		\item \(N_r\): Number of receive antennas (\(N_r = 1\) for SISO),
+		\item \(\eta_t = \eta_r = 1\): Array efficiency (perfect alignment and matching).
+	\end{itemize}
+	
+	Assuming \(G_t = G_r = G\):
+	
+	\begin{equation}
+		G_t = G_r = G
+	\end{equation}
+	
+	\paragraph{Oxygen Absorption Loss}
+	The oxygen absorption loss is given by:
+	
+	\begin{equation}
+		\mathcal{L} = \alpha_{\text{O}_2} \cdot d,
+	\end{equation}
+	
+	where \(\alpha_{\text{O}_2} = 15 \, \text{dB/km}\) is the specific attenuation, and \(d = 1.2 \, \text{km}\). Substituting:
+	
+	\begin{equation}
+		\mathcal{L} = 15 \cdot 1.2 = 18 \, \text{dB} = \saverread{Q1}{4}.
+	\end{equation}
+	
+	\paragraph{Minimum SNR from BER Curve}
+	The minimum SNR for \(\text{BER} = \num{1e-5}\) is obtained from the BER curve shown in Figure~\ref{fig:ber-snr}.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.5\linewidth]{Q1/results/ber-snr}
+		\caption{BER vs. SNR for QPSK modulation.}
+		\label{fig:ber-snr}
+	\end{figure}
+	
+	According to Figure~\ref{fig:ber-snr}, the minimum SNR is:
+	
+	\begin{equation}
+		\text{SNR} = \saverread{Q1}{1} \, \text{dB} = \saverread{Q1}{2}.
+	\end{equation}
+	
+	\paragraph{Bandwidth Calculation Using Shannon's Formula}
+	The channel capacity is given by:
+	
+	\begin{equation}
+		C = B_w \log_2\left(1 + \frac{S}{N}\right),
+	\end{equation}
+	
+	where:
+	\begin{itemize}
+		\item \(C = 1.25 \, \text{Gbps}\) (with 25\% coding overhead),
+		\item \(\text{SNR} = \saverread{Q1}{1} \, \text{dB}\).
+	\end{itemize}
+	
+	Rearranging for \(B_w\):
+	
+	\begin{equation}
+		B_w = \frac{C}{\log_2\left(1 + \text{SNR}\right)} = \saverread{Q1}{3} \, \text{Hz}.
+	\end{equation}
+	
+	\paragraph{Antenna Gain Calculation}
+	Using Friis equation:
+	
+	\begin{equation}
+		G^2 = \text{SNR} \cdot K_B \cdot T_0 \cdot B_w \cdot \mathcal{L} \cdot \frac{F}{P_t} \cdot \left( \frac{4 \pi \ell}{\lambda} \right)^2,
+	\end{equation}
+	
+	where:
+	\begin{itemize}
+		\item \(\lambda = \saverread{Q1}{5} \, \text{m}\),
+		\item \(P_t = 8 \, \text{dBm}\),
+		\item \(F = 5 \, \text{dB}\),
+		\item \(\mathcal{L} = \saverread{Q1}{4}\).
+	\end{itemize}
+	
+	From precomputed values:
+	\begin{equation}
+		G^2 = \saverread{Q1}{6},
+	\end{equation}
+	
+	\begin{equation}
+		G = \sqrt{\saverread{Q1}{6}} = \saverread{Q1}{7} = \saverread{Q1}{8} \, \text{dB}.
+	\end{equation}
+	
+	\paragraph{Conclusion}
+	The minimum antenna gain for both transmit and receive antennas is approximately \(\saverread{Q1}{8} \, \text{dB}\) under the given conditions.
+	
+
+
+\subsubsection{Part b}
+{\color{questioncolor}
+	What is the receiver sensitivity?
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{SISO:  Pole Sway and antenna misalignment}
+{\color{questioncolor}
+
+
+Fig. \ref{fig:lighting-poles-sway} shows pole sway caused by wind. Measurements show that pole sway can be as large as $\pm2.7^\circ$. Assume Parabolic antennas are used in Section \ref{SISO}. For a Parabolic antenna 3-dB beamwidth in degree is approximately given by:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.25\linewidth]{HW/lighting-poles-sway}
+	\caption{}
+	\label{fig:lighting-poles-sway}
+\end{figure}
+
+
+\begin{equation}
+	\Delta\theta=\frac{70\lambda}{L}
+\end{equation}
+where $\Delta\theta$ denotes antenna beamwidth and $L$ is the antenna diameter.\\
+You can calculate the gain of a Parabolic antenna from here:\\ $http://www.qsl.net/pa2ohh/jsparabolic.htm$
+\\ or use the following relation: 
+
+\begin{equation}
+	G=\eta\times\frac{\pi^2L^2}{\lambda^2}
+\end{equation}
+where $\eta$, known as the aperture efficiency, is typically 0.55 to 0.70.
+
+
+How much drop in the received SNR is caused by maximum antenna pole sway? What solutions do you recommend (at least 3 solutions)?\\
+
+Hints: \\
+
+You should approximate the antenna gain with a linear function of angle.
+
+}
+
+
+
+
+
+
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\FloatBarrier\question%2
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\FloatBarrier\question%2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	
 	\begin{note}

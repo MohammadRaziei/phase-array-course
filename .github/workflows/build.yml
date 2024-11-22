@@ -38,8 +38,8 @@ jobs:
       #     out-file-path: "fonts"
       #     extract: true
 
-      - name: Move HW files
-        run: mv HW/* .
+      - name: Copy HW files
+        run: cp HW/* .
 
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v3
