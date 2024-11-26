@@ -185,6 +185,10 @@
 		\item \(\mathcal{L}\): Losses in the system.
 	\end{itemize}
 	
+	\begin{equation}
+		\lambda = \frac{c}{f} = \frac{\num{3e8}}{\num{60e9}} = \saverread{Q1}{5} \ \text{m}
+	\end{equation}
+	
 	\paragraph{System Model}
 	For a phased array system, the transmit power (\(P_t\)) and antenna gains (\(G_t, G_r\)) are defined as:
 	
@@ -262,6 +266,25 @@
 		G^2 = \text{SNR} \cdot K_B \cdot T_0 \cdot B_w \cdot \mathcal{L} \cdot \frac{F}{P_t} \cdot \left( \frac{4 \pi \ell}{\lambda} \right)^2,
 	\end{equation}
 	
+	\begin{figure}[H]
+		\begin{subfigure}{.45\linewidth}
+			\centering
+			\includegraphics[width=\linewidth]{Q1/results/G-per-F-Pt}
+			\caption{Magnitude Scale}
+			\label{fig:g-per-f-pt}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}{.45\linewidth}
+			\centering
+			\includegraphics[width=\linewidth]{Q1/results/G-per-F-Pt-db}
+			\caption{dB Scale}
+			\label{fig:g-per-f-pt-db}
+		\end{subfigure}
+		\caption{
+			Antenna Gain
+		}
+	\end{figure}
+	
 	where:
 	\begin{itemize}
 		\item \(\lambda = \saverread{Q1}{5} \, \text{m}\),
@@ -279,6 +302,13 @@
 		G = \sqrt{\saverread{Q1}{6}} = \saverread{Q1}{7} = \saverread{Q1}{8} \, \text{dB}.
 	\end{equation}
 	
+	
+
+	
+	
+	
+	
+	
 	\paragraph{Conclusion}
 	The minimum antenna gain for both transmit and receive antennas is approximately \(\saverread{Q1}{8} \, \text{dB}\) under the given conditions.
 	
@@ -287,12 +317,16 @@
 \subsubsection{Part b}
 {\color{questioncolor}
 	What is the receiver sensitivity?
-}
+\\}
 
 
 
+Receiver sensitivity is the minimum power level at which the receiving node is able to clearly receive the bits being transmitted: 
 
-
+\begin{equation}
+	S_i = k_B \cdot T_0 \cdot B_w \cdot F \cdot \text{SNR}_{\text{min}} = \saverread{Q1}{9}
+	 = \saverread{Q1}{10} \ \text{dBm}
+\end{equation}
 
 
 
@@ -317,10 +351,10 @@ Fig. \ref{fig:lighting-poles-sway} shows pole sway caused by wind. Measurements 
 
 
 \begin{equation}
-	\Delta\theta=\frac{70\lambda}{L}
+	\Delta\theta=\frac{70\lambda}{L} 
 \end{equation}
 where $\Delta\theta$ denotes antenna beamwidth and $L$ is the antenna diameter.\\
-You can calculate the gain of a Parabolic antenna from here:\\ $http://www.qsl.net/pa2ohh/jsparabolic.htm$
+You can calculate the gain of a Parabolic antenna from here:\\ \url{http://www.qsl.net/pa2ohh/jsparabolic.htm}
 \\ or use the following relation: 
 
 \begin{equation}
@@ -331,7 +365,7 @@ where $\eta$, known as the aperture efficiency, is typically 0.55 to 0.70.
 
 How much drop in the received SNR is caused by maximum antenna pole sway? What solutions do you recommend (at least 3 solutions)?\\
 
-Hints: \\
+\noindent Hints: 
 
 You should approximate the antenna gain with a linear function of angle.
 
@@ -339,15 +373,28 @@ You should approximate the antenna gain with a linear function of angle.
 
 
 
+\begin{equation}
+	L =\frac{70\,\lambda}{\Delta\theta} = \frac{70\times\saverread{Q1}{5}}{3} = \saverread{Q1}{21} \ \text{m}
+\end{equation}
+
+
+
+\subsection{Phased Array Solution: Clear Sky}\label{clear}
+
+Design a CMOS TX phased array and a CMOS RX phased array at 60 GHz for 1 Gbps data at 1 km. Calculate gain drop for maximum sway angle with and without beamforming. Explain your design steps and assumptions. 
+
+
+
 
 
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\FloatBarrier\question%2
+\FloatBarrier\question[Qualcomm 28 GHz Phased Array for 5G]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
+In Nov 2015, Qualcomm company demonstrated their TDD synchronous system operating in the 28 GHz band. The demonstration included one millimeter-wave (mm-wave) base station and one mobile device. The mm-wave base station, had 128 antenna elements with 16 controllable RF channels, while the device contained four sub-arrays with 4 controllable RF channels.\\
 
 
 
@@ -362,20 +409,263 @@ You should approximate the antenna gain with a linear function of angle.
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\FloatBarrier\question[Samsung 28 GHz Phased Array for 5G]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+{\color{questioncolor}
+For several years, Samsung has been developing 28 GHz phased array solutions for mobile communications. In 2014, Samsung demonstrated a phased array link for the future 5G mobile communication at 28 GHz frequency. Both transmit and receive array antennas had the same number of antennas arranged in the form of a uniform planar array, confined within an area of $60 mm
+\times 30 mm$. The total array gain was 18 dBi.\\
 
+1- Plot the 3D radiation pattern and calculate maximum gain of a uniform planar array with 25 element ($5\times 5$) using patch elements with $\lambda/2$ spacing. \\
 
+2- If 200 m LOS range is required, what is the number of antennas, element gain and TX Effective isotropic radiated power (EIRP)? This problem might have many solutions. You should justify your answer.\\
 
+3- In order to reduce the hardware complexity, a sub-array architecture was employed to group antennas into a sub-array. What are the side effects of using sub-arrays instead of independent elements? Name three possible issues.\\
+
+4- Assume each 2 by 1 power combiner/splitter has $1.2 d$B loss. What is your proposed optimum size for a sub-array?\\
+
+}
 
 
 	
-	\begin{note}
-		Figure~\ref{fig:R1} and all similar figures in this question are generated automatically using the \texttt{tikz} package in \LaTeX. The procedure is as follows: the matrix $R$ in Equation~\eqref{eq:R1} is calculated in MATLAB and saved as a .csv file. Then, it is read in \LaTeX using the \texttt{csvsimple} package and plotted with the \texttt{tikz} package. This fully automates the entire process, which is worth mentioning.
-	\end{note}
-	
+%	\begin{note}
+%		Figure~\ref{fig:R1} and all similar figures in this question are generated automatically using the \texttt{tikz} package in \LaTeX. The procedure is as follows: the matrix $R$ in Equation~\eqref{eq:R1} is calculated in MATLAB and saved as a .csv file. Then, it is read in \LaTeX using the \texttt{csvsimple} package and plotted with the \texttt{tikz} package. This fully automates the entire process, which is worth mentioning.
+%	\end{note}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\FloatBarrier\question[Dolph-Chebychev Tapering]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+{\color{questioncolor}
+Study \textbf{Section 23.9} of the enclosed file entitles as \href{https://github.com/MohammadRaziei/phased-array-course/raw/HW02/HW/Array%20Design%20Methods.pdf}{Array Design Methods} to learn Dolph-Chebychev array weighting.\\
+
+Consider a standard 11-element linear array pointed at broadside.\\
+
+4-a) Calculate the Dolph-Chebychev weightings for sidelobe levels of -20 dB, -30 dB, and -40 dB. Write them in a Table.\\
+
+4-b) Plot the resulting beam pattern and compute the HPBW, BWNN, and the peal array gain for each weighting.\\
+
+
+You should develop your own code in Matlab to calculate array weights. Zip your codes with your homework solution.
+}
 	
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\FloatBarrier\question[Array Factor]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+{\color{questioncolor}
+For $f_0= 60$ GHz, $N=10$, and $d=\lambda_0/2$ plot array factor in $\theta$ plane (i.e. $\phi=0$) when:
+
+$\Delta\phi$ is the progressive phase shift. For each case determine the steering angle, sidelobe level, and HPBW. Assume all antennas are isotropic.
+}
+
+
+
+
+\begin{equation}
+	\text{AF} = \sum_{n=0}^{N-1} e^{j \psi_n} = \sum_{n=0}^{N-1} e^{j \, n \left( 2 \pi \frac{d}{\lambda_0} \cos(\theta) + \Delta \phi \right) } 
+\end{equation}
+
+
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\linewidth]{Q5/results/AF-polarplot-beta-0}
+	\caption{}
+	\label{fig:af-polarplot-beta-0}
+\end{figure}
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=\linewidth]{Q5/results/AF-plot-beta-0}
+	\caption{}
+	\label{fig:af-plot-beta-0}
+\end{figure}
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=\linewidth]{Q5/results/AF-plot-db-beta-0}
+	\caption{}
+	\label{fig:af-plot-db-beta-0}
+\end{figure}
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{cc}
+		\toprule
+		\textbf{HPBW} & \textbf{SLL} \\
+		\midrule
+		$0.06 \pi$ & $12.97$ \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+
+
+
+\subsection{Part a}
+{\color{questioncolor} $\Delta\phi$=$\pi/2$
+}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\linewidth]{Q5/results/AF-polarplot-beta-90}
+	\caption{}
+	\label{fig:af-polarplot-beta-90}
+\end{figure}
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=\linewidth]{Q5/results/AF-plot-beta-90}
+	\caption{}
+	\label{fig:af-plot-beta-90}
+\end{figure}
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=\linewidth]{Q5/results/AF-plot-db-beta-90}
+	\caption{}
+	\label{fig:af-plot-db-beta-90}
+\end{figure}
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ccc}
+		\toprule
+		\textbf{HPBW} & \textbf{SLL} & \textbf{Steer$^\circ$}\\
+		\midrule
+		$0.07 \pi$ & $12.97$ & $\pm 120^\circ$\\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+
+\subsection{Part b}
+{\color{questioncolor}
+$\Delta\phi$=$\pi$\\
+}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\linewidth]{Q5/results/AF-polarplot-beta-180}
+	\caption{}
+	\label{fig:af-polarplot-beta-180}
+\end{figure}
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=\linewidth]{Q5/results/AF-plot-beta-180}
+	\caption{}
+	\label{fig:af-plot-beta-180}
+\end{figure}
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=\linewidth]{Q5/results/AF-plot-db-beta-180}
+	\caption{}
+	\label{fig:af-plot-db-beta-180}
+\end{figure}
+
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{cc}
+		\toprule
+		\textbf{HPBW} & \textbf{SLL} \\
+		\midrule
+		$0.27 \pi$ & $12.97$ \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+
+
+
+
+
+
+\subsection{Part c}
+{\color{questioncolor}
+For the same array, fix $\Delta\phi$ at $\pi/4$ and change the frequency from 50 to 70 GHz.\\  Plot steering angle (peak gain direction) versus frequency.\\}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\linewidth]{Q5/results/AF-polarplot-beta-45}
+	\caption{}
+	\label{fig:af-polarplot-beta-45}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{Q5/results/AF-plot-db-beta-45}
+	\caption{}
+	\label{fig:af-plot-db-beta-45}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{Q5/results/AF-plot-beta-45}
+	\caption{}
+	\label{fig:af-plot-beta-45}
+\end{figure}
+
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\linewidth]{Q5/results/streeing-45}
+	\caption{}
+	\label{fig:streeing-45}
+\end{figure}
+
+
+
+
+
+\subsection{Part d}
+{\color{questioncolor}
+Now, consider the antenna shown in Fig. \ref{Fig3}. Assume antenna spacing is $\lambda_0/2$, and the inter-element feed section is  $\lambda_0$, where $\lambda_0$ is the wavelength at 60 GHz. Plot the steering angle when the frequency changes from 50 to 70 GHz. Compare your results with part (c) and discuss the differences.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.4]{HW/Sfed}
+\caption{Series-Fed array}
+\label{Fig3}
+\end{figure}
+}
+	\begin{equation}
+		L = \lambda_0
+	\end{equation}
+	
+	\begin{equation}
+		\Delta\phi = \frac{2\pi}{\lambda}L = 2\pi \frac{\lambda_0}{\lambda}
+	\end{equation}
+	
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.6\linewidth]{Q5/results/streeing-d}
+		\caption{}
+		\label{fig:streeing-d}
+	\end{figure}
+	
+	As shown in Figure~\ref{fig:streeing-d}, the beam angle diagram is similar to the diagram in Figure~\ref{fig:streeing-45} and is also linear. However, the difference is that it supports a wider range of angles as the frequency varies.
+	
+	
+	
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\newpage
