@@ -26,5 +26,8 @@ function a = dolph_chebyshev(N, R)
     zi = exp(1j * psi);       % Zeros in z-domain (complex exponential)
 
     % Convert zeros to polynomial coefficients
-    a = real(poly2(zi));      % Real coefficients of the polynomial
+    a = real(poly(zi));      % Real coefficients of the polynomial
+
+    % normalize the output by its max
+    a = a / max(a);
 end

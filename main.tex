@@ -7,6 +7,8 @@
 \usepackage{placeins}
 \usepackage{adjustbox}
 \usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
 \usepackage{csvsimple}
 \usepackage[top=1in, left=1in, right=1in, bottom=1in]{geometry}
 \usepackage{nicefrac}
@@ -17,6 +19,7 @@
 \usepackage{listings}
 \usepackage{mathtools} % For \xlongequal
 \usepackage{siunitx}
+\usepackage{multicol}
 \usepackage{tcolorbox}
 \usepackage[numbers]{natbib}
 
@@ -373,17 +376,65 @@ You should approximate the antenna gain with a linear function of angle.
 
 
 
+The following equation represents the gain of a parabolic antenna (\(G\)) with aperture length \(L\):
+
 \begin{equation}
-	L =\frac{70\,\lambda}{\Delta\theta} = \frac{70\times\saverread{Q1}{5}}{3} = \saverread{Q1}{21} \ \text{m}
+	G = \eta \frac{\pi^2 L^2}{\lambda^2}
 \end{equation}
 
+First, we need to calculate the length of the antenna aperture (\(L\)) by considering the worst-case scenario for the design. Using the power obtained in Equation (12), we have:
+
+\[
+G_0 = \saverread{Q1}{8} \, \text{dB} 
+\]
+
+We also consider the efficiency factor (\(\eta\)) as \(\eta = 0.55\) to account for the worst-case design. The aperture length is calculated as follows:
+
+\begin{equation}
+	L = \frac{\lambda}{\pi} \sqrt{\frac{G_0}{\eta}} = \frac{\lambda}{\pi} \sqrt{\frac{\saverread{Q1}{8}}{0.55}} = 0.0567 \, \text{m} = 56.7 \, \text{mm} 
+\end{equation}
+
+The antenna beamwidth is calculated using the following equation:
+
+\begin{equation}
+	\Delta \theta = \frac{70 \lambda}{L} \approx 5.51^\circ
+\end{equation}
+
+
+At half of this beamwidth, i.e., \(2.76^\circ\), the gain is halved. Since the wind also shifts the beam by \(2.7^\circ\), the gain at this angle is reduced by half, resulting in a corresponding reduction in the \(\text{SNR}\).
+\\
+
+\noindent\textbf{Solutions}
+
+1. Perform beamforming since the beam steering speed is significantly faster than the wind speed.  
+
+2. Increase the beamwidth to ensure functionality under varying wind conditions.  
+
+3. Use stronger and more durable materials for the antenna to reduce its swing caused by the wind.
 
 
 \subsection{Phased Array Solution: Clear Sky}\label{clear}
 
+{\color{questioncolor}
 Design a CMOS TX phased array and a CMOS RX phased array at 60 GHz for 1 Gbps data at 1 km. Calculate gain drop for maximum sway angle with and without beamforming. Explain your design steps and assumptions. 
+}
 
 
+We select 30 antennas for both TX and RX, which results in the required transmit power (\(P_t\)) being:
+
+\[
+P_t \cdot G_t \cdot G_r = 43.5 \, \text{dBm}.
+\]
+
+Assuming \(G_t = G_r = 18 \, \text{dBi}\), we calculate:
+
+\[
+P_t = 7.5 \, \text{dBm}.
+\]
+
+In this setup, we use a 30-element uniform linear array (ULA) and assume that all elements sway with the same angle and in the same direction. Instead of physically rotating the antennas, we calculate the beam attenuation at the maximum sway angle (when the antennas have no swing).
+
+The beam pattern is simulated, and we compute the attenuation for the maximum sway angle (\(2.75^\circ\)) for both the formed and non-formed beam patterns. In the worst-case scenario, the TX and RX sway in opposite directions, which doubles the calculated attenuation.
 
 
 
@@ -392,21 +443,145 @@ Design a CMOS TX phased array and a CMOS RX phased array at 60 GHz for 1 Gbps da
 \FloatBarrier\question[Qualcomm 28 GHz Phased Array for 5G]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
+{\color{questioncolor}
 In Nov 2015, Qualcomm company demonstrated their TDD synchronous system operating in the 28 GHz band. The demonstration included one millimeter-wave (mm-wave) base station and one mobile device. The mm-wave base station, had 128 antenna elements with 16 controllable RF channels, while the device contained four sub-arrays with 4 controllable RF channels.\\
 
+}
+
+
+\subsection{Part a}
+
+{\color{questioncolor}
+Search to find more information about this project. Explain why 28 GHz frequency was chosen?\\
+}
+
+Using the Qualcomm website \cite{qualcommResearch}, we present the reasons Qualcomm selected the 28 GHz frequency. It is important to note that the goal of this project is to use millimeter-wave technology, and the 28 GHz frequency has been chosen as one of the relevant frequencies for millimeter waves.
+
+\begin{enumerate}
+	\item Since we are operating in the millimeter-wave range, it is possible to use a very large number of antennas in a small form factor. This enables the transmission and reception of narrower beams, which, in turn, allows for the transmission and reception of more energy. This capability helps overcome propagation losses in millimeter waves.
+	\item Extremely high bandwidth is achievable, allowing for very high data rates of several gigabits per second.
+	\item Operating at a higher frequency allows for the support of more users.
+\end{enumerate}
 
 
 
 
 
+\subsection{Part b}
+
+{\color{questioncolor}
+
+Why only 4 sub-arrays were used for the mobile device? Does increasing the carrier frequency help to have a better link?\\
+}
+
+As mentioned in the problem statement, this project utilizes four subarrays. Increasing the number of subarrays generally improves processing accuracy. However, it should be noted that there are physical limitations in mobile devices. Additionally, increasing the number of subarrays requires addressing their power consumption, which creates a challenge in managing power for a larger number of subarrays. Another issue is the increased complexity of the structure.
 
 
 
 
+\subsection{Part c}
+
+{\color{questioncolor}
+In a LOS link measurement maximum range of 350 m was measured. Find the total transmitted power assuming 500 MHz bandwidth, 10 dB noise figure, 5 dBi antenna element gain, and minimum  10 dB SNR at the receiver output.\\
+}
+
+By increasing the center frequency, we can enhance data rates and bandwidth. However, it should be noted that the range will be reduced, and at higher frequencies, signal attenuation in the environment becomes more significant. Therefore, in addition to the mentioned advantages, it also has the stated disadvantages. For this reason, if a greater range is important in an application, a communication link with a higher center frequency will not be suitable. However, if data transfer rate or bandwidth is of primary importance, a communication link with a higher frequency will be highly appropriate.
+
+\subsection{Part d}
+{\color{questioncolor}
+What is the maximum LOS range between two mobile devices?\\
+}
+
+We can calculate the transmission power using the link equation. Therefore, we rewrite the link equation. It is important to note that we are using a phased array here, and hence the number of antennas must be considered in the equation:
+
+\begin{equation}
+	\text{SNR} = \eta \, N_t P_t N_t G_t N_r G_r \left( \frac{\lambda}{4 \pi \ell} \right)^n \frac{1}{K_B T_0 B F \mathcal{L}},
+\end{equation}
+
+where:
+\begin{multicols}{2}
+	\begin{itemize}
+		\item \(N_t\): Number of transmitting antennas,
+		\item \(N_r\): Number of receiving antennas,
+		\item \(G_t\): Transmitting antenna gain,
+		\item \(G_r\): Receiving antenna gain,
+		\item \(\lambda\): Wavelength,
+		\item \(\ell\): Distance,
+		\item \(K_B\): Boltzmann constant,
+		\item \(T_0\): Absolute temperature,
+		\item \(B\): Bandwidth,
+		\item \(F\): Noise figure,
+		\item \(\mathcal{L}\): System losses,
+		\item \(\eta\): Efficiency factor.
+	\end{itemize}
+\end{multicols}
+
+The number of antennas at the transmitter and receiver for base station transmission must be specified. According to the problem statement, we have 16 controllable {RF} channels available. Therefore, the number of antennas capable of beamforming from the base station is 16.
 
 
+For the base station transmission, the number of transmitting antennas is:
+
+\[
+N_{t,b} = 16
+\]
+
+For the receiver, with a 4-element array:
+
+\[
+N_{r,d} = 4
+\]
+
+Rewriting the equation to solve for \(P_{t,b}\):
+
+\begin{equation}
+	P_{t,b} = \frac{\text{SNR} \, K_B \, T_0 \, B \, F \, \mathcal{L}}{\eta \, N_{r,d}^2 N_t G_t G_r} \left( \frac{4 \pi \ell}{\lambda} \right)^n
+\end{equation}
+
+Finally, substituting the values, the transmit power is calculated as:
+
+\[
+P_{t,b} = 0.0033 \, \text{W} = 5.176 \, \text{dBm}.
+\]
+
+
+\subsection{Part e}
+{\color{questioncolor}
+One requirement for the base station is to generate multiple simultaneous beams. What is your hardware architecture solution to achieve this goal?\\
+}
+
+
+	
+	First, the transmit power of the mobile in the designed link must be calculated. Then, the \textit{range} between the two mobiles can be determined. Considering the problem description, there are 4 RF channels in a single mobile device; hence:
+	\[
+	N_{t,d} = 4
+	\]
+	
+	Additionally, there are 128 antennas at the receiver. Since the number of RF controllable channels is limited to 4, the total number of antennas is significant. Thus, we have:
+	\[
+	N_{r,b} = 128
+	\]
+	
+	Using Equation (28), the transmit power of the mobile in a link between mobiles and the base station is calculated as:
+	\[
+	P_{t,m} = 0.0016 \, \text{W} = 2.166 \, \text{dBm}.
+	\]
+	
+	As expected, the transmit power of each mobile is less than the transmit power of the base station.
+	
+	For a link between two mobiles, consider the distance \(R\) between them. The transmit power of each mobile is limited to the above value. Keeping the total number of transmitting and receiving antennas in mind, the power constraints of both channels (transmitting and receiving) are considered. Rewriting the link equation for the range between the two mobiles, we get:
+	
+	\[
+	R^n = \eta N_t P_t N_t G_t N_r G_r \left( \frac{\lambda}{4\pi} \right)^n \frac{1}{K_B T_0 B F \mathcal{L} \text{SNR}} \implies R = \frac{\lambda}{4\pi} \sqrt[n]{\frac{\eta N_t P_t N_t G_t N_r G_r}{K_B T_0 B F \mathcal{L} \text{SNR}}}.
+	\]
+	
+	By substituting the values, the maximum distance \(R\) between two mobiles is calculated as:
+	\[
+	R = 61.872 \, \text{m}.
+	\]
+	
+	
+	For beamforming, we use the phased array structure. For simultaneous beamforming, a digital phased array is required.
+	
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -417,6 +592,12 @@ In Nov 2015, Qualcomm company demonstrated their TDD synchronous system operatin
 {\color{questioncolor}
 For several years, Samsung has been developing 28 GHz phased array solutions for mobile communications. In 2014, Samsung demonstrated a phased array link for the future 5G mobile communication at 28 GHz frequency. Both transmit and receive array antennas had the same number of antennas arranged in the form of a uniform planar array, confined within an area of $60 mm
 \times 30 mm$. The total array gain was 18 dBi.\\
+}
+
+
+
+
+{\color{questioncolor}
 
 1- Plot the 3D radiation pattern and calculate maximum gain of a uniform planar array with 25 element ($5\times 5$) using patch elements with $\lambda/2$ spacing. \\
 
@@ -429,7 +610,163 @@ For several years, Samsung has been developing 28 GHz phased array solutions for
 }
 
 
-	
+
+According to the calculations from the first assignment, the array factor for a planar array structure of size \(M \times N\) is given as:
+
+\[
+AF = \frac{\sin\left(\frac{M}{2} \frac{2\pi}{\lambda} d_x \sin(\theta) \cos(\phi)\right)}{\sin\left(\frac{1}{2} \frac{2\pi}{\lambda} d_x \sin(\theta) \cos(\phi)\right)}
+\cdot 
+\frac{\sin\left(\frac{N}{2} \frac{2\pi}{\lambda} d_y \sin(\theta) \sin(\phi)\right)}{\sin\left(\frac{1}{2} \frac{2\pi}{\lambda} d_y \sin(\theta) \sin(\phi)\right)} 
+\]
+
+In this question, we set \(M = N = 5\). The spacing between adjacent antennas is half the wavelength:
+
+\[
+d_x = d_y = \frac{\lambda}{2} = \frac{c}{2f} \simeq 5.4 \, \text{mm}
+\]
+
+Now, using the product principle for the patterns, we multiply the given antenna pattern with the array factor to determine the final pattern, which will then be plotted in 3D. The maximum gain based on the resulting pattern is:
+
+\[
+G_{\text{max}} = 21.34 \, \text{dB} 
+\]
+
+
+
+In this section, we design an LOS link for a range of \(200 \, \text{m}\) with a central frequency of \(f_0 = 28 \, \text{GHz}\). Acceptable assumptions should be made for other parameters. The parameters used in question 2 can also be considered for a similar project.
+
+
+
+In most papers reporting the signal-to-noise ratio (SNR), the typical range of SNR is considered from \(-10 \, \text{dB}\) to \(10 \, \text{dB}\), especially in system-level studies. Therefore, we design the link for the required SNR, which is:
+
+\[
+\text{SNR} = 10 \, \text{dB} 
+\]
+
+
+
+the oxygen absorption loss at \(28 \, \text{GHz}\) is given by:
+
+\[
+L_{\text{per km}} = 0.2 \, \text{dB/km} 
+\]
+
+Given that the link range is \(200 \, \text{m}\), the total loss over this distance is:
+
+\[
+L = 0.2 \times 0.2 = 0.04 \, \text{dB} 
+\]
+
+
+
+The required bandwidth and data rate are interdependent; knowing one allows us to determine the other. the data rate is set to:
+
+\[
+R = 1.25 \, \text{Gbps}
+\]
+
+
+
+
+
+The required bandwidth was calculated as follows:
+\[
+B = 361 \, \text{MHz} 
+\]
+
+
+
+Given that the propagation is LOS and the weather conditions are clear with no rain, the path loss exponent is set to:
+\[
+n = 2 
+\]
+
+
+
+In general, the phase noise of RF components is considered to range between \(5 \, \text{dB}\) and \(10 \, \text{dB}\). For design purposes, we assume the worst-case scenario:
+\[
+F = 10 \, \text{dB} 
+\]
+
+
+
+
+
+
+Now, we need to determine the structure of the transmitter and receiver. It is important to consider the area where the antenna array will be placed. According to the problem, this area is:
+
+\[
+30 \, \text{mm} \times 60 \, \text{mm}.
+\]
+
+Both the transmitter and receiver structures need to fit within this area. The spacing between two antennas is set to:
+
+\[
+d = \frac{\lambda}{20} \approx 5.36 \, \text{mm}.
+\]
+
+This allows for a maximum array size of \(6 \times 12\) within the specified area. However, to balance efficiency and power constraints, we choose a \(4 \times 8\) array for the transmitter and a \(4 \times 4\) array for the receiver. This makes optimal use of the available area. Since the number of transmitting antennas has a greater impact on link quality, we allocate more antennas to the transmitter. Therefore, we have:
+
+\[
+N_t = 32, \quad N_r = 16 
+\]
+
+
+
+As mentioned earlier, the number of transmitting antennas is set to \(N_t = 32\). We simulate this structure and calculate the maximum gain. The radiation pattern of the transmitter is shown in Figure 5. Note that it is not plotted on a logarithmic scale. The maximum gain for the transmitter is:
+
+\[
+G_t = 22.42 \, \text{dB} 
+\]
+
+
+
+Similarly, the number of receiving antennas is set to \(N_r = 16\). We simulate this structure and calculate the maximum gain. The radiation pattern of the receiver is shown in Figure 6. Again, note that it is not plotted on a logarithmic scale. The maximum gain for the receiver is:
+
+\[
+G_r = 19.41 \, \text{dB} 
+\]
+
+
+Using the explanations provided in the previous sections and applying the link equation, we calculate the transmit power. The calculations are performed in MATLAB, and the transmit power per antenna is:
+
+\[
+P_t = 1.645 \times 10^{-5} \, \text{W} = -17.84 \, \text{dBm}.
+\]
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Q3/results/Pattern-Plot-4x4}
+	\caption{}
+	\label{fig:pattern-plot-4x4}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Q3/results/Pattern-Plot-4x8}
+	\caption{}
+	\label{fig:pattern-plot-4x8}
+\end{figure}
+
+
+
+1. To divide a 16-element array into 4 subarrays, each containing 4 elements, we reduce the number of required power amplifiers (PAs) from 16 to 4. However, each PA must produce 4 times the power to feed the antennas within its subarray. Increasing the number of elements in a subarray leads to higher-powered PAs, which are more expensive and complex to build. Moreover, higher power might necessitate the use of heat sinks to manage thermal dissipation, which further increases cost and complexity.
+
+2. Beam steering allows us to direct the antenna's beam in a desired direction by applying proper weights to each antenna. As the number of antennas decreases (e.g., by grouping them into subarrays), the angular resolution of the beam steering reduces. This results in less precise control over the beam direction, which is a trade-off in subarray design.
+
+3. Subarray structures require combiners to connect multiple elements. These combiners introduce additional losses, which decrease overall system efficiency. For instance, each combiner may add around \(1.2 \, \text{dB}\) of loss, contributing to the total system losses.
+
+4. To implement the subarray structure effectively, we consider using 2 or 3 combiner stages. Each stage introduces \(1.2 \, \text{dB}\) of loss, so with three stages, the total loss is:
+
+\[
+\text{Total Loss} = 3 \times 1.2 = 3.6 \, \text{dB}.
+\]
+
+This loss corresponds to about \(3 \, \text{dB}\), or roughly half the transmitted power.
+
+5. For the transmitter, a three-stage combiner structure is recommended, while for the receiver, a two-stage combiner suffices. With 4 antennas per subarray on both the transmitter and receiver sides, the losses remain acceptable, and the design achieves the goal of reducing structural complexity while maintaining reasonable performance.
+
+
 %	\begin{note}
 %		Figure~\ref{fig:R1} and all similar figures in this question are generated automatically using the \texttt{tikz} package in \LaTeX. The procedure is as follows: the matrix $R$ in Equation~\eqref{eq:R1} is calculated in MATLAB and saved as a .csv file. Then, it is read in \LaTeX using the \texttt{csvsimple} package and plotted with the \texttt{tikz} package. This fully automates the entire process, which is worth mentioning.
 %	\end{note}
@@ -446,15 +783,148 @@ Study \textbf{Section 23.9} of the enclosed file entitles as \href{https://githu
 
 Consider a standard 11-element linear array pointed at broadside.\\
 
-4-a) Calculate the Dolph-Chebychev weightings for sidelobe levels of -20 dB, -30 dB, and -40 dB. Write them in a Table.\\
-
-4-b) Plot the resulting beam pattern and compute the HPBW, BWNN, and the peal array gain for each weighting.\\
-
-
 You should develop your own code in Matlab to calculate array weights. Zip your codes with your homework solution.
 }
+
+
+\subsection{Part a}
+{\color{questioncolor}
+	Calculate the Dolph-Chebychev weightings for sidelobe levels of -20 dB, -30 dB, and -40 dB. Write them in a Table.\\
+}
+
+
+\begin{table}
+	\begin{tabular}{c|c}
+		\toprule
+		\textbf{SLL} & \textbf{Weights}\\\midrule
+		-20 & \(\csvreader[head=false, after line={\ \ }]{Q4/results/w-sll-20.csv}{}{\num{\csvcoli}}\) \\\midrule
+		-30 & \(\csvreader[head=false, after line={\ \ }]{Q4/results/w-sll-30.csv}{}{\num{\csvcoli}}\) \\\midrule
+		-40 & \(\csvreader[head=false, after line={\ \ }]{Q4/results/w-sll-40.csv}{}{\num{\csvcoli}}\) \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+
+
+	\begin{figure}[ht]
+		\centering
+		\begin{tikzpicture}
+			\begin{axis}[
+				width=\textwidth,
+				height=0.6\textwidth,
+				xlabel={Index $i$},
+				ylabel={$w_i$},
+				grid=both,
+				major grid style={line width=.2pt, draw=gray!50},
+				minor grid style={line width=.1pt, draw=gray!10},
+				ymin=0,
+				ymajorgrids=true,
+				xmajorgrids=true,
+				title={Stem Plot of $w_i$ from CSV Data},
+                legend style={
+					at={(0.5,-0.15)},
+					anchor=north,
+					legend columns=3
+				},
+				legend entries={
+					Sidelobe Level 20 dB,
+					Sidelobe Level 30 dB,
+					Sidelobe Level 40 dB
+				}
+				]
+				
+				% Read data from CSV and generate indices
+				\addplot+[
+				ycomb,
+				mark=*,
+				line width=0.8pt,
+				mark size=2.5pt,
+				] table[x expr=\coordindex+1, y index=0, col sep=comma] {Q4/results/w-sll-20.csv};
+				
+				\addplot+[
+				ycomb,
+				mark=*,
+				line width=0.8pt,
+				mark size=2.5pt, 
+				] table[x expr=\coordindex+1, y index=0, col sep=comma] {Q4/results/w-sll-30.csv};
+				
+				\addplot+[
+				ycomb,
+				mark=*,
+				line width=0.8pt,
+				mark size=2.5pt, 
+				] table[x expr=\coordindex+1, y index=0, col sep=comma] {Q4/results/w-sll-40.csv};
+				
+			\end{axis}
+		\end{tikzpicture}
+		\caption{Stem plot of $w_i$ values.}
+		\label{fig:stem-plot}
+	\end{figure}
 	
 
+
+
+
+\subsection{Part b}
+{\color{questioncolor}
+Plot the resulting beam pattern and compute the HPBW, BWNN, and the peal array gain for each weighting.\\
+}
+
+
+\begin{figure}[H]
+	\begin{subfigure}{.75\linewidth}
+		\includegraphics[width=\linewidth]{Q4/results/af-sll-20.pdf}
+		\caption{}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{.2\linewidth}
+		\includegraphics[width=\linewidth]{Q4/results/af-polar-sll-20.pdf}
+		\caption{}
+	\end{subfigure}
+	\caption{20 db}
+\end{figure}
+
+
+\begin{figure}[H]
+	\begin{subfigure}{.75\linewidth}
+		\includegraphics[width=\linewidth]{Q4/results/af-sll-30.pdf}
+		\caption{}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{.2\linewidth}
+		\includegraphics[width=\linewidth]{Q4/results/af-polar-sll-30.pdf}
+		\caption{}
+	\end{subfigure}
+	\caption{30 db}
+\end{figure}
+
+
+
+\begin{figure}[H]
+	\begin{subfigure}{.75\linewidth}
+		\includegraphics[width=\linewidth]{Q4/results/af-sll-40.pdf}
+		\caption{}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{.2\linewidth}
+		\includegraphics[width=\linewidth]{Q4/results/af-polar-sll-40.pdf}
+		\caption{}
+	\end{subfigure}
+	\caption{40 db}
+\end{figure}
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{cccc}
+		\toprule
+		\textbf{SLL} & \textbf{Peak Gain} & \textbf{HPBW} & \textbf{NNBW} \\\midrule
+		$-20\ \text{dB}$ & $18.7$ & $0.06\pi$ & $0.14\pi$ \\\midrule
+		$-30\ \text{dB}$ & $16.9$ & $0.07\pi$ & $0.18\pi$ \\\midrule
+		$-40\ \text{dB}$ & $15.8$ & $0.07\pi$ & $0.22\pi$ \\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \FloatBarrier\question[Array Factor]
@@ -670,7 +1140,7 @@ Now, consider the antenna shown in Fig. \ref{Fig3}. Assume antenna spacing is $\
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\newpage
 	\bibliographystyle{plainnat}
-	%\nocite{*}
+	\nocite{*}
 	\bibliography{references}
 	
 \end{document}
