@@ -17,6 +17,12 @@
 \usepackage{listings}
 \usepackage{mathtools} % For \xlongequal
 
+\usepackage{tcolorbox}
+
+% Define a custom note environment
+\newtcolorbox{note}{colback=lightgray!10!white, colframe=lightgray!50!black, title=Note}
+
+
 
 \makeatletter
 \let\old@lstKV@SwitchCases\lstKV@SwitchCases
@@ -563,6 +569,12 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 	We import the .csv file data into MATLAB and plot all the $S$ parameters in Figure~\ref{fig:S-parametes}. 
 	As evident from Figure~\ref{fig:S-parametes}, the $S_{11}$ and $S_{22}$ curves are similar, and the $S_{12}$ and $S_{21}$ curves are also similar. 
 	This similarity is due to the passive nature of the antenna structure.
+	\textit{The overlap in the $S_{12}$ and $S_{21}$ plots indicates the channel reciprocity.}
+	
+	
+	
+	
+	
 	
 	
 	\begin{figure}[H]
@@ -598,6 +610,14 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 		\label{fig:S-parametes}
 	\end{figure}	
 	
+	For better comparison, we overlaid all the plots from Figure~\ref{fig:S-parametes} in Figure~\ref{fig:S-param} to highlight their similarities more clearly.
+	
+
+	
+	
+	
+	
+	
 	
 	
 	\begin{figure}[H]
@@ -612,6 +632,10 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 	\FloatBarrier
 	\subsection{part c:}
 	
+	To find the 10-dB impedance bandwidth, it is sufficient to intersect the $S_{11}$ plot with the $-10$ dB line and measure its width.
+	Next, we need to determine the center frequency, at which the impedance $S_{11}$ reaches its minimum (since resonance occurs at this frequency). Figure~\ref{fig:s11-10db} illustrates both of these points.
+	
+	
 	
 	\begin{figure}[H]
 		\centering
@@ -620,8 +644,17 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 		\label{fig:s11-10db}
 	\end{figure}
 	
+	For calculating the fractional bandwidth, we use the following formula:
+	\begin{equation}
+		\text{fractional bandwidth} = \frac{\text{bandwidth}}{\text{center frequency}}
+	\end{equation}
+	
+	Table~\ref{tab:s11} summarizes these calculated values from Figure~\ref{fig:s11-10db}.
+	
+	
 	\begin{table}[H]
 		\centering
+		\caption{}\label{tab:s11}
 		\begin{tabular}{cc}
 			\toprule
 			\textbf{-10 dB impedance band-width (BW)} & 10.2 \\ \midrule		
@@ -630,6 +663,8 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 			\bottomrule
 		\end{tabular}
 	\end{table}
+	
+
 	
 	
 	\FloatBarrier
@@ -643,16 +678,19 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 		\label{fig:s12-f0}
 	\end{figure}
 	
+	As shown in Figure~\ref{fig:s12-f0}, the center frequency of the antenna is $f_0 = 61.5$ GHz. At this frequency, we examine the $S_{12}$ parameter to determine the antenna coupling. This is illustrated in Figure 15, where the coupling at the center frequency is $-16.174 \mathrm{dB}$.
+	
+	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\FloatBarrier
 	\question%4
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
-
+	From the function provided in the question, it can be understood that the frequency $f_0$ is $60 \mathrm{GHz}$:
 	\begin{equation}
-		f_0 = 60 \times 10^9 Hz
+		f_0 = 60 \times 10^9 \mathrm{Hz}
 	\end{equation}
-	
+	Therefore, the wavelength is equal to:
 	\begin{equation}
 		\lambda_0 = \frac{c}{f_0} = \frac{3 \times 10^8}{60 \times 10^9} = 5 \times 10^{-3}\ (m) = 5\ (mm)
 	\end{equation}
@@ -661,7 +699,9 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 	\FloatBarrier
 	\subsection{part a:}
 	
-	\begin{equation}
+	The matrix $R_1$ represents the positions of each array element, which, given the zero values of the other entries, is along the x-axis.
+	
+	\begin{equation}\label{eq:R1}
 		R_1 = (2.5 \times 10^{-3}) 
 		\begin{bmatrix}
 			3 & 0 & 0 \\
@@ -678,10 +718,6 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 			\csvreader[head=false, late after line=\\]{Q4/results/R1.csv}{}%
 			{\csvcoli & \csvcolii & \csvcoliii}
 		\end{bmatrix}
-	\end{equation}
-	
-	\begin{equation}
-		d = 2.5 \times 10^{-3} = \frac{\lambda_0}2
 	\end{equation}
 	
 	
@@ -704,8 +740,22 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 				}%
 			\end{tikzpicture}
 		\end{adjustbox}
-		\caption{\space}
+		\caption{The positions of the different array elements are shown in Equation~\eqref{eq:R1}.}
+		\label{fig:R1}
 	\end{figure}
+	
+	\begin{note}
+		Figure~\ref{fig:R1} and all similar figures in this question are generated automatically using the \texttt{tikz} package in \LaTeX. The procedure is as follows: the matrix $R$ in Equation~\eqref{eq:R1} is calculated in MATLAB and saved as a .csv file. Then, it is read in \LaTeX using the \texttt{csvsimple} package and plotted with the \texttt{tikz} package. This fully automates the entire process, which is worth mentioning.
+	\end{note}
+	
+	
+		Using the function provided in the assignment files, we plotted the array factor of a uniform linear array structure with 7 elements and $d = \frac{\lambda}{2}$ in Figure~\ref{fig:array-beam-polar-r1}. The distance between each two elements is $2.5 \mathrm{mm}$.
+	
+	\begin{equation}
+		d = 2.5 \times 10^{-3} = \frac{\lambda_0}{2}
+	\end{equation}
+	
+
 	
 	\begin{figure}[h]
 		\centering
@@ -721,11 +771,22 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 		\label{fig:array-beam-r1}
 	\end{figure}
 	
+	As can be seen, since the element spacing is equal and set to $d = \nicefrac{\lambda}{2}$, it can be observed that there are no grating lobes present.
+	
+	
+	
+	
+	
+	To find the maximum and minimum points of the array factor function, given its noisy nature, it is necessary to denoise and smooth it. This ensures that the max and min values are correctly identified. Then, within a small neighborhood of $5 f_s$, we search for local extrema of the functions. This approach allows us to solve the problem and determine the null-to-null width and calculate the SLL.
+	
+	 
 	
 	\FloatBarrier
 	\subsection{part b:}
 	
-	\begin{equation}
+	This time, we consider $R$ with the following value, and the element spacing is $d = \lambda_0$. The scale of these plots is the same.
+	
+	\begin{equation}\label{eq:R2}
 		R_2 = (5 \times 10^{-3}) 
 		\begin{bmatrix}
 			3 & 0 & 0 \\
@@ -750,17 +811,7 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 		d = 5 \times 10^{-3} = \lambda_0
 	\end{equation}
 	
-%	\begin{adjustbox}{scale=1.2}
-%		\begin{tikzpicture}[scale=1, every node/.style={scale=1}]
-%			\def\dscale{1}
-%			\csvreader[head=false]{Q4/results/R2.csv}{}%
-%			{%
-%				\node[draw,circle,fill=black, inner sep=2pt,line width=.7] (????) at (\csvcoli*\dscale, \csvcolii*\dscale) {};%
-%			}%
-%			
-%		\end{tikzpicture}
-%	\end{adjustbox}
-%	
+
 	
 \begin{figure}[h]
 	\centering
@@ -784,7 +835,7 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 			\let\rownum\relax
 		\end{tikzpicture}
 	\end{adjustbox}
-	\caption{\space}
+	\caption{The positions of the different array elements are shown in Equation~\eqref{eq:R2}.}
 \end{figure}
 	
 	
@@ -802,13 +853,20 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 		\label{fig:array-beam-r2}
 	\end{figure}
 	
+	This time, it is observed that there are grating lobes at two angles perpendicular to the main lobe.
+	This is due to the spacing between the elements in a ULA.
 	
-	\FloatBarrier
+	Note that in this case, due to the increase in the physical length of the array, the main lobe has become narrower; however, unfortunately, the creation of two grating lobes has compromised the outcome.
+	
+	
+	
+%	\FloatBarrier
 	\subsection{part c:}
 	
+	Now, let us consider the same $R_2$, to which we have added some randomness. We call this new vector $R_3$.
 	
 	
-	\begin{equation}
+	\begin{equation}\label{eq:R3}
 		R_3 = (5 \times 10^{-3})
 		\begin{bmatrix}
 			3 + 0.5 \times \text{randn()} & 0 & 0 \\
@@ -848,7 +906,7 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 				}%
 			\end{tikzpicture}
 		\end{adjustbox}
-		\caption{\space}
+		\caption{The positions of the different array elements are shown in Equation~\eqref{eq:R3}.}
 	\end{figure}
 	
 	
@@ -866,13 +924,15 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 		\label{fig:array-beam-r3}
 	\end{figure}
 	
+	We observe that the added randomness slightly reduces the grating lobes and significantly changes the shape of the array factor.
 	
 	
 	\FloatBarrier
 	\subsection{part d:}
-	?????
+We repeat this experiment once more to examine this effect for a different $R_3$.
+
 	
-	\begin{equation}
+	\begin{equation}\label{eq:R3-1}
 		R_3 = (5 \times 10^{-3})
 		\begin{bmatrix}
 			3 + 0.5 \times \text{randn()} & 0 & 0 \\
@@ -912,7 +972,7 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 				}%
 			\end{tikzpicture}
 		\end{adjustbox}
-		\caption{\space}
+	\caption{The positions of the different array elements are shown in Equation~\eqref{eq:R3-1}.}
 	\end{figure}
 	
 	\begin{figure}[h]
@@ -929,10 +989,11 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 		\label{fig:array-beam-r3-2}
 	\end{figure}
 	
+		This time, we observe that a better randomness seems to have been chosen, resulting in fewer grating lobes. The table below can be obtained using the data from Figure~\ref{fig:array-beam-r3-2}.
 		
 	\begin{table}[h]
 		\centering
-		\caption{Peak Optimization Results}
+		\caption{Peak Results}
 		\csvreader[
 		head=false,
 		tabular=|c|c|c|,
@@ -945,9 +1006,14 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 	\end{table}
 	
 	
+	I performed this experiment 800 times instead of 100. To optimize it, I selected the following two criteria.
 	
 	
 	\subsubsection{Method 1:}
+	
+	In the first method, we select random numbers until the \textit{Peak Ratio} reaches its maximum. We report this value. This criterion essentially represents the ratio of the main lobe to the grating lobe.
+	The result of this process can be seen in the figures below.
+	
 	
 	
 	\begin{figure}[H]
@@ -1022,7 +1088,9 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 	
 	\subsubsection{Method 2:}
 	
-	
+	In the other method, we attempt to minimize the \textit{Max Side Lobe's Peak}. This criterion essentially indicates that the grating lobe is at its minimum.
+		The result of this process can be seen in the figures below.
+		
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=\linewidth]{Q4/results/array-beam-Ropt-2}
@@ -1095,6 +1163,8 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 	
 	\FloatBarrier
 	\subsubsection{Comparing these two methods:}
+	
+	It is observed that the outputs of these two methods are very similar, and the grating lobe is almost eliminated. This shows that randomness can disrupt the existing order, which results in the elimination of the grating lobe and causes the main lobe to become narrower and more directional as the physical length of the array increases.
 	
 		
 		\begin{table}[h]
@@ -1209,8 +1279,18 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 		\end{bmatrix}.
 	\end{equation}
 	
+	Can be written as following code in MATLAB: 
+	
+	\begin{lstlisting}
+AF = @(P, lambda, theta, phi) abs(cell2mat(arrayfun(@(phi) arrayfun(@(theta) sum(exp(1j*2*pi/lambda *[sin(theta)* cos(phi), sin(theta)* sin(phi), cos(theta)]*P')), theta,'UniformOutput',true)', phi,'UniformOutput',false)));
+	\end{lstlisting}
+	
+	Therefore, it is sufficient to find $P$ in this question, substitute it into this function, and from there determine the array factor and other desired values. We perform this in each part below:
+	
 	\FloatBarrier
 	\subsection{part a:}
+	
+
 	
 	\begin{figure}[H]
 		\centering
@@ -1229,12 +1309,16 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 	\end{figure}
 	
 	
+
+	
+		
 	\begin{equation}
 		\bm{p}_n = \begin{bmatrix}
 			0 \\ 0 \\ n d
 		\end{bmatrix}
 		\quad\implies\quad \bm{k}^\transpose\bm{p}_n = \frac{2\pi}{\lambda}nd\cos(\theta)
 	\end{equation}
+	
 	
 	\begin{align}
 		\text{AF} &= \sum_{n=0}^{N-1} \mathrm{e}^{\mathrm{j}\frac{2\pi}{\lambda}nd\cos(\theta)}
@@ -1275,8 +1359,11 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 		\caption{}
 		\label{fig:a-cart}
 	\end{subfigure}
+	\caption{Arrangement of phased array elements and its 3D radiation pattern}
 \end{figure}
 
+
+Since the pattern is symmetric, we plot the array factor as a function of $\theta$ at $\phi=0$.
 
 \begin{figure}[H]
 	\centering
@@ -1293,10 +1380,21 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 		\caption{dB}
 		\label{fig:a-phi-0-db}
 	\end{subfigure}
+	\caption{Array factor as a function of $\theta$ at $\phi=0$}
 \end{figure}
 
 
-
+\begin{table}[H]
+	\centering
+	\caption{Phased array characterization}
+	\begin{tabular}{cccc}
+		\toprule
+		\textbf{HPBW} & \textbf{BWNN} & \textbf{SSL} & \textbf{Main Lobe's Peak}\\
+		\midrule
+		$0.021\pi$ & $0.08\pi$ & $13$ & $25 \ \ (28\,dB)$\\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
 	
 \FloatBarrier
@@ -1328,25 +1426,28 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 	\includegraphics[width=0.4\linewidth]{Q6/results/b-imagesc}
 	\caption{}
 	\label{fig:b-imagesc}
-	\caption{}
 \end{figure}
 
 
 \begin{figure}[H]
-	\begin{subfigure}{.5\linewidth}
+	\centering
+	\begin{subfigure}{.48\linewidth}
 		\centering
 		\includegraphics[width=0.9\linewidth]{Q6/results/b-p-plot3}
 		\caption{}
 		\label{fig:b-p-plot3}
 	\end{subfigure}
-	\begin{subfigure}{.5\linewidth}
+	\begin{subfigure}{.48\linewidth}
 		\centering
 		\includegraphics[width=0.9\linewidth]{Q6/results/b-cart}
 		\caption{}
 		\label{fig:b-cart}
 	\end{subfigure}
-	\caption{}
+	\caption{Arrangement of phased array elements and its 3D radiation pattern}
 \end{figure}
+
+Since the pattern is symmetric, we plot the array factor as a function of $\theta$ at $\phi=0$.
+
 
 
 \begin{figure}[H]
@@ -1364,10 +1465,21 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 		\caption{dB}
 		\label{fig:b-phi-0-db}
 	\end{subfigure}
-	\caption{}
+	\caption{Array factor as a function of $\theta$ at $\phi=0$}
 \end{figure}
 
 
+\begin{table}[H]
+	\centering
+	\caption{Phased array characterization}
+	\begin{tabular}{cccc}
+		\toprule
+		\textbf{HPBW} & \textbf{BWNN} & \textbf{SSL} & \textbf{Main Lobe's Peak}\\
+		\midrule
+		$0.056\pi$ & $0.12\pi$ & 8 & $25 \ \ (28\,dB)$\\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
 \subsection{part c:}
 
@@ -1428,8 +1540,10 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 		\caption{}
 		\label{fig:c-cart}
 	\end{subfigure}
-	\caption{}
+	\caption{Arrangement of phased array elements and its 3D radiation pattern}
 \end{figure}
+
+Since the pattern is symmetric, we plot the array factor as a function of $\theta$ at $\phi=0$.
 
 
 \begin{figure}[H]
@@ -1447,8 +1561,40 @@ where $|\text{AF}_x|$ is the array factor in the x-direction, which is defined a
 		\caption{dB}
 		\label{fig:c-phi-0-db}
 	\end{subfigure}
-	\caption{}
+	\caption{Array factor as a function of $\theta$ at $\phi=0$}
 \end{figure}
+
+\begin{table}[H]
+	\centering
+	\caption{Phased array characterization}
+	\begin{tabular}{cccc}
+		\toprule
+		\textbf{HPBW} & \textbf{BWNN} & \textbf{SSL} & \textbf{Main Lobe's Peak}\\
+		\midrule
+		$0.113\pi$ & $0.26\pi$ & $12$ & $25 \ \ (28\,dB)$\\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+
+\subsection{part d:}
+
+
+\begin{table}[H]
+	\centering
+	\caption{Phased array characterization}
+	\begin{tabular}{ccccc}
+		\toprule
+		\textbf{} & \textbf{HPBW} & \textbf{BWNN} & \textbf{SSL} & \textbf{Main Lobe's Peak}\\
+		\midrule
+		\textbf{Uniform Linear Array} & $0.056\pi$ & $0.12\pi$ & 8 & $25 \ \ (28\,dB)$\\
+		\midrule
+		\textbf{Uniform Circular Array} & $0.113\pi$ & $0.26\pi$ & $12$ & $25 \ \ (28\,dB)$\\
+		\midrule
+		\textbf{Square Array} & $0.056\pi$ & $0.12\pi$ & 8 & $25 \ \ (28\,dB)$\\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
 
 	
