@@ -1,31 +1,53 @@
-%% Q1
+%% Initialization
 clear; close all; clc;
 mkdir results
-addpath ../common/
+addpath ../common/ ../HW/
 
 
-% Constants
-Kb = 1.38e-23;          % Boltzmann constant (J/K)
-T0 = 290;               % Absolute temperature (K)
-B = 1e6;                % Bandwidth (Hz)
-F = 10^(5/10);          % Noise figure (linear scale)
-L = 10^(3/10);          % System losses (linear scale)
-SNR = 10^(10/10);       % Minimum SNR (linear scale)
-lambda = 3e8 / 3.5e9;   % Wavelength (m), assuming frequency = 3.5 GHz
-eta = 0.9;              % Efficiency factor
-Nt = 4;                 % Number of transmitting antennas
-Nr = 4;                 % Number of receiving antennas
-Gt = 10^(10/10);        % Transmitting antenna gain (linear scale)
-Gr = 10^(10/10);        % Receiving antenna gain (linear scale)
 
-% Transmit power for mobile (W)
-Pt_m = 0.0016;
+N = 21; % Number of points
+d_lambda = 0.5;
 
-% Calculate maximum LOS range R (m)
-R = (lambda / (4 * pi)) * ...
-    nthroot((eta * Nt * Pt_m * Nt * Gt * Nr * Gr) / ...
-    (Kb * T0 * B * F * L * SNR), 2);
+AF_theta =@(w_n, d_lambda, theta_0) w_n * exp(1j*(0:length(w_n)-1).'* (2*pi*d_lambda * cos(theta_0)));
+AF = @(w_n, d_lambda, theta) abs(arrayfun(@(theta_0) AF_theta(w_n, d_lambda, theta_0), theta,'UniformOutput',true));
 
-% Display result
-fprintf('Maximum LOS Range: %.3f meters\n', R);
+
+% Generate Kaiser window
+w = hamming_window(N);
+csvwrite("results/hamming.csv", w');
+
+% Display results
+disp('Hamming Window:');
+disp(w);
+
+% Plot the window
+figure;
+stem(0:N-1, w, 'filled');
+xlabel('Index (n)');
+ylabel('Amplitude');
+title('Hamming Window');
+grid on;
+ylim([0, 1.2])
+
+
+exportgraphics(gcf, 'results/hamming-21.pdf', 'Append', false);
+
+
+theta = -pi:0.001:pi;
+
+
+af = AF(ones(1,N), d_lambda, theta);
+
+[fig1, fig2] = plot_af(theta, af);
+
+exportgraphics(fig1, 'results/af.pdf', 'Append', false);
+exportgraphics(fig2, 'results/af-db.pdf', 'Append', false);
+
+
+af = AF(w, d_lambda, theta);
+
+[fig1, fig2] = plot_af(theta, af);
+exportgraphics(fig1, 'results/af-with-hamming.pdf', 'Append', false);
+
+exportgraphics(fig2, 'results/af-db-with-hamming.pdf', 'Append', false);
 

@@ -39,7 +39,7 @@ jobs:
       #     extract: true
 
       - name: Copy HW files
-        run: cp HW/* .
+        run: cp Quiz/* .
 
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v3

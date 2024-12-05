@@ -22,6 +22,9 @@
 \usepackage{multicol}
 \usepackage{tcolorbox}
 \usepackage[numbers]{natbib}
+\usepackage{pgffor}
+\usepackage{pgfmath}
+\usepackage{colortbl}
 
 % Define a custom note environment
 \newtcolorbox{note}{colback=lightgray!10!white, colframe=lightgray!50!black, title=Note}
@@ -97,14 +100,19 @@
 {\thesection\enspace}{0pt}{}[\vspace{2pt}\titlerule]
 
 
+\usepackage{xepersian}
+\settextfont{XB Niloofar}
+\setmathdigitfont{Yas}
+
+
 \newcommand\question[1][\space]{
-	\section[Question \numberstringnum{\thesection}]
-	{Question \numberstringnum{\thesection}: #1}
+	\section[سوال \tartibi{section}]
+	{سوال \tartibi{section}: #1}
 }
 
 
-\author{Mohammad Raziei}
-\title{Solutions to the First Series of Exercises}
+\author{محمد رضیئی فیجانی}
+\title{امتحان میانترم درس آرایه فازی}
 \date{\today}
 
 
@@ -140,1006 +148,699 @@
 	\maketitle
 	
 	
+	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\FloatBarrier\question[Friis link equation and phased array design]%1
+	\FloatBarrier\question[\lr{Passive and Active Reconfigurable Intelligent Surface}]%1
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
-	\subsection{Single Antenna Implementation}\label{SISO}
-	\textcolor{questioncolor}{A small-cell backhaul company wants to design a 60 GHz link between two stations which are
-		$1.2 \text{km}$ apart. The objective is to transmit and receive minimum $1 \text{Gbps}$ data.}
 	
-	\subsubsection{Part a}
-	{\color{questioncolor} If CMOS technology is used, what is the minimum antenna gain for a Single antenna at TX
-	and RX (SISO)?
-	\\[1em]
-	\noindent Hints:
-	\begin{enumerate}
-		\item CMOS power amplifiers give an output power ($P_{1\text{dB}}$) of typically 0 to 8 dBm at 60 GHz. 
-		\item Assume QPSK modulation, and find minimum required SNR for BER of $10^{-5}$. 
-		\item Calculate the physical bandwidth assuming $25\%$ coding overhead.
-		\item Find Oxygen ($O_2$) absorption loss at $60 \text{GHz}$ band.
-		\item Assume clear sky condition (no rain). \textcolor{black}{$\rightarrow$ Means \(n = 2\) in Friis equation}
-		\item Assume perfect antenna alignment and matching.  \textcolor{black}{$\rightarrow$ Means \(\eta_r = \eta_t = 1\) }
-		\item Plot antenna gain as a function of $P_{1\text{dB}}$ and receiver noise figure (F ranges from 5 to 10 dB).
-		\item You are allowed to make any reasonable assumption if necessary. But you should clearly justify your assumption.	
-	\end{enumerate}
-	}
 
-
-
-
-
-\paragraph{Antenna Gain Calculation Using Friis and Shannon's Formulas}
+	توان دریافتی از یک \lr{RIS} غیرفعال توسط گیرنده به صورت زیر مدل می‌شود:
 	
-	The signal-to-noise ratio (SNR) for a wireless link is expressed by the Friis link equation:
+	\begin{equation}
+		P_r = \frac{N^2 P_T}{16L}
+	\end{equation}
 	
+	
+	\begin{equation}
+		\lambda = \frac{c}{f} = \frac{\num{3e8}}{\num{5.8e9}} = 0.0517 \ \text{m} 
+	\end{equation}
+	
+	
+	
+	
+				
 	\begin{align}
 		\text{SNR} &= P_t \cdot G_t \cdot G_r \cdot \left( \frac{\lambda}{4 \pi \ell} \right)^n \cdot \frac{1}{K_B \cdot T_0 \cdot B_w \cdot F \cdot \mathcal{L}}
 	\end{align}
 	
-	where:
-	\begin{itemize}
-		\item \(\lambda\): Carrier wavelength,
-		\item \(\ell\): Link range,
-		\item \(K_B = 1.38 \times 10^{-23} \, \text{J/K}\): Boltzmann constant,
-		\item \(T_0 = 290 \, \text{K}\): Absolute room temperature,
-		\item \(B_w\): Channel bandwidth,
-		\item \(F\): Receiver noise figure,
-		\item \(\mathcal{L}\): Losses in the system.
-	\end{itemize}
-	
-	\begin{equation}
-		\lambda = \frac{c}{f} = \frac{\num{3e8}}{\num{60e9}} = \saverread{Q1}{5} \ \text{m}
-	\end{equation}
-	
-	\paragraph{System Model}
-	For a phased array system, the transmit power (\(P_t\)) and antenna gains (\(G_t, G_r\)) are defined as:
-	
-	\begin{align}
-		P_t &= N_t \cdot P_{t1}, \\
-		G_t &= \eta_t \cdot N_t \cdot G_{t1}, \\
-		G_r &= \eta_r \cdot N_r \cdot G_{r1},
-	\end{align}
-	
-	where:
-	\begin{itemize}
-		\item \(N_t\): Number of transmit antennas (\(N_t = 1\) for SISO),
-		\item \(N_r\): Number of receive antennas (\(N_r = 1\) for SISO),
-		\item \(\eta_t = \eta_r = 1\): Array efficiency (perfect alignment and matching).
-	\end{itemize}
-	
-	Assuming \(G_t = G_r = G\):
-	
-	\begin{equation}
-		G_t = G_r = G
-	\end{equation}
-	
-	\paragraph{Oxygen Absorption Loss}
-	The oxygen absorption loss is given by:
-	
-	\begin{equation}
-		\mathcal{L} = \alpha_{\text{O}_2} \cdot d,
-	\end{equation}
-	
-	where \(\alpha_{\text{O}_2} = 15 \, \text{dB/km}\) is the specific attenuation, and \(d = 1.2 \, \text{km}\). Substituting:
-	
-	\begin{equation}
-		\mathcal{L} = 15 \cdot 1.2 = 18 \, \text{dB} = \saverread{Q1}{4}.
-	\end{equation}
-	
-	\paragraph{Minimum SNR from BER Curve}
-	The minimum SNR for \(\text{BER} = \num{1e-5}\) is obtained from the BER curve shown in Figure~\ref{fig:ber-snr}.
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.5\linewidth]{Q1/results/ber-snr}
-		\caption{BER vs. SNR for QPSK modulation.}
-		\label{fig:ber-snr}
-	\end{figure}
-	
-	According to Figure~\ref{fig:ber-snr}, the minimum SNR is:
-	
-	\begin{equation}
-		\text{SNR} = \saverread{Q1}{1} \, \text{dB} = \saverread{Q1}{2}.
-	\end{equation}
-	
-	\paragraph{Bandwidth Calculation Using Shannon's Formula}
-	The channel capacity is given by:
-	
-	\begin{equation}
-		C = B_w \log_2\left(1 + \frac{S}{N}\right),
-	\end{equation}
-	
-	where:
-	\begin{itemize}
-		\item \(C = 1.25 \, \text{Gbps}\) (with 25\% coding overhead),
-		\item \(\text{SNR} = \saverread{Q1}{1} \, \text{dB}\).
-	\end{itemize}
-	
-	Rearranging for \(B_w\):
-	
-	\begin{equation}
-		B_w = \frac{C}{\log_2\left(1 + \text{SNR}\right)} = \saverread{Q1}{3} \, \text{Hz}.
-	\end{equation}
-	
-	\paragraph{Antenna Gain Calculation}
-	Using Friis equation:
-	
-	\begin{equation}
-		G^2 = \text{SNR} \cdot K_B \cdot T_0 \cdot B_w \cdot \mathcal{L} \cdot \frac{F}{P_t} \cdot \left( \frac{4 \pi \ell}{\lambda} \right)^2,
-	\end{equation}
-	
-	\begin{figure}[H]
-		\begin{subfigure}{.45\linewidth}
-			\centering
-			\includegraphics[width=\linewidth]{Q1/results/G-per-F-Pt}
-			\caption{Magnitude Scale}
-			\label{fig:g-per-f-pt}
-		\end{subfigure}
-		\hfill
-		\begin{subfigure}{.45\linewidth}
-			\centering
-			\includegraphics[width=\linewidth]{Q1/results/G-per-F-Pt-db}
-			\caption{dB Scale}
-			\label{fig:g-per-f-pt-db}
-		\end{subfigure}
-		\caption{
-			Antenna Gain
-		}
-	\end{figure}
-	
-	where:
-	\begin{itemize}
-		\item \(\lambda = \saverread{Q1}{5} \, \text{m}\),
-		\item \(P_t = 8 \, \text{dBm}\),
-		\item \(F = 5 \, \text{dB}\),
-		\item \(\mathcal{L} = \saverread{Q1}{4}\).
-	\end{itemize}
-	
-	From precomputed values:
-	\begin{equation}
-		G^2 = \saverread{Q1}{6},
-	\end{equation}
-	
-	\begin{equation}
-		G = \sqrt{\saverread{Q1}{6}} = \saverread{Q1}{7} = \saverread{Q1}{8} \, \text{dB}.
-	\end{equation}
-	
-	
-
+	که در آن:
+	\begin{latin}
+		\begin{itemize}
+			\item \(\lambda\): Carrier wavelength,
+			\item \(\ell\): Link range,
+			\item \(K_B = 1.38 \times 10^{-23} \, \text{J/K}\): Boltzmann constant,
+			\item \(T_0 = 290 \, \text{K}\): Absolute room temperature,
+			\item \(B_w\): Channel bandwidth,
+			\item \(F\): Receiver noise figure,
+			\item \(\mathcal{L}\): Losses in the system.
+		\end{itemize}
+	\end{latin}
 	
 	
 	
 	
-	
-	\paragraph{Conclusion}
-	The minimum antenna gain for both transmit and receive antennas is approximately \(\saverread{Q1}{8} \, \text{dB}\) under the given conditions.
-	
-
-
-\subsubsection{Part b}
-{\color{questioncolor}
-	What is the receiver sensitivity?
-\\}
-
-
-
-Receiver sensitivity is the minimum power level at which the receiving node is able to clearly receive the bits being transmitted: 
-
-\begin{equation}
-	S_i = k_B \cdot T_0 \cdot B_w \cdot F \cdot \text{SNR}_{\text{min}} = \saverread{Q1}{9}
-	 = \saverread{Q1}{10} \ \text{dBm}
-\end{equation}
-
-
-
-
-
-
-
-
-
-\subsection{SISO:  Pole Sway and antenna misalignment}
-{\color{questioncolor}
-
-
-Fig. \ref{fig:lighting-poles-sway} shows pole sway caused by wind. Measurements show that pole sway can be as large as $\pm2.7^\circ$. Assume Parabolic antennas are used in Section \ref{SISO}. For a Parabolic antenna 3-dB beamwidth in degree is approximately given by:
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.25\linewidth]{HW/lighting-poles-sway}
-	\caption{}
-	\label{fig:lighting-poles-sway}
-\end{figure}
-
-
-\begin{equation}
-	\Delta\theta=\frac{70\lambda}{L} 
-\end{equation}
-where $\Delta\theta$ denotes antenna beamwidth and $L$ is the antenna diameter.\\
-You can calculate the gain of a Parabolic antenna from here:\\ \url{http://www.qsl.net/pa2ohh/jsparabolic.htm}
-\\ or use the following relation: 
-
-\begin{equation}
-	G=\eta\times\frac{\pi^2L^2}{\lambda^2}
-\end{equation}
-where $\eta$, known as the aperture efficiency, is typically 0.55 to 0.70.
-
-
-How much drop in the received SNR is caused by maximum antenna pole sway? What solutions do you recommend (at least 3 solutions)?\\
-
-\noindent Hints: 
-
-You should approximate the antenna gain with a linear function of angle.
-
-}
-
-
-
-The following equation represents the gain of a parabolic antenna (\(G\)) with aperture length \(L\):
-
-\begin{equation}
-	G = \eta \frac{\pi^2 L^2}{\lambda^2}
-\end{equation}
-
-First, we need to calculate the length of the antenna aperture (\(L\)) by considering the worst-case scenario for the design. Using the power obtained in Equation (12), we have:
-
-\[
-G_0 = \saverread{Q1}{8} \, \text{dB} 
-\]
-
-We also consider the efficiency factor (\(\eta\)) as \(\eta = 0.55\) to account for the worst-case design. The aperture length is calculated as follows:
-
-\begin{equation}
-	L = \frac{\lambda}{\pi} \sqrt{\frac{G_0}{\eta}} = \frac{\lambda}{\pi} \sqrt{\frac{\saverread{Q1}{8}}{0.55}} = 0.0567 \, \text{m} = 56.7 \, \text{mm} 
-\end{equation}
-
-The antenna beamwidth is calculated using the following equation:
-
-\begin{equation}
-	\Delta \theta = \frac{70 \lambda}{L} \approx 5.51^\circ
-\end{equation}
-
-
-At half of this beamwidth, i.e., \(2.76^\circ\), the gain is halved. Since the wind also shifts the beam by \(2.7^\circ\), the gain at this angle is reduced by half, resulting in a corresponding reduction in the \(\text{SNR}\).
-\\
-
-\noindent\textbf{Solutions}
-
-1. Perform beamforming since the beam steering speed is significantly faster than the wind speed.  
-
-2. Increase the beamwidth to ensure functionality under varying wind conditions.  
-
-3. Use stronger and more durable materials for the antenna to reduce its swing caused by the wind.
-
-
-\subsection{Phased Array Solution: Clear Sky}\label{clear}
-
-{\color{questioncolor}
-Design a CMOS TX phased array and a CMOS RX phased array at 60 GHz for 1 Gbps data at 1 km. Calculate gain drop for maximum sway angle with and without beamforming. Explain your design steps and assumptions. 
-}
-
-
-We select 30 antennas for both TX and RX, which results in the required transmit power (\(P_t\)) being:
-
-\[
-P_t \cdot G_t \cdot G_r = 43.5 \, \text{dBm}.
-\]
-
-Assuming \(G_t = G_r = 18 \, \text{dBi}\), we calculate:
-
-\[
-P_t = 7.5 \, \text{dBm}.
-\]
-
-In this setup, we use a 30-element uniform linear array (ULA) and assume that all elements sway with the same angle and in the same direction. Instead of physically rotating the antennas, we calculate the beam attenuation at the maximum sway angle (when the antennas have no swing).
-
-The beam pattern is simulated, and we compute the attenuation for the maximum sway angle (\(2.75^\circ\)) for both the formed and non-formed beam patterns. In the worst-case scenario, the TX and RX sway in opposite directions, which doubles the calculated attenuation.
-
-
-
-
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\FloatBarrier\question[Qualcomm 28 GHz Phased Array for 5G]
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\FloatBarrier\question[\lr{Array Pattern Synthesis}]%1
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	
+	تابع 	پنجره همینگ N تایی  به صورت زیر است.
+	
+	\begin{latin}
+		\lstinputlisting{Q2/hamming_window.m}
+	\end{latin}
+خروجی آن را برای $N=21$ رسم می‌کنیم.
+	
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.5\linewidth]{Q2/results/hamming-21}
+	\caption{}
+	\label{fig:hamming-21}
+\end{figure}
 
-{\color{questioncolor}
-In Nov 2015, Qualcomm company demonstrated their TDD synchronous system operating in the 28 GHz band. The demonstration included one millimeter-wave (mm-wave) base station and one mobile device. The mm-wave base station, had 128 antenna elements with 16 controllable RF channels, while the device contained four sub-arrays with 4 controllable RF channels.\\
+ابتدا AF را بدون tapering رسم می‌کنیم.
+	
+	
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{Q2/results/af}
+	\caption{}
+	\label{fig:af}
+\end{figure}
+	
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{Q2/results/af-db}
+	\caption{}
+	\label{fig:af-db}
+\end{figure}
+	
+	سپس پنجره hamming را به آن اعمال می‌کنیم:
+	
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{Q2/results/af-with-hamming}
+	\caption{}
+	\label{fig:af-with-hamming}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{Q2/results/af-db-with-hamming}
+	\caption{}
+	\label{fig:af-db-with-hamming}
+\end{figure}
 
-}
+اطلاعات خواسته شده در شکل مشخص شده است.
 
 
-\subsection{Part a}
+برای آرایه خطی مورد های زیر را داریم:
 
-{\color{questioncolor}
-Search to find more information about this project. Explain why 28 GHz frequency was chosen?\\
-}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\linewidth]{Q2/results/a-cart}
+	\caption{}
+	\label{fig:a-cart}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\linewidth]{Q2/results/a-imagesc}
+	\caption{}
+	\label{fig:a-imagesc}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.51\linewidth]{Q2/results/a-p-plot3}
+	\caption{}
+	\label{fig:a-p-plot3}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{Q2/results/a-phi-0-mag}
+	\caption{}
+	\label{fig:a-phi-0-mag}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{Q2/results/a-phi-0-db}
+	\caption{}
+	\label{fig:a-phi-0-db}
+\end{figure}
 
-Using the Qualcomm website \cite{qualcommResearch}, we present the reasons Qualcomm selected the 28 GHz frequency. It is important to note that the goal of this project is to use millimeter-wave technology, and the 28 GHz frequency has been chosen as one of the relevant frequencies for millimeter waves.
-
-\begin{enumerate}
-	\item Since we are operating in the millimeter-wave range, it is possible to use a very large number of antennas in a small form factor. This enables the transmission and reception of narrower beams, which, in turn, allows for the transmission and reception of more energy. This capability helps overcome propagation losses in millimeter waves.
-	\item Extremely high bandwidth is achievable, allowing for very high data rates of several gigabits per second.
-	\item Operating at a higher frequency allows for the support of more users.
-\end{enumerate}
+و برای دایروی نیز موارد زیر را داریم:
 
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\linewidth]{Q2/results/b-cart}
+	\caption{}
+	\label{fig:b-cart}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\linewidth]{Q2/results/b-imagesc}
+	\caption{}
+	\label{fig:b-imagesc}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.51\linewidth]{Q2/results/b-p-plot3}
+	\caption{}
+	\label{fig:b-p-plot3}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{Q2/results/b-phi-0-mag}
+	\caption{}
+	\label{fig:b-phi-0-mag}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{Q2/results/b-phi-0-db}
+	\caption{}
+	\label{fig:b-phi-0-db}
+\end{figure}
 
 
 
-\subsection{Part b}
-
-{\color{questioncolor}
-
-Why only 4 sub-arrays were used for the mobile device? Does increasing the carrier frequency help to have a better link?\\
-}
-
-As mentioned in the problem statement, this project utilizes four subarrays. Increasing the number of subarrays generally improves processing accuracy. However, it should be noted that there are physical limitations in mobile devices. Additionally, increasing the number of subarrays requires addressing their power consumption, which creates a challenge in managing power for a larger number of subarrays. Another issue is the increased complexity of the structure.
 
 
+	
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\FloatBarrier\question[\lr{Two dimensional array}]%3
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	
 
 
-\subsection{Part c}
 
-{\color{questioncolor}
-In a LOS link measurement maximum range of 350 m was measured. Find the total transmitted power assuming 500 MHz bandwidth, 10 dB noise figure, 5 dBi antenna element gain, and minimum  10 dB SNR at the receiver output.\\
-}
 
-By increasing the center frequency, we can enhance data rates and bandwidth. However, it should be noted that the range will be reduced, and at higher frequencies, signal attenuation in the environment becomes more significant. Therefore, in addition to the mentioned advantages, it also has the stated disadvantages. For this reason, if a greater range is important in an application, a communication link with a higher center frequency will not be suitable. However, if data transfer rate or bandwidth is of primary importance, a communication link with a higher frequency will be highly appropriate.
 
-\subsection{Part d}
-{\color{questioncolor}
-What is the maximum LOS range between two mobile devices?\\
-}
+	
+	برای آرایه مربعی با \(N = 4\) (تعداد 16 آنتن) و فاصله المان‌ها \(d = 0.6\lambda\)، وزن‌های آرایه برای چرخاندن پرتو اصلی به زوایای \(\theta = 30^\circ\) و \(\phi = 45^\circ\) به صورت زیر محاسبه می‌شوند:
+	
 
-We can calculate the transmission power using the link equation. Therefore, we rewrite the link equation. It is important to note that we are using a phased array here, and hence the number of antennas must be considered in the equation:
+	زاویه فاز برای هر المان در موقعیت \((m, n)\) به صورت زیر است:
+	\[
+	\psi_{m,n} = -2\pi \left[m \sin\theta \cos\phi \ \frac{d_x}{\lambda} + n \sin\theta \sin\phi\ \frac{d_y}{\lambda} \right]
+	\]
+	
+		\begin{equation}
+		\theta = 30
+		\quad,\quad
+		\phi = 45
+	\end{equation}
 
-\begin{equation}
-	\text{SNR} = \eta \, N_t P_t N_t G_t N_r G_r \left( \frac{\lambda}{4 \pi \ell} \right)^n \frac{1}{K_B T_0 B F \mathcal{L}},
-\end{equation}
-
-where:
-\begin{multicols}{2}
-	\begin{itemize}
-		\item \(N_t\): Number of transmitting antennas,
-		\item \(N_r\): Number of receiving antennas,
-		\item \(G_t\): Transmitting antenna gain,
-		\item \(G_r\): Receiving antenna gain,
-		\item \(\lambda\): Wavelength,
-		\item \(\ell\): Distance,
-		\item \(K_B\): Boltzmann constant,
-		\item \(T_0\): Absolute temperature,
-		\item \(B\): Bandwidth,
-		\item \(F\): Noise figure,
-		\item \(\mathcal{L}\): System losses,
-		\item \(\eta\): Efficiency factor.
+	
+	
+	جایگذاری مقادیر:
+	\[
+	\sin\theta = 0.5, \quad \cos\phi = \sin\phi = \frac{\sqrt{2}}{2}
+	\]
+	
+		\begin{itemize}
+		\item \(x\):
+		\[
+		\sin\theta \cos\phi =  \tfrac{\sqrt{2}}{4}
+		\]
+		\item \(y\):
+		\[
+		\sin\theta \sin\phi = \tfrac{\sqrt{2}}{4}
+		\]
 	\end{itemize}
-\end{multicols}
+	
+	\[
+	\psi_{m,n} = -0.4243\pi (m + n)
+	\]
+	
+	وزن‌های آرایه برای هر المان:
+	\[
+	w_{m,n} = e^{-j 0.4243\pi (m + n)}
+	\]
+	
 
-The number of antennas at the transmitter and receiver for base station transmission must be specified. According to the problem statement, we have 16 controllable {RF} channels available. Therefore, the number of antennas capable of beamforming from the base station is 16.
+	وزن‌ها در ماتریس \(4 \times 4\) را میتوان به صورت ماتریسی نوشت.
+	
+%\[
+%W =
+%\begin{bmatrix}
+%	\foreach \m in {0,1,2,3} {
+%		\foreach \n  in {0,1,2,3} {
+%      		\pgfmathparse{\m + \n}%
+%			\pgfmathtruncatemacro{\sum}{\pgfmathresult} % Convert to integer
+%			\pgfmathsetmacro{\p}{0.4243 * (\m + \n)}%
+%			\ifnum\sum=0 1%
+%			\else e^{-j (\p) \pi }%
+%			\fi%
+%			\ifnum\n<3 \quad \else \\ \fi
+%		}
+%	}
+%	\end{bmatrix}
+%\]
 
 
-For the base station transmission, the number of transmitting antennas is:
-
-\[
-N_{t,b} = 16
-\]
-
-For the receiver, with a 4-element array:
-
-\[
-N_{r,d} = 4
-\]
-
-Rewriting the equation to solve for \(P_{t,b}\):
 
 \begin{equation}
-	P_{t,b} = \frac{\text{SNR} \, K_B \, T_0 \, B \, F \, \mathcal{L}}{\eta \, N_{r,d}^2 N_t G_t G_r} \left( \frac{4 \pi \ell}{\lambda} \right)^n
-\end{equation}
-
-Finally, substituting the values, the transmit power is calculated as:
-
-\[
-P_{t,b} = 0.0033 \, \text{W} = 5.176 \, \text{dBm}.
-\]
-
-
-\subsection{Part e}
-{\color{questioncolor}
-One requirement for the base station is to generate multiple simultaneous beams. What is your hardware architecture solution to achieve this goal?\\
-}
-
-
-	
-	First, the transmit power of the mobile in the designed link must be calculated. Then, the \textit{range} between the two mobiles can be determined. Considering the problem description, there are 4 RF channels in a single mobile device; hence:
-	\[
-	N_{t,d} = 4
-	\]
-	
-	Additionally, there are 128 antennas at the receiver. Since the number of RF controllable channels is limited to 4, the total number of antennas is significant. Thus, we have:
-	\[
-	N_{r,b} = 128
-	\]
-	
-	Using Equation (28), the transmit power of the mobile in a link between mobiles and the base station is calculated as:
-	\[
-	P_{t,m} = 0.0016 \, \text{W} = 2.166 \, \text{dBm}.
-	\]
-	
-	As expected, the transmit power of each mobile is less than the transmit power of the base station.
-	
-	For a link between two mobiles, consider the distance \(R\) between them. The transmit power of each mobile is limited to the above value. Keeping the total number of transmitting and receiving antennas in mind, the power constraints of both channels (transmitting and receiving) are considered. Rewriting the link equation for the range between the two mobiles, we get:
-	
-	\[
-	R^n = \eta N_t P_t N_t G_t N_r G_r \left( \frac{\lambda}{4\pi} \right)^n \frac{1}{K_B T_0 B F \mathcal{L} \text{SNR}} \implies R = \frac{\lambda}{4\pi} \sqrt[n]{\frac{\eta N_t P_t N_t G_t N_r G_r}{K_B T_0 B F \mathcal{L} \text{SNR}}}.
-	\]
-	
-	By substituting the values, the maximum distance \(R\) between two mobiles is calculated as:
-	\[
-	R = 61.872 \, \text{m}.
-	\]
-	
-	
-	For beamforming, we use the phased array structure. For simultaneous beamforming, a digital phased array is required.
-	
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\FloatBarrier\question[Samsung 28 GHz Phased Array for 5G]
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-{\color{questioncolor}
-For several years, Samsung has been developing 28 GHz phased array solutions for mobile communications. In 2014, Samsung demonstrated a phased array link for the future 5G mobile communication at 28 GHz frequency. Both transmit and receive array antennas had the same number of antennas arranged in the form of a uniform planar array, confined within an area of $60 mm
-\times 30 mm$. The total array gain was 18 dBi.\\
-}
-
-
-
-
-{\color{questioncolor}
-
-1- Plot the 3D radiation pattern and calculate maximum gain of a uniform planar array with 25 element ($5\times 5$) using patch elements with $\lambda/2$ spacing. \\
-
-2- If 200 m LOS range is required, what is the number of antennas, element gain and TX Effective isotropic radiated power (EIRP)? This problem might have many solutions. You should justify your answer.\\
-
-3- In order to reduce the hardware complexity, a sub-array architecture was employed to group antennas into a sub-array. What are the side effects of using sub-arrays instead of independent elements? Name three possible issues.\\
-
-4- Assume each 2 by 1 power combiner/splitter has $1.2 d$B loss. What is your proposed optimum size for a sub-array?\\
-
-}
-
-
-
-According to the calculations from the first assignment, the array factor for a planar array structure of size \(M \times N\) is given as:
-
-\[
-AF = \frac{\sin\left(\frac{M}{2} \frac{2\pi}{\lambda} d_x \sin(\theta) \cos(\phi)\right)}{\sin\left(\frac{1}{2} \frac{2\pi}{\lambda} d_x \sin(\theta) \cos(\phi)\right)}
-\cdot 
-\frac{\sin\left(\frac{N}{2} \frac{2\pi}{\lambda} d_y \sin(\theta) \sin(\phi)\right)}{\sin\left(\frac{1}{2} \frac{2\pi}{\lambda} d_y \sin(\theta) \sin(\phi)\right)} 
-\]
-
-In this question, we set \(M = N = 5\). The spacing between adjacent antennas is half the wavelength:
-
-\[
-d_x = d_y = \frac{\lambda}{2} = \frac{c}{2f} \simeq 5.4 \, \text{mm}
-\]
-
-Now, using the product principle for the patterns, we multiply the given antenna pattern with the array factor to determine the final pattern, which will then be plotted in 3D. The maximum gain based on the resulting pattern is:
-
-\[
-G_{\text{max}} = 21.34 \, \text{dB} 
-\]
-
-
-
-In this section, we design an LOS link for a range of \(200 \, \text{m}\) with a central frequency of \(f_0 = 28 \, \text{GHz}\). Acceptable assumptions should be made for other parameters. The parameters used in question 2 can also be considered for a similar project.
-
-
-
-In most papers reporting the signal-to-noise ratio (SNR), the typical range of SNR is considered from \(-10 \, \text{dB}\) to \(10 \, \text{dB}\), especially in system-level studies. Therefore, we design the link for the required SNR, which is:
-
-\[
-\text{SNR} = 10 \, \text{dB} 
-\]
-
-
-
-the oxygen absorption loss at \(28 \, \text{GHz}\) is given by:
-
-\[
-L_{\text{per km}} = 0.2 \, \text{dB/km} 
-\]
-
-Given that the link range is \(200 \, \text{m}\), the total loss over this distance is:
-
-\[
-L = 0.2 \times 0.2 = 0.04 \, \text{dB} 
-\]
-
-
-
-The required bandwidth and data rate are interdependent; knowing one allows us to determine the other. the data rate is set to:
-
-\[
-R = 1.25 \, \text{Gbps}
-\]
-
-
-
-
-
-The required bandwidth was calculated as follows:
-\[
-B = 361 \, \text{MHz} 
-\]
-
-
-
-Given that the propagation is LOS and the weather conditions are clear with no rain, the path loss exponent is set to:
-\[
-n = 2 
-\]
-
-
-
-In general, the phase noise of RF components is considered to range between \(5 \, \text{dB}\) and \(10 \, \text{dB}\). For design purposes, we assume the worst-case scenario:
-\[
-F = 10 \, \text{dB} 
-\]
-
-
-
-
-
-
-Now, we need to determine the structure of the transmitter and receiver. It is important to consider the area where the antenna array will be placed. According to the problem, this area is:
-
-\[
-30 \, \text{mm} \times 60 \, \text{mm}.
-\]
-
-Both the transmitter and receiver structures need to fit within this area. The spacing between two antennas is set to:
-
-\[
-d = \frac{\lambda}{20} \approx 5.36 \, \text{mm}.
-\]
-
-This allows for a maximum array size of \(6 \times 12\) within the specified area. However, to balance efficiency and power constraints, we choose a \(4 \times 8\) array for the transmitter and a \(4 \times 4\) array for the receiver. This makes optimal use of the available area. Since the number of transmitting antennas has a greater impact on link quality, we allocate more antennas to the transmitter. Therefore, we have:
-
-\[
-N_t = 32, \quad N_r = 16 
-\]
-
-
-
-As mentioned earlier, the number of transmitting antennas is set to \(N_t = 32\). We simulate this structure and calculate the maximum gain. The radiation pattern of the transmitter is shown in Figure 5. Note that it is not plotted on a logarithmic scale. The maximum gain for the transmitter is:
-
-\[
-G_t = 22.42 \, \text{dB} 
-\]
-
-
-
-Similarly, the number of receiving antennas is set to \(N_r = 16\). We simulate this structure and calculate the maximum gain. The radiation pattern of the receiver is shown in Figure 6. Again, note that it is not plotted on a logarithmic scale. The maximum gain for the receiver is:
-
-\[
-G_r = 19.41 \, \text{dB} 
-\]
-
-
-Using the explanations provided in the previous sections and applying the link equation, we calculate the transmit power. The calculations are performed in MATLAB, and the transmit power per antenna is:
-
-\[
-P_t = 1.645 \times 10^{-5} \, \text{W} = -17.84 \, \text{dBm}.
-\]
-
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.7\linewidth]{Q3/results/Pattern-Plot-4x4}
-	\caption{}
-	\label{fig:pattern-plot-4x4}
-\end{figure}
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.7\linewidth]{Q3/results/Pattern-Plot-4x8}
-	\caption{}
-	\label{fig:pattern-plot-4x8}
-\end{figure}
-
-
-
-1. To divide a 16-element array into 4 subarrays, each containing 4 elements, we reduce the number of required power amplifiers (PAs) from 16 to 4. However, each PA must produce 4 times the power to feed the antennas within its subarray. Increasing the number of elements in a subarray leads to higher-powered PAs, which are more expensive and complex to build. Moreover, higher power might necessitate the use of heat sinks to manage thermal dissipation, which further increases cost and complexity.
-
-2. Beam steering allows us to direct the antenna's beam in a desired direction by applying proper weights to each antenna. As the number of antennas decreases (e.g., by grouping them into subarrays), the angular resolution of the beam steering reduces. This results in less precise control over the beam direction, which is a trade-off in subarray design.
-
-3. Subarray structures require combiners to connect multiple elements. These combiners introduce additional losses, which decrease overall system efficiency. For instance, each combiner may add around \(1.2 \, \text{dB}\) of loss, contributing to the total system losses.
-
-4. To implement the subarray structure effectively, we consider using 2 or 3 combiner stages. Each stage introduces \(1.2 \, \text{dB}\) of loss, so with three stages, the total loss is:
-
-\[
-\text{Total Loss} = 3 \times 1.2 = 3.6 \, \text{dB}.
-\]
-
-This loss corresponds to about \(3 \, \text{dB}\), or roughly half the transmitted power.
-
-5. For the transmitter, a three-stage combiner structure is recommended, while for the receiver, a two-stage combiner suffices. With 4 antennas per subarray on both the transmitter and receiver sides, the losses remain acceptable, and the design achieves the goal of reducing structural complexity while maintaining reasonable performance.
-
-
-%	\begin{note}
-%		Figure~\ref{fig:R1} and all similar figures in this question are generated automatically using the \texttt{tikz} package in \LaTeX. The procedure is as follows: the matrix $R$ in Equation~\eqref{eq:R1} is calculated in MATLAB and saved as a .csv file. Then, it is read in \LaTeX using the \texttt{csvsimple} package and plotted with the \texttt{tikz} package. This fully automates the entire process, which is worth mentioning.
-%	\end{note}
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\FloatBarrier\question[Dolph-Chebychev Tapering]
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-{\color{questioncolor}
-Study \textbf{Section 23.9} of the enclosed file entitles as \href{https://github.com/MohammadRaziei/phased-array-course/raw/HW02/HW/Array%20Design%20Methods.pdf}{Array Design Methods} to learn Dolph-Chebychev array weighting.\\
-
-Consider a standard 11-element linear array pointed at broadside.\\
-
-You should develop your own code in Matlab to calculate array weights. Zip your codes with your homework solution.
-}
-
-
-\subsection{Part a}
-{\color{questioncolor}
-	Calculate the Dolph-Chebychev weightings for sidelobe levels of -20 dB, -30 dB, and -40 dB. Write them in a Table.\\
-}
-
-
-\begin{table}
-	\begin{tabular}{c|c}
-		\toprule
-		\textbf{SLL} & \textbf{Weights}\\\midrule
-		-20 & \(\csvreader[head=false, after line={\ \ }]{Q4/results/w-sll-20.csv}{}{\num{\csvcoli}}\) \\\midrule
-		-30 & \(\csvreader[head=false, after line={\ \ }]{Q4/results/w-sll-30.csv}{}{\num{\csvcoli}}\) \\\midrule
-		-40 & \(\csvreader[head=false, after line={\ \ }]{Q4/results/w-sll-40.csv}{}{\num{\csvcoli}}\) \\
-		\bottomrule
-	\end{tabular}
-\end{table}
-
-
-
-	\begin{figure}[ht]
-		\centering
-		\begin{tikzpicture}
-			\begin{axis}[
-				width=\textwidth,
-				height=0.6\textwidth,
-				xlabel={Index $i$},
-				ylabel={$w_i$},
-				grid=both,
-				major grid style={line width=.2pt, draw=gray!50},
-				minor grid style={line width=.1pt, draw=gray!10},
-				ymin=0,
-				ymajorgrids=true,
-				xmajorgrids=true,
-				title={Stem Plot of $w_i$ from CSV Data},
-                legend style={
-					at={(0.5,-0.15)},
-					anchor=north,
-					legend columns=3
-				},
-				legend entries={
-					Sidelobe Level 20 dB,
-					Sidelobe Level 30 dB,
-					Sidelobe Level 40 dB
+	W = 
+	\left[
+	\raisebox{-1.7cm}{
+		\begin{tikzpicture}[node distance=1cm, every node/.style={anchor=center}]
+			\def\dr{2.5}
+			\def\dc{1}
+			\foreach \m in {0,1,2,3} {
+				\foreach \n in {0,1,2,3} {
+					\pgfmathparse{\m + \n}%
+					\pgfmathtruncatemacro{\sum}{\pgfmathresult} % Convert to integer
+					\pgfmathsetmacro{\p}{0.4243 * (\m + \n)}%
+					% Calculate element and place in matrix
+					\ifnum\sum=0
+					\node at (\n*\dr,-\m*\dc) {$1$};
+					\else
+					\node at (\n*\dr,-\m*\dc) {$e^{-j (\p) \pi}$};
+					\fi
 				}
-				]
-				
-				% Read data from CSV and generate indices
-				\addplot+[
-				ycomb,
-				mark=*,
-				line width=0.8pt,
-				mark size=2.5pt,
-				] table[x expr=\coordindex+1, y index=0, col sep=comma] {Q4/results/w-sll-20.csv};
-				
-				\addplot+[
-				ycomb,
-				mark=*,
-				line width=0.8pt,
-				mark size=2.5pt, 
-				] table[x expr=\coordindex+1, y index=0, col sep=comma] {Q4/results/w-sll-30.csv};
-				
-				\addplot+[
-				ycomb,
-				mark=*,
-				line width=0.8pt,
-				mark size=2.5pt, 
-				] table[x expr=\coordindex+1, y index=0, col sep=comma] {Q4/results/w-sll-40.csv};
-				
-			\end{axis}
-		\end{tikzpicture}
-		\caption{Stem plot of $w_i$ values.}
-		\label{fig:stem-plot}
-	\end{figure}
+			}
+	\end{tikzpicture}}
+	\right]
+\end{equation}
+	
+	حال که ماترس را ساختیم مانند tapering با آن برخورد می‌کنیم که تنها فاز را عوض می‌کند و دامنه را تغییر نمی‌دهد.
+	ابتدا مسیله را بدون ماتریس های وزن حل میکنیم.
+	
+	
+	
+	
+	
+	
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Q3/results/c-p-plot3}
+	\caption{}
+	\label{fig:c-p-plot3}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.5\linewidth]{Q3/results/c-imagesc}
+	\caption{}
+	\label{fig:c-imagesc}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Q3/results/c-cart}
+	\caption{}
+	\label{fig:c-cart}
+\end{figure}
+
+
+حال اگر $\phi = 24^\circ$ فرض کنیم، داریم:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Q3/results/c-phi-0-mag}
+	\caption{}
+	\label{fig:c-phi-0-mag}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{Q3/results/c-phi-0-db}
+	\caption{}
+	\label{fig:c-phi-0-db}
+\end{figure}
+
+
+
+%	\[
+%	W =
+%	\begin{bmatrix}
+%		e^{j0} & e^{-j0.4243\pi} & e^{-j1.4243\pi} & e^{-j2.4243\pi} \\
+%		e^{-j1.333\pi} & e^{-j2.666\pi} & e^{-j4\pi} & e^{-j5.333\pi} \\
+%		e^{-j2.666\pi} & e^{-j4\pi} & e^{-j5.333\pi} & e^{-j6.666\pi} \\
+%		e^{-j4\pi} & e^{-j5.333\pi} & e^{-j6.666\pi} & e^{-j8\pi}
+%	\end{bmatrix}
+%	\]
+%	
+	
 	
 
-
-
-
-\subsection{Part b}
-{\color{questioncolor}
-Plot the resulting beam pattern and compute the HPBW, BWNN, and the peal array gain for each weighting.\\
-}
-
-
+	
+	
+سپس وزن ها را به آن اعمال می‌کنیم:
 \begin{figure}[H]
-	\begin{subfigure}{.75\linewidth}
-		\includegraphics[width=\linewidth]{Q4/results/af-sll-20.pdf}
-		\caption{}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{.2\linewidth}
-		\includegraphics[width=\linewidth]{Q4/results/af-polar-sll-20.pdf}
-		\caption{}
-	\end{subfigure}
-	\caption{20 db}
-\end{figure}
-
-
-\begin{figure}[H]
-	\begin{subfigure}{.75\linewidth}
-		\includegraphics[width=\linewidth]{Q4/results/af-sll-30.pdf}
-		\caption{}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{.2\linewidth}
-		\includegraphics[width=\linewidth]{Q4/results/af-polar-sll-30.pdf}
-		\caption{}
-	\end{subfigure}
-	\caption{30 db}
-\end{figure}
-
-
-
-\begin{figure}[H]
-	\begin{subfigure}{.75\linewidth}
-		\includegraphics[width=\linewidth]{Q4/results/af-sll-40.pdf}
-		\caption{}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{.2\linewidth}
-		\includegraphics[width=\linewidth]{Q4/results/af-polar-sll-40.pdf}
-		\caption{}
-	\end{subfigure}
-	\caption{40 db}
-\end{figure}
-
-
-\begin{table}[H]
 	\centering
-	\begin{tabular}{cccc}
-		\toprule
-		\textbf{SLL} & \textbf{Peak Gain} & \textbf{HPBW} & \textbf{NNBW} \\\midrule
-		$-20\ \text{dB}$ & $18.7$ & $0.06\pi$ & $0.14\pi$ \\\midrule
-		$-30\ \text{dB}$ & $16.9$ & $0.07\pi$ & $0.18\pi$ \\\midrule
-		$-40\ \text{dB}$ & $15.8$ & $0.07\pi$ & $0.22\pi$ \\
-		\bottomrule
-	\end{tabular}
-\end{table}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\FloatBarrier\question[Array Factor]
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-{\color{questioncolor}
-For $f_0= 60$ GHz, $N=10$, and $d=\lambda_0/2$ plot array factor in $\theta$ plane (i.e. $\phi=0$) when:
-
-$\Delta\phi$ is the progressive phase shift. For each case determine the steering angle, sidelobe level, and HPBW. Assume all antennas are isotropic.
-}
-
-
-
-
-\begin{equation}
-	\text{AF} = \sum_{n=0}^{N-1} e^{j \psi_n} = \sum_{n=0}^{N-1} e^{j \, n \left( 2 \pi \frac{d}{\lambda_0} \cos(\theta) + \Delta \phi \right) } 
-\end{equation}
-
-
-
+	\includegraphics[width=0.5\linewidth]{Q3/results/w-p-plot3}
+	\caption{}
+	\label{fig:w-p-plot3}
+\end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.4\linewidth]{Q5/results/AF-polarplot-beta-0}
+	\includegraphics[width=0.5\linewidth]{Q3/results/w-imagesc}
 	\caption{}
-	\label{fig:af-polarplot-beta-0}
+	\label{fig:w-imagesc}
 \end{figure}
-
-\begin{figure}[H] 
-	\centering
-	\includegraphics[width=\linewidth]{Q5/results/AF-plot-beta-0}
-	\caption{}
-	\label{fig:af-plot-beta-0}
-\end{figure}
-
-\begin{figure}[H] 
-	\centering
-	\includegraphics[width=\linewidth]{Q5/results/AF-plot-db-beta-0}
-	\caption{}
-	\label{fig:af-plot-db-beta-0}
-\end{figure}
-
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{cc}
-		\toprule
-		\textbf{HPBW} & \textbf{SLL} \\
-		\midrule
-		$0.06 \pi$ & $12.97$ \\
-		\bottomrule
-	\end{tabular}
-\end{table}
-
-
-
-
-\subsection{Part a}
-{\color{questioncolor} $\Delta\phi$=$\pi/2$
-}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.4\linewidth]{Q5/results/AF-polarplot-beta-90}
+	\includegraphics[width=0.5\linewidth]{Q3/results/w-cart}
 	\caption{}
-	\label{fig:af-polarplot-beta-90}
+	\label{fig:w-cart}
 \end{figure}
 
-\begin{figure}[H] 
+
+
+چون طبق فرض بیشینه مقدار گین در $\phi = 24^\circ$ رخ می‌دهد برای این زاویه داریم:
+
+\begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth]{Q5/results/AF-plot-beta-90}
+	\includegraphics[width=\linewidth]{Q3/results/w-phi-0-mag}
 	\caption{}
-	\label{fig:af-plot-beta-90}
+	\label{fig:w-phi-0-mag}
 \end{figure}
-
-\begin{figure}[H] 
+\begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth]{Q5/results/AF-plot-db-beta-90}
+	\includegraphics[width=\linewidth]{Q3/results/w-phi-0-db}
 	\caption{}
-	\label{fig:af-plot-db-beta-90}
+	\label{fig:w-phi-0-db}
 \end{figure}
 
+		
 
+	اگر فرض کنیم آنتن ها به صورت ایزوتروپیک هستند، یعنی پترن کلی آنتن همین فاکتور آرایه خواهد بود. بنابراین از روی شکل های بالا می‌توان جدول زیر را تشکیل داد.
+	
 \begin{table}[H]
 	\centering
 	\begin{tabular}{ccc}
-		\toprule
-		\textbf{HPBW} & \textbf{SLL} & \textbf{Steer$^\circ$}\\
-		\midrule
-		$0.07 \pi$ & $12.97$ & $\pm 120^\circ$\\
+		\toprule\rowcolor{gray!10}
+		\textbf{HPBW} & \textbf{NNBW} & \textbf{Gain Peak}\\\midrule
+		$0.142\pi$ & $0.47\pi$ & $16 = 24 \ \text{dB}$ \\
 		\bottomrule
 	\end{tabular}
 \end{table}
 
 
-\subsection{Part b}
-{\color{questioncolor}
-$\Delta\phi$=$\pi$\\
-}
+حال برای قسمت آخر به صورت زیر انجام می‌دهیم:
 
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.4\linewidth]{Q5/results/AF-polarplot-beta-180}
-	\caption{}
-	\label{fig:af-polarplot-beta-180}
-\end{figure}
+ابتدا ماتریس وزن را مشابه قسمت قبل بدست می‌آوریم.
 
-\begin{figure}[H] 
-	\centering
-	\includegraphics[width=\linewidth]{Q5/results/AF-plot-beta-180}
-	\caption{}
-	\label{fig:af-plot-beta-180}
-\end{figure}
-
-\begin{figure}[H] 
-	\centering
-	\includegraphics[width=\linewidth]{Q5/results/AF-plot-db-beta-180}
-	\caption{}
-	\label{fig:af-plot-db-beta-180}
-\end{figure}
-
-
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{cc}
-		\toprule
-		\textbf{HPBW} & \textbf{SLL} \\
-		\midrule
-		$0.27 \pi$ & $12.97$ \\
-		\bottomrule
-	\end{tabular}
-\end{table}
+\begin{equation}
+	W = 
+	\left[
+	\raisebox{-2.7cm}{
+		\begin{tikzpicture}[node distance=1cm, every node/.style={anchor=center}]
+			\def\dr{2.5}
+			\def\dc{1}
+			\foreach \m in {0,1,2,3,4,5} {
+				\foreach \n in {0,1,2} {
+					\pgfmathparse{\m + \n}%
+					\pgfmathtruncatemacro{\sum}{\pgfmathresult} % Convert to integer
+					\pgfmathsetmacro{\p}{(2 * (\m * sin(pi/6)*cos(pi/4) * 0.5 + \n * sin(pi/6)*sin(pi/4) * 0.8))}%
+					% Calculate element and place in matrix
+					\ifnum\sum=0
+					\node at (\n*\dr,-\m*\dc) {$1$};
+					\else
+					\node at (\n*\dr,-\m*\dc) {$e^{-j (\p) \pi}$};
+					\fi
+				}
+			}
+	\end{tikzpicture}}
+	\right]
+\end{equation}
 
 
-
-
-
-
-
-\subsection{Part c}
-{\color{questioncolor}
-For the same array, fix $\Delta\phi$ at $\pi/4$ and change the frequency from 50 to 70 GHz.\\  Plot steering angle (peak gain direction) versus frequency.\\}
-
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.4\linewidth]{Q5/results/AF-polarplot-beta-45}
-	\caption{}
-	\label{fig:af-polarplot-beta-45}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth]{Q5/results/AF-plot-db-beta-45}
-	\caption{}
-	\label{fig:af-plot-db-beta-45}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth]{Q5/results/AF-plot-beta-45}
-	\caption{}
-	\label{fig:af-plot-beta-45}
-\end{figure}
-
-
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.6\linewidth]{Q5/results/streeing-45}
-	\caption{}
-	\label{fig:streeing-45}
-\end{figure}
-
-
-
-
-
-\subsection{Part d}
-{\color{questioncolor}
-Now, consider the antenna shown in Fig. \ref{Fig3}. Assume antenna spacing is $\lambda_0/2$, and the inter-element feed section is  $\lambda_0$, where $\lambda_0$ is the wavelength at 60 GHz. Plot the steering angle when the frequency changes from 50 to 70 GHz. Compare your results with part (c) and discuss the differences.
-
-\begin{figure}[h]
-\centering
-\includegraphics[scale=0.4]{HW/Sfed}
-\caption{Series-Fed array}
-\label{Fig3}
-\end{figure}
-}
-	\begin{equation}
-		L = \lambda_0
-	\end{equation}
 	
-	\begin{equation}
-		\Delta\phi = \frac{2\pi}{\lambda}L = 2\pi \frac{\lambda_0}{\lambda}
-	\end{equation}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\linewidth]{Q3/results/w2-p-plot3}
+	\caption{}
+	\label{fig:w2-p-plot3}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\linewidth]{Q3/results/w2-imagesc}
+	\caption{}
+	\label{fig:w2-imagesc}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\linewidth]{Q3/results/w2-cart}
+	\caption{}
+	\label{fig:w2-cart}
+\end{figure}
+چون طبق فرض بیشینه مقدار گین در $\phi = 24^\circ$ رخ می‌دهد برای این زاویه داریم:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{Q3/results/w2-phi-0-mag}
+	\caption{}
+	\label{fig:w2-phi-0-mag}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{Q3/results/w2-phi-0-db}
+	\caption{}
+	\label{fig:w2-phi-0-db}
+\end{figure}
 	
 	
-	\begin{figure}[H]
+	\begin{table}[H]
 		\centering
-		\includegraphics[width=0.6\linewidth]{Q5/results/streeing-d}
-		\caption{}
-		\label{fig:streeing-d}
-	\end{figure}
+		\begin{tabular}{ccc}
+			\toprule\rowcolor{gray!10}
+			\textbf{HPBW} & \textbf{NNBW} & \textbf{Gain Peak}\\\midrule
+			$0.140\pi$ & $0.47\pi$ & $16 = 24 \ \text{dB}$ \\
+			\bottomrule
+		\end{tabular}
+	\end{table}
 	
-	As shown in Figure~\ref{fig:streeing-d}, the beam angle diagram is similar to the diagram in Figure~\ref{fig:streeing-45} and is also linear. However, the difference is that it supports a wider range of angles as the frequency varies.
+	مشاهده می‌شود که یک گریتینگ لوب بزرگ پیدا می‌کند که باعث ابهام است. اما مشخصات آن زیاد تغییر نمی‌کند.
+	
+	
 	
 	
 	
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\FloatBarrier\question[\lr{Phased array Radar Jamming}]%4
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+
+		
+		قدرت سیگنال قابل تشخیص حداقل (\lr{\(P_{\text{min}}\)}) برای یک رادار آرایه فازی با ویژگی‌های مشخص شده در جدول زیر به صورت رابطه‌ی زیر تعریف می‌شود:
+		
+		\[
+		P_{\text{min}} = \frac{P_t G^2 \lambda^2 \sigma}{(4 \pi)^3 R_{\text{max}}^4}
+		\]
+		
+		که در آن:
+		\begin{itemize}
+			\item \(P_{\text{min}}\): حداقل قدرت سیگنال قابل تشخیص
+			\item \(P_t\): قدرت سیگنال ارسالی
+			\item \(G\): بهره‌ی آنتن
+			\item \(\lambda\): طول موج
+			\item \(\sigma\): مقطع راداری (\lr{RCS}) هدف
+			\item \(R_{\text{max}}\): حداکثر برد
+		\end{itemize}
+		
+		این معادله باید نسبت سیگنال به نویز حداقلی (\lr{SNR}) لازم برای تشخیص را تأمین کند.
+		
+		جدول مشخصات رادار:
+		\begin{table}[h!]
+			\centering
+			\begin{tabular}{|c|c|c|}
+				\hline
+				\textbf{پارامتر} & \textbf{مقدار} & \textbf{واحد} \\
+				\hline
+				فرکانس (\lr{F}) & 8 & \lr{GHz} \\
+				\hline
+				فاکتور نویز (\lr{NF}) & 5 & \lr{dB} \\
+				\hline
+				برد (\lr{R}) & $1-100$ & \lr{km}\\
+				\hline
+				بهره المان ($G_0$) & 6 & \lr{dBi} \\
+				\hline
+				پهنای باند (\lr{BW}) & 10 & \lr{MHz} \\
+				\hline
+				حداقل \lr{SNR} (${SNR_{\text{min}}}$) & 8 & \lr{dB} \\
+				\hline
+				حداقل \lr{RCS} (\(\sigma_{\text{min}}\)) & $0.5$ & \(\text{m}^2\) \\
+				\hline
+				توان المان (${P_0}$) & 2 & \lr{W} \\
+				\hline
+				دمای اتاق (\(T_0\)) & 290 & \(\text{K}\) \\
+				\hline
+				ثابت بولتزمن (\lr{KB}) & \(1.38 \times 10^{-23}\) & \(\text{J/K}\) \\
+				\hline
+			\end{tabular}
+			\caption{مشخصات رادار آرایه فازی}
+		\end{table}
+
+رابطه بالا در حقیقت توان سیگنال دریافتی را نشان می‌دهد. برای محاسبه توان نویز لازم است که از رابطه زیر استفاده کنیم.
+
+
+
+\begin{equation}
+	N_0 = K_B T_0 B_w F = \num{1.2655e-13} = \num{-128.9772} \ \text{dB}
+\end{equation}
+
+حال SNR کمینه به صورت زیر تعریف می‌شود:
+
+\begin{equation}
+	\text{SNR}_{\min} = \frac{P_{\min}}{N_0} 
+\end{equation}
+
+
+در مقیاس db رابطه فوق را می‌نویسیم.
+\begin{equation}
+	P_{\min} = {N_0} + \text{SNR} = \num{-128.9772} + 8 = \num{-120.9772} \ \text{dB}
+\end{equation}
+
+
+\begin{equation}
+	P_t = N P_0 \quad,\quad G = N G_0
+\end{equation}
+
+حال از این رابطه استفاده می‌کنیم و خیلی ساده $N$ را بدست می‌آوریم.
+
+\begin{equation}
+	 N^3 = \frac{P_{\text{min}}(4 \pi)^3 R_{\text{max}}^4}{ P_0 G_0^2 \lambda^2 \sigma}
+\end{equation}
+
+حال برای بدست آوردن $N$ به طریق زیر عمل می‌کنیم.
+\begin{equation}
+	N = \Big\lceil\ (N^3)^{\tfrac{1}{3}}\ \Big\rceil = 19229
+\end{equation}
+	
+	
+	
+	
+	
+	
+
+		
+
+		
+		در این بخش، فرض می‌کنیم که یک آرایه فازی با مشخصات مشخص داریم. این آرایه شامل المان‌هایی است که به شکل متقارن در یک ساختار آرایه‌ای قرار گرفته‌اند. همچنین فرض می‌کنیم که راداری در فاصله ۵ کیلومتری از آرایه قرار گرفته که در راستای لوب فرعی آن واقع شده است. هدف ما این است که کیفیت سیگنال حفظ شود، به‌طوری‌که نسبت سیگنال به نویز (\lr{SNR$_{\text{min}}$}) در لوب فرعی بیشتر از یک مقدار مشخص باشد.
+		
+		برای این منظور، لازم است که مقدار \lr{SLL} (نسبت سطح لوب فرعی به سطح لوب اصلی) برای آرایه فازی محاسبه شود. این مقدار به ما کمک می‌کند تا میزان کاهش بهره در لوب فرعی را مشخص کنیم و کیفیت کلی سیگنال را ارزیابی کنیم. در این راستا، بهره لوب فرعی را به صورت \( G_l \) تعریف می‌کنیم و روابط زیر را استفاده خواهیم کرد.
+		
+
+		نسبت سیگنال به نویز برای حداقل مقدار قابل قبول از سیگنال به شکل زیر بیان می‌شود (رابطه‌ی فریس):
+		\[
+		SNR_{\text{min}} = P_t G_t G_r \left( \frac{\lambda}{4 \pi R} \right)^2 \frac{1}{K_B T_0 B N L}
+		\]
+
+
+		توجه داریم که در این حالت افت جمر از معکوس توان دوی $R$ استفاده می‌کند.
+		با توجه به تعریف بهره لوب فرعی و استفاده از رابطه \( SNR_{\text{min}} \)، بهره لوب فرعی به صورت زیر محاسبه می‌شود:
+		\[
+		G_l = \frac{K_B T_0 B N L \, SNR_{\text{min}}}{N_t^2 P_0 G_0} \left( \frac{4 \pi R}{\lambda} \right)^2
+		\]
+		
+		
+		با استفاده از نرم‌افزار متلب و جایگذاری مقادیر، مقدار بهره لوب فرعی به صورت زیر محاسبه می‌شود:
+		\[
+		G_l = 7.61 \times 10^{-10}
+		\]
+		
+
+		
+		بهره بیشینه (\( G_{\text{max}} \)) برای آرایه فازی به صورت زیر تعریف می‌شود. این مقدار با توجه به تعداد المان‌ها و تقویت سیگنال در لوب اصلی محاسبه می‌شود:
+		\[
+		G_{\text{max}} = N_t \cdot G_0
+		\]
+		
+		با توجه به اینکه آرایه ما دارای \( N_t = 20 \) المان است، مقدار بهره بیشینه برابر است با:
+		\[
+		G_{\text{max}} = 20 \times 3.9811 = 79.6214
+		\]
+		
+
+		
+		نسبت سطح لوب فرعی به سطح لوب اصلی (\( SLL \)) با استفاده از بهره‌های محاسبه‌شده به صورت زیر است:
+		\[
+		SLL = \frac{G_l}{G_{\text{max}}} = \num{9.5577e-12} 
+		\]
+		
+		
+		
+		به‌صورت دسی‌بل، مقدار \lr{SLL} برابر خواهد بود با:
+		\[
+		SLL = 10 \log_{10}(SLL) = -110.1965 \, \text{dB}
+		\]
+		
+
+		
+		مقدار نسبت سطح لوب فرعی به سطح لوب اصلی (\( SLL \)) محاسبه شد و برابر با \( 110 \, \text{dB} \) است. این مقدار نشان‌دهنده کیفیت طراحی آرایه فازی و دقت آن در کاهش سطح لوب‌های فرعی است.
+		
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\FloatBarrier\question[\lr{Array Tapering}]%5
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	تابع کایزر به صورت زیر است:
+	\begin{latin}
+		\lstinputlisting{Q5/kaiser_window.m}
+	\end{latin}
+	
+	که رسم شده آن به صورت زیر است:
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.5\linewidth]{Q5/results/keiser-11}
+		\caption{}
+		\label{fig:keiser-11}
+	\end{figure}
+	
+	برای پارامتر $\alpha$ آن را با آزمون خطا طوری تنظیم می‌کنم که SLL خروجی برابر با 30 db شود.
+	
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{Q5/results/af-with-keiser}
+	\caption{}
+	\label{fig:af-with-keiser}
+\end{figure}
+
+
+\(w[n] = [\csvreader[head=false, after line={;}]
+{Q5/results/keiser.csv}{}{\num{\csvcoli}}] \) 
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{Q5/results/af-db-with-keiser}
+	\caption{}
+	\label{fig:af-db-with-keiser}
+\end{figure}
+ 
+ مقدار $\alpha$ در شکل نمایش داده شده است. با زیادتر شدن مقدار $\alpha$ اندازه \lr{SLL} نیز افزایش پیدا می‌کند. 
+ 
+ \begin{equation}
+ 	\alpha \ge 3.427
+ \end{equation}
+ 
+ 
+ 
+ در مورد تغییر خواسته شده برای سوال ۴، قسمت اول، تمامی روابط از آنجایی آمد که میخواستیم با توجه کمینه مقدار SNR مقدار توان دریافتی را پیدا کنیم. اینجا $N$ برای ایجاد توان دریافتی مناسب کاربرد داشت. و مقدار SLL روی آن نقش نداشت. پس روی قسمت الف تاثیری ندارد.
+ 
+ اما در قسمت ب، چون SLL را می‌توانیم با پنجره کایزر بهبود بدهیم، به تعداد کمتری $N$ نیاز داریم تا 110 دیبی SLL بگیریم.
+
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\newpage
-	\bibliographystyle{plainnat}
+	\bibliographystyle{plainnat-fa}
 	\nocite{*}
 	\bibliography{references}
 	
