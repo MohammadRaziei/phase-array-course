@@ -1,0 +1,148 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[paper=a4, fontsize=11pt]{scrartcl} % A4 paper and 11pt font size
+\usepackage{graphicx}
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+\usepackage[english]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+\usepackage{listings}
+\usepackage{sectsty} % Allows customizing section commands
+\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{	
+\normalfont \normalsize 
+\textsc{Sharif University of Technology\\ Electrical Engineering Dept.} \\ [25pt] % Your university, school and/or department name(s)
+\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+\huge Phased Array Systems\\ Assignment 3, Phase Shifter  \\ % The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+%========= TYPE YOUR NAME HERE ==================
+\author{Ali Hosseini} % Your name
+
+\date{\normalsize\today} % Today's date or a custom date
+
+\begin{document}
+
+
+\maketitle % Print the title
+\begin{figure}[!t]
+\centering
+\includegraphics[scale=0.65]{Sharif}
+\end{figure}
+%---------------------------------------------------------------------------------------
+%	PROBLEM 1
+%----------------------------------------------------------------------------------------
+
+\section{Vector-Sum Phase Shifter}\label{clear}
+
+a)  Describe how this type of phase shifter operates. How does the phase of this phase shifter vary from 0 to 360 degrees?\\
+
+b) If the Ideal VGAs have 2, 3 or 4 control bits in Fig. \ref{vsum}, simulate the minimum and maximum output phases in each mode and express the results. The control voltage can vary from 0 to 2 volts.\\
+
+c)In practice, due to the lines used in each path and the elements used in each path, the output phase has offsets. Does this offset disrupt the array beam?\\
+
+d) Non-Ideal VGA. Fig. \ref{vga} illustrates the gain and phase of a VGA from MACOM measured at 5.5 GHz. The data points are given in a matlab file named \textit{VGAS21.m}. Assume phase is ideal but gain as it is given in Fig. \ref{vga}(a). Find the blind phases of the V-Sum phase shifter designed by using this VGA. \\
+
+e) Assume phase is ideal plot the phase constellation of a 3 bit VGA ($0^o$ to $90^\circ$ quadrant is divided to $2^3\times 2^3$ regions).\\
+
+f) Now consider the real phase corresponding to each gain value. Plot the new phase constellation and compare it with the ideal-phase case.\\
+\begin{figure}[bh]
+\centering
+\includegraphics[scale=0.6]{VSM}
+\caption{Vector-Sum phase shifter schematics.}\label{vsum}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.6]{VGA_S21}
+\caption{Measured Gain and Phase of a VGA.}\label{vga}
+\end{figure}
+
+\section{Phased Shifter Based on Hybrid90 at 30 GHz}
+(Solve all parts of this exercise for both lumped and distributed modes shown in Fif. \ref{LD}.)\\
+
+a)In Fig.\ref{loads}, four reflective loads are shown. Put each of these loads in both Distributed and Lumped Hybrid90 types. Express the bandwidth in each mode and the reason for using each of these loads using relationships.\\
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.6]{reflective}\label{loads}
+\caption{Four loads for a typical RTPS.}
+\end{figure}
+
+
+b) For each of the four loads, adjust the $C_V$ range so that the output phase can be changed from 0 to 90 degrees. Report simulation results. (Consider the minimum $C_V$ value equal to $C_1/\sqrt{3}$. Also calculate the value of the $C_V$-dependent elements, for example, L in load (b)).
+c) Which of these reflective loads do you select? Why?\\
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.7]{RTPS}\label{LD}
+\caption{Lumped (right) and distributed (left) RTPS}
+\end{figure}
+
+\section{Phase Shifters in Literature}
+This section can be done using first and second references.\\
+
+a) If the reflective load is given in Fig. \ref{cload}, get the relation between the input impedance and the phase change in terms of the circuit parameters.\\
+
+b) Simulate section (a) in ADS and get the phase result. What is the cause(s) of the difference between simulation and measurement?\\
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=1]{Z1}\label{cload}
+\caption{Compound Reflective Load.}
+\end{figure}
+
+c) What are the advantages and disadvantages of using the circuit in Fig. \ref{L90} as the $90^0$ hybrid coupler?\\
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.8]{Niknejad}
+\caption{Lumped Hybrid Coupler.}
+\label{L90}
+\end{figure}
+
+d) Now, if we have the equivalent circuit in cascade, what changes in losses, bandwidth, phase shift, and other phase parameters (using mathematical relationships)?\\
+
+e) If, as shown in Fig. \ref{RTL}, the RTL load is chosen as the reflective load, what changes are made to (c) and (d)?\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.8]{RTL} \label{RTL}
+\end{figure}
+\\
+f) Compare all the phase shifters of Questions 4 and 5 in terms of the phase change range (with reasons and mathematical relationships).
+\\
+\\
+References:\\
+1. B. Biglarbegian, M.R. Nezhad-Ahmadi, M. Fakharzadeh, S. Safavi-Naeini , Millimeter-Wave Reflective-Type Phase Shifter in CMOS Technology, IEEE Microwave and Wireless Components Letters, vol.19, no.9, pp.560-562, Sept. 2009\\
+2.  M. Tabesh, A. Arbabian, A. Niknejad, 60GHz Low-Loss Compact Phase Shifters Using A Transformer-Based Hybrid in 65nm CMOS, Custom Integrated Circuits Conference (CICC), 2011 IEEE, Sep. 2011
+
+%----------------------------------------------------------------------------------------
+
+\end{document}

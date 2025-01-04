@@ -22,6 +22,16 @@
 \usepackage{multicol}
 \usepackage{tcolorbox}
 \usepackage[numbers]{natbib}
+\usepackage{xfp}
+\usepackage{circuitikz}
+\usepackage{enumitem, enumerate}
+
+
+\sisetup{
+	round-mode=places,
+	round-precision=4 % Set the number of decimal places
+}
+
 
 % Define a custom note environment
 \newtcolorbox{note}{colback=lightgray!10!white, colframe=lightgray!50!black, title=Note}
@@ -90,21 +100,28 @@
 
 \newcommand*{\transpose}{{\mkern-1.5mu\mathsf{T}}}
 
+\renewcommand{\baselinestretch}{1.5} 
+
 
 \usepackage{titlesec}
 \titleformat{\section}[block]
 {\titlerule\addvspace{4pt}\normalfont\fontsize{14}{16}\bfseries}
 {\thesection\enspace}{0pt}{}[\vspace{2pt}\titlerule]
 
+\usepackage{xepersian}
+\settextfont{XB Niloofar}
+\setmathdigitfont{Yas}
+
+
 
 \newcommand\question[1][\space]{
-	\section[Question \numberstringnum{\thesection}]
-	{Question \numberstringnum{\thesection}: #1}
+	\section[سوال \tartibi{section}]
+	{سوال \tartibi{section}: #1}
 }
 
 
-\author{Mohammad Raziei}
-\title{Solutions to the First Series of Exercises}
+\author{محمد رضیئی}
+\title{گزارش تکلیف سری سوم}
 \date{\today}
 
 
@@ -123,8 +140,6 @@
 	%	\)
 }
 
-
-
 \begin{document}
 	
 	
@@ -137,201 +152,107 @@
 	%		\fancyfoot[LE,RO]{\thepage}
 	%		\fancyfoot[LO,CE]{From: K. Grant}
 	%		\fancyfoot[CO,RE]{To: Dean A. Smith}
-	\maketitle
+	
+\begin{titlepage}
+	\begin{center}
+		\vspace*{1cm}
+		
+		\includegraphics[width=0.3\textwidth]{HW/Sharif.jpg} % Replace with your logo
+		
+		\vspace{0.5cm}
+		\textbf{\large دانشگاه صنعتی شریف}
+		
+		\vspace{0.5cm}
+		{\Large \textbf{مهندسی برق}}
+		
+		
+		\vspace{2.5cm}
+		
+		{\Large \textbf{گزارش تکلیف سری سوم}}
+		
+
+		
+		\vspace{1cm}
+		{\Huge \textbf{درس سیستم‌های آرایه فازی}}
+		
+		\vspace{2.5cm}
+		
+		\textbf{\large محمد رضیئی }
+		
+		\vfill
+		
+
+		
+
+		
+		\textbf{\large \today}
+		
+		\vspace{0.5cm}
+	\end{center}
+\end{titlepage}
 	
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\FloatBarrier\question[Friis link equation and phased array design]%1
+	\FloatBarrier\question[]%1
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	
-	\subsection{Single Antenna Implementation}\label{SISO}
-	\textcolor{questioncolor}{A small-cell backhaul company wants to design a 60 GHz link between two stations which are
-		$1.2 \text{km}$ apart. The objective is to transmit and receive minimum $1 \text{Gbps}$ data.}
-	
-	\subsubsection{Part a}
-	{\color{questioncolor} If CMOS technology is used, what is the minimum antenna gain for a Single antenna at TX
-	and RX (SISO)?
-	\\[1em]
-	\noindent Hints:
-	\begin{enumerate}
-		\item CMOS power amplifiers give an output power ($P_{1\text{dB}}$) of typically 0 to 8 dBm at 60 GHz. 
-		\item Assume QPSK modulation, and find minimum required SNR for BER of $10^{-5}$. 
-		\item Calculate the physical bandwidth assuming $25\%$ coding overhead.
-		\item Find Oxygen ($O_2$) absorption loss at $60 \text{GHz}$ band.
-		\item Assume clear sky condition (no rain). \textcolor{black}{$\rightarrow$ Means \(n = 2\) in Friis equation}
-		\item Assume perfect antenna alignment and matching.  \textcolor{black}{$\rightarrow$ Means \(\eta_r = \eta_t = 1\) }
-		\item Plot antenna gain as a function of $P_{1\text{dB}}$ and receiver noise figure (F ranges from 5 to 10 dB).
-		\item You are allowed to make any reasonable assumption if necessary. But you should clearly justify your assumption.	
-	\end{enumerate}
-	}
-
-
-
-
-
-\paragraph{Antenna Gain Calculation Using Friis and Shannon's Formulas}
-	
-	The signal-to-noise ratio (SNR) for a wireless link is expressed by the Friis link equation:
-	
-	\begin{align}
-		\text{SNR} &= P_t \cdot G_t \cdot G_r \cdot \left( \frac{\lambda}{4 \pi \ell} \right)^n \cdot \frac{1}{K_B \cdot T_0 \cdot B_w \cdot F \cdot \mathcal{L}}
-	\end{align}
-	
-	where:
-	\begin{itemize}
-		\item \(\lambda\): Carrier wavelength,
-		\item \(\ell\): Link range,
-		\item \(K_B = 1.38 \times 10^{-23} \, \text{J/K}\): Boltzmann constant,
-		\item \(T_0 = 290 \, \text{K}\): Absolute room temperature,
-		\item \(B_w\): Channel bandwidth,
-		\item \(F\): Receiver noise figure,
-		\item \(\mathcal{L}\): Losses in the system.
-	\end{itemize}
-	
-	\begin{equation}
-		\lambda = \frac{c}{f} = \frac{\num{3e8}}{\num{60e9}} = \saverread{Q1}{5} \ \text{m}
-	\end{equation}
-	
-	\paragraph{System Model}
-	For a phased array system, the transmit power (\(P_t\)) and antenna gains (\(G_t, G_r\)) are defined as:
-	
-	\begin{align}
-		P_t &= N_t \cdot P_{t1}, \\
-		G_t &= \eta_t \cdot N_t \cdot G_{t1}, \\
-		G_r &= \eta_r \cdot N_r \cdot G_{r1},
-	\end{align}
-	
-	where:
-	\begin{itemize}
-		\item \(N_t\): Number of transmit antennas (\(N_t = 1\) for SISO),
-		\item \(N_r\): Number of receive antennas (\(N_r = 1\) for SISO),
-		\item \(\eta_t = \eta_r = 1\): Array efficiency (perfect alignment and matching).
-	\end{itemize}
-	
-	Assuming \(G_t = G_r = G\):
-	
-	\begin{equation}
-		G_t = G_r = G
-	\end{equation}
-	
-	\paragraph{Oxygen Absorption Loss}
-	The oxygen absorption loss is given by:
-	
-	\begin{equation}
-		\mathcal{L} = \alpha_{\text{O}_2} \cdot d,
-	\end{equation}
-	
-	where \(\alpha_{\text{O}_2} = 15 \, \text{dB/km}\) is the specific attenuation, and \(d = 1.2 \, \text{km}\). Substituting:
-	
-	\begin{equation}
-		\mathcal{L} = 15 \cdot 1.2 = 18 \, \text{dB} = \saverread{Q1}{4}.
-	\end{equation}
-	
-	\paragraph{Minimum SNR from BER Curve}
-	The minimum SNR for \(\text{BER} = \num{1e-5}\) is obtained from the BER curve shown in Figure~\ref{fig:ber-snr}.
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.5\linewidth]{Q1/results/ber-snr}
-		\caption{BER vs. SNR for QPSK modulation.}
-		\label{fig:ber-snr}
+		\includegraphics[width=\linewidth]{Q1/results/ADS/circuit}
+		\caption{}
+		\label{fig:circuit}
 	\end{figure}
-	
-	According to Figure~\ref{fig:ber-snr}, the minimum SNR is:
-	
-	\begin{equation}
-		\text{SNR} = \saverread{Q1}{1} \, \text{dB} = \saverread{Q1}{2}.
-	\end{equation}
-	
-	\paragraph{Bandwidth Calculation Using Shannon's Formula}
-	The channel capacity is given by:
-	
-	\begin{equation}
-		C = B_w \log_2\left(1 + \frac{S}{N}\right),
-	\end{equation}
-	
-	where:
-	\begin{itemize}
-		\item \(C = 1.25 \, \text{Gbps}\) (with 25\% coding overhead),
-		\item \(\text{SNR} = \saverread{Q1}{1} \, \text{dB}\).
-	\end{itemize}
-	
-	Rearranging for \(B_w\):
-	
-	\begin{equation}
-		B_w = \frac{C}{\log_2\left(1 + \text{SNR}\right)} = \saverread{Q1}{3} \, \text{Hz}.
-	\end{equation}
-	
-	\paragraph{Antenna Gain Calculation}
-	Using Friis equation:
-	
-	\begin{equation}
-		G^2 = \text{SNR} \cdot K_B \cdot T_0 \cdot B_w \cdot \mathcal{L} \cdot \frac{F}{P_t} \cdot \left( \frac{4 \pi \ell}{\lambda} \right)^2,
-	\end{equation}
 	
 	\begin{figure}[H]
-		\begin{subfigure}{.45\linewidth}
-			\centering
-			\includegraphics[width=\linewidth]{Q1/results/G-per-F-Pt}
-			\caption{Magnitude Scale}
-			\label{fig:g-per-f-pt}
-		\end{subfigure}
-		\hfill
-		\begin{subfigure}{.45\linewidth}
-			\centering
-			\includegraphics[width=\linewidth]{Q1/results/G-per-F-Pt-db}
-			\caption{dB Scale}
-			\label{fig:g-per-f-pt-db}
-		\end{subfigure}
-		\caption{
-			Antenna Gain
-		}
+		\centering
+		\includegraphics[width=0.7\linewidth]{Q1/results/ADS/freq-range}
+		\caption{}
+		\label{fig:freq-range}
 	\end{figure}
 	
-	where:
-	\begin{itemize}
-		\item \(\lambda = \saverread{Q1}{5} \, \text{m}\),
-		\item \(P_t = 8 \, \text{dBm}\),
-		\item \(F = 5 \, \text{dB}\),
-		\item \(\mathcal{L} = \saverread{Q1}{4}\).
-	\end{itemize}
 	
-	From precomputed values:
-	\begin{equation}
-		G^2 = \saverread{Q1}{6},
-	\end{equation}
-	
-	\begin{equation}
-		G = \sqrt{\saverread{Q1}{6}} = \saverread{Q1}{7} = \saverread{Q1}{8} \, \text{dB}.
-	\end{equation}
-	
-	
-
-	
-	
-	
-	
-	
-	\paragraph{Conclusion}
-	The minimum antenna gain for both transmit and receive antennas is approximately \(\saverread{Q1}{8} \, \text{dB}\) under the given conditions.
-	
-
-
-\subsubsection{Part b}
-{\color{questioncolor}
-	What is the receiver sensitivity?
-\\}
-
-
-
-Receiver sensitivity is the minimum power level at which the receiving node is able to clearly receive the bits being transmitted: 
+\begin{table}[h!]
+	\centering
+	\caption{Phase Data Table}
+	\begin{tabular}{|l|c|c|c|c|}
+		\hline
+		Phase Type & Frequency (GHz) & Phase (deg) & VcQ & VcI \\
+		\hline
+		Maximum Phase & $60.00$ & $-91.810$ & $0.000$ & $2.000$ \\
+		Minimum Phase & $60.00$ & $-178.187$ & $2.000$ & $0.000$ \\
+		\hline
+	\end{tabular}
+\end{table}
 
 \begin{equation}
-	S_i = k_B \cdot T_0 \cdot B_w \cdot F \cdot \text{SNR}_{\text{min}} = \saverread{Q1}{9}
-	 = \saverread{Q1}{10} \ \text{dBm}
+	\text{frequency range} = (-91.810) - (-178.187) = \fpeval{(-91.810) - (-178.187)}^\circ \le 90^\circ 
 \end{equation}
 
 
+	
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Q1/results/ADS/s21-phase-vs-vci}
+		\caption{}
+		\label{fig:s21-phase-vs-vci}
+	\end{figure}
+	
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Q1/results/ADS/s21-phase-vs-vcq}
+		\caption{}
+		\label{fig:s21-phase-vs-vcq}
+	\end{figure}
+	
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\linewidth]{Q1/results/ADS/s21-phase-vs-vciq}
+		\caption{}
+		\label{fig:s21-phase-vs-vciq}
+	\end{figure}
 
 
 
@@ -339,804 +260,715 @@ Receiver sensitivity is the minimum power level at which the receiving node is a
 
 
 
-\subsection{SISO:  Pole Sway and antenna misalignment}
-{\color{questioncolor}
 
 
-Fig. \ref{fig:lighting-poles-sway} shows pole sway caused by wind. Measurements show that pole sway can be as large as $\pm2.7^\circ$. Assume Parabolic antennas are used in Section \ref{SISO}. For a Parabolic antenna 3-dB beamwidth in degree is approximately given by:
+\begin{figure}[H]
+	\begin{subfigure}{.45\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{Q1/results/phase-vs-voltage}
+		\caption{}
+		\label{fig:phase-vs-voltage}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{.45\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{Q1/results/amplitude-vs-voltage}
+		\caption{}
+		\label{fig:amplitude-vs-voltage}
+	\end{subfigure}
+	\caption{}
+\end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.25\linewidth]{HW/lighting-poles-sway}
+	\includegraphics[width=0.7\linewidth]{Q1/results/vga-phase-map}
 	\caption{}
-	\label{fig:lighting-poles-sway}
+	\label{fig:vga-phase-map}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Q1/results/vga-phase-sort}
+	\caption{}
+	\label{fig:vga-phase-sort}
 \end{figure}
 
 
-\begin{equation}
-	\Delta\theta=\frac{70\lambda}{L} 
-\end{equation}
-where $\Delta\theta$ denotes antenna beamwidth and $L$ is the antenna diameter.\\
-You can calculate the gain of a Parabolic antenna from here:\\ \url{http://www.qsl.net/pa2ohh/jsparabolic.htm}
-\\ or use the following relation: 
-
-\begin{equation}
-	G=\eta\times\frac{\pi^2L^2}{\lambda^2}
-\end{equation}
-where $\eta$, known as the aperture efficiency, is typically 0.55 to 0.70.
-
-
-How much drop in the received SNR is caused by maximum antenna pole sway? What solutions do you recommend (at least 3 solutions)?\\
-
-\noindent Hints: 
-
-You should approximate the antenna gain with a linear function of angle.
-
-}
 
 
 
-The following equation represents the gain of a parabolic antenna (\(G\)) with aperture length \(L\):
-
-\begin{equation}
-	G = \eta \frac{\pi^2 L^2}{\lambda^2}
-\end{equation}
-
-First, we need to calculate the length of the antenna aperture (\(L\)) by considering the worst-case scenario for the design. Using the power obtained in Equation (12), we have:
-
-\[
-G_0 = \saverread{Q1}{8} \, \text{dB} 
-\]
-
-We also consider the efficiency factor (\(\eta\)) as \(\eta = 0.55\) to account for the worst-case design. The aperture length is calculated as follows:
-
-\begin{equation}
-	L = \frac{\lambda}{\pi} \sqrt{\frac{G_0}{\eta}} = \frac{\lambda}{\pi} \sqrt{\frac{\saverread{Q1}{8}}{0.55}} = 0.0567 \, \text{m} = 56.7 \, \text{mm} 
-\end{equation}
-
-The antenna beamwidth is calculated using the following equation:
-
-\begin{equation}
-	\Delta \theta = \frac{70 \lambda}{L} \approx 5.51^\circ
-\end{equation}
 
 
-At half of this beamwidth, i.e., \(2.76^\circ\), the gain is halved. Since the wind also shifts the beam by \(2.7^\circ\), the gain at this angle is reduced by half, resulting in a corresponding reduction in the \(\text{SNR}\).
-\\
-
-\noindent\textbf{Solutions}
-
-1. Perform beamforming since the beam steering speed is significantly faster than the wind speed.  
-
-2. Increase the beamwidth to ensure functionality under varying wind conditions.  
-
-3. Use stronger and more durable materials for the antenna to reduce its swing caused by the wind.
 
 
-\subsection{Phased Array Solution: Clear Sky}\label{clear}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Q1/results/vga-phase-map-nonideal}
+	\caption{}
+	\label{fig:vga-phase-map-nonideal}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Q1/results/vga-phase-sort-nonideal}
+	\caption{}
+	\label{fig:vga-phase-sort-nonideal}
+\end{figure}
 
-{\color{questioncolor}
-Design a CMOS TX phased array and a CMOS RX phased array at 60 GHz for 1 Gbps data at 1 km. Calculate gain drop for maximum sway angle with and without beamforming. Explain your design steps and assumptions. 
-}
-
-
-We select 30 antennas for both TX and RX, which results in the required transmit power (\(P_t\)) being:
-
-\[
-P_t \cdot G_t \cdot G_r = 43.5 \, \text{dBm}.
-\]
-
-Assuming \(G_t = G_r = 18 \, \text{dBi}\), we calculate:
-
-\[
-P_t = 7.5 \, \text{dBm}.
-\]
-
-In this setup, we use a 30-element uniform linear array (ULA) and assume that all elements sway with the same angle and in the same direction. Instead of physically rotating the antennas, we calculate the beam attenuation at the maximum sway angle (when the antennas have no swing).
-
-The beam pattern is simulated, and we compute the attenuation for the maximum sway angle (\(2.75^\circ\)) for both the formed and non-formed beam patterns. In the worst-case scenario, the TX and RX sway in opposite directions, which doubles the calculated attenuation.
 
 
 
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\FloatBarrier\question[Qualcomm 28 GHz Phased Array for 5G]
+\FloatBarrier\question[]%1
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-{\color{questioncolor}
-In Nov 2015, Qualcomm company demonstrated their TDD synchronous system operating in the 28 GHz band. The demonstration included one millimeter-wave (mm-wave) base station and one mobile device. The mm-wave base station, had 128 antenna elements with 16 controllable RF channels, while the device contained four sub-arrays with 4 controllable RF channels.\\
-
-}
-
-
-\subsection{Part a}
-
-{\color{questioncolor}
-Search to find more information about this project. Explain why 28 GHz frequency was chosen?\\
-}
-
-Using the Qualcomm website \cite{qualcommResearch}, we present the reasons Qualcomm selected the 28 GHz frequency. It is important to note that the goal of this project is to use millimeter-wave technology, and the 28 GHz frequency has been chosen as one of the relevant frequencies for millimeter waves.
-
-\begin{enumerate}
-	\item Since we are operating in the millimeter-wave range, it is possible to use a very large number of antennas in a small form factor. This enables the transmission and reception of narrower beams, which, in turn, allows for the transmission and reception of more energy. This capability helps overcome propagation losses in millimeter waves.
-	\item Extremely high bandwidth is achievable, allowing for very high data rates of several gigabits per second.
-	\item Operating at a higher frequency allows for the support of more users.
-\end{enumerate}
+\def\fo{30e9}% 30 GHz
+\def\Cl{256e-15}% 256 fF
 
 
 
-
-
-\subsection{Part b}
-
-{\color{questioncolor}
-
-Why only 4 sub-arrays were used for the mobile device? Does increasing the carrier frequency help to have a better link?\\
-}
-
-As mentioned in the problem statement, this project utilizes four subarrays. Increasing the number of subarrays generally improves processing accuracy. However, it should be noted that there are physical limitations in mobile devices. Additionally, increasing the number of subarrays requires addressing their power consumption, which creates a challenge in managing power for a larger number of subarrays. Another issue is the increased complexity of the structure.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Q2/coupler}
+	\caption{}
+	\label{fig:coupler}
+\end{figure}
 
 
 
+%\begin{table}[h!]
+%	\centering
+%	\begin{tabular}{|c|c|}
+%		\hline
+%		\textbf{Parameter} & \textbf{Value} \\ \hline
+%		H & $\num{8} \ \text{mil}$ \\ \hline
+%		Er &$\num{3.38}$ \\ \hline
+%		Mur & $\num{1}$ \\ \hline
+%		Cond & $\num{58.7E6}$ \\ \hline
+%		Hu & $\num{1e+36}$ \\ \hline
+%		T & $\num{35} \ \text{$\mu$m}$ \\ \hline
+%		TanD & $\num{0.0027}$ \\ \hline
+%		FreqForEpsrTanD & $\num{10} \ \text{GHz}$ \\ \hline
+%	\end{tabular}
+%	\caption{Parameter Table for the Substrate}
+%	\label{tab:parameters}
+%\end{table}
 
-\subsection{Part c}
 
-{\color{questioncolor}
-In a LOS link measurement maximum range of 350 m was measured. Find the total transmitted power assuming 500 MHz bandwidth, 10 dB noise figure, 5 dBi antenna element gain, and minimum  10 dB SNR at the receiver output.\\
-}
 
-By increasing the center frequency, we can enhance data rates and bandwidth. However, it should be noted that the range will be reduced, and at higher frequencies, signal attenuation in the environment becomes more significant. Therefore, in addition to the mentioned advantages, it also has the stated disadvantages. For this reason, if a greater range is important in an application, a communication link with a higher center frequency will not be suitable. However, if data transfer rate or bandwidth is of primary importance, a communication link with a higher frequency will be highly appropriate.
+\subsection{قسمت الف:}
+ابتدا برای هر از بار های شکل 
+	\ref{fig:reflective}
+مقدار فاز $\Gamma$ را حساب می‌کنیم.
 
-\subsection{Part d}
-{\color{questioncolor}
-What is the maximum LOS range between two mobile devices?\\
-}
 
-We can calculate the transmission power using the link equation. Therefore, we rewrite the link equation. It is important to note that we are using a phased array here, and hence the number of antennas must be considered in the equation:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{HW/reflective.png}
+	\caption{}
+	\label{fig:reflective}
+\end{figure}
 
+طبق راهنمایی تدریس یار درس، میزان پهنای باند برای بار‌های تماما موهومی بی‌نهایت است. از آنجایی که تمامی بارهای این شکل موهومی خالص است، از نظر پهنای باند برتری خاصی بایکدیگر ندارند. برتری آن ها در میزان درجه آزادی و می‌توان فاز را تغییر بدون این که مقادیر سلف و خازن نیاز باشد که منفی شود. بنابراین بهبود عملکرد این قسمت را در قسمت بعدی خواهیم دید:
+
+\subsection{قسمت ب:}
+
+
+اول از همه بگم که از سایت 
+\url{https://leleivre.com/rf_lumped90hybrid.html}
+روابط دقیق سلف و خازن های شکل زیر را در آوردم.
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Q2/rf-lumped90hybrid}
+	\caption{}
+	\label{fig:rf-lumped90hybrid}
+\end{figure}
+
+که به صورت زیر است:
+\begin{align}
+	Z_s &= \frac{Z_0}{\sqrt{2}}, \\[10pt]
+	L_1 &= \frac{Z_s}{2 \pi f_{0}}, \\[10pt]
+	L_2 &= \frac{Z_0}{2 \pi f_{0}}, \\[10pt]
+	C_1 &= \frac{1}{2 \pi f_{0}} \left( \frac{1}{Z_s} + \frac{1}{Z_0} \right).
+\end{align}
+
+حال با توجه به مقادیر سوال فرکانس کاری را بدست می‌آوریم:
 \begin{equation}
-	\text{SNR} = \eta \, N_t P_t N_t G_t N_r G_r \left( \frac{\lambda}{4 \pi \ell} \right)^n \frac{1}{K_B T_0 B F \mathcal{L}},
+	Z_0 = 50 \ \Omega
 \end{equation}
 
-where:
-\begin{multicols}{2}
-	\begin{itemize}
-		\item \(N_t\): Number of transmitting antennas,
-		\item \(N_r\): Number of receiving antennas,
-		\item \(G_t\): Transmitting antenna gain,
-		\item \(G_r\): Receiving antenna gain,
-		\item \(\lambda\): Wavelength,
-		\item \(\ell\): Distance,
-		\item \(K_B\): Boltzmann constant,
-		\item \(T_0\): Absolute temperature,
-		\item \(B\): Bandwidth,
-		\item \(F\): Noise figure,
-		\item \(\mathcal{L}\): System losses,
-		\item \(\eta\): Efficiency factor.
-	\end{itemize}
-\end{multicols}
-
-The number of antennas at the transmitter and receiver for base station transmission must be specified. According to the problem statement, we have 16 controllable {RF} channels available. Therefore, the number of antennas capable of beamforming from the base station is 16.
-
-
-For the base station transmission, the number of transmitting antennas is:
-
-\[
-N_{t,b} = 16
-\]
-
-For the receiver, with a 4-element array:
-
-\[
-N_{r,d} = 4
-\]
-
-Rewriting the equation to solve for \(P_{t,b}\):
-
 \begin{equation}
-	P_{t,b} = \frac{\text{SNR} \, K_B \, T_0 \, B \, F \, \mathcal{L}}{\eta \, N_{r,d}^2 N_t G_t G_r} \left( \frac{4 \pi \ell}{\lambda} \right)^n
+	\implies \quad
+	Z_s = \num{\fpeval{50 / sqrt(2)}} \ \Omega
 \end{equation}
 
-Finally, substituting the values, the transmit power is calculated as:
 
-\[
-P_{t,b} = 0.0033 \, \text{W} = 5.176 \, \text{dBm}.
-\]
+\begin{equation}
+	\begin{cases}
+		f_{0} = \frac{Z_s}{2 \pi L_1} \simeq \num{\fpeval{(50 / sqrt(2)) / (2 * pi * 93.8) * 1000}} \ \text{GHz}
+		\\
+		f_{0} = \frac{Z_0}{2 \pi L_2} \simeq \num{\fpeval{(50) / (2 * pi * 132) * 1000}} \ \text{GHz}
+	\end{cases}
+	\implies f_0 = 60 \ \text{GHz}
+\end{equation}
 
+متوجه میشویم که فرکانس باید ۶۰ گیگ باشد. برای این فرکانس مقادیر زیر را داریم:
 
-\subsection{Part e}
-{\color{questioncolor}
-One requirement for the base station is to generate multiple simultaneous beams. What is your hardware architecture solution to achieve this goal?\\
-}
 
+\begin{equation}
+	f_0 = 60 \ \text{GHz}
+	\quad \implies C_1 = 128.1 \ \text{fF},\ \ L_1 = 93.78 \  \text{pH},\ \ L_2 = 132.6 \ \text{pH}
+\end{equation}
 
-	
-	First, the transmit power of the mobile in the designed link must be calculated. Then, the \textit{range} between the two mobiles can be determined. Considering the problem description, there are 4 RF channels in a single mobile device; hence:
-	\[
-	N_{t,d} = 4
-	\]
-	
-	Additionally, there are 128 antennas at the receiver. Since the number of RF controllable channels is limited to 4, the total number of antennas is significant. Thus, we have:
-	\[
-	N_{r,b} = 128
-	\]
-	
-	Using Equation (28), the transmit power of the mobile in a link between mobiles and the base station is calculated as:
-	\[
-	P_{t,m} = 0.0016 \, \text{W} = 2.166 \, \text{dBm}.
-	\]
-	
-	As expected, the transmit power of each mobile is less than the transmit power of the base station.
-	
-	For a link between two mobiles, consider the distance \(R\) between them. The transmit power of each mobile is limited to the above value. Keeping the total number of transmitting and receiving antennas in mind, the power constraints of both channels (transmitting and receiving) are considered. Rewriting the link equation for the range between the two mobiles, we get:
-	
-	\[
-	R^n = \eta N_t P_t N_t G_t N_r G_r \left( \frac{\lambda}{4\pi} \right)^n \frac{1}{K_B T_0 B F \mathcal{L} \text{SNR}} \implies R = \frac{\lambda}{4\pi} \sqrt[n]{\frac{\eta N_t P_t N_t G_t N_r G_r}{K_B T_0 B F \mathcal{L} \text{SNR}}}.
-	\]
-	
-	By substituting the values, the maximum distance \(R\) between two mobiles is calculated as:
-	\[
-	R = 61.872 \, \text{m}.
-	\]
-	
-	
-	For beamforming, we use the phased array structure. For simultaneous beamforming, a digital phased array is required.
-	
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\FloatBarrier\question[Samsung 28 GHz Phased Array for 5G]
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-{\color{questioncolor}
-For several years, Samsung has been developing 28 GHz phased array solutions for mobile communications. In 2014, Samsung demonstrated a phased array link for the future 5G mobile communication at 28 GHz frequency. Both transmit and receive array antennas had the same number of antennas arranged in the form of a uniform planar array, confined within an area of $60 mm
-\times 30 mm$. The total array gain was 18 dBi.\\
-}
-
-
-
-
-{\color{questioncolor}
-
-1- Plot the 3D radiation pattern and calculate maximum gain of a uniform planar array with 25 element ($5\times 5$) using patch elements with $\lambda/2$ spacing. \\
-
-2- If 200 m LOS range is required, what is the number of antennas, element gain and TX Effective isotropic radiated power (EIRP)? This problem might have many solutions. You should justify your answer.\\
-
-3- In order to reduce the hardware complexity, a sub-array architecture was employed to group antennas into a sub-array. What are the side effects of using sub-arrays instead of independent elements? Name three possible issues.\\
-
-4- Assume each 2 by 1 power combiner/splitter has $1.2 d$B loss. What is your proposed optimum size for a sub-array?\\
-
-}
-
-
-
-According to the calculations from the first assignment, the array factor for a planar array structure of size \(M \times N\) is given as:
-
-\[
-AF = \frac{\sin\left(\frac{M}{2} \frac{2\pi}{\lambda} d_x \sin(\theta) \cos(\phi)\right)}{\sin\left(\frac{1}{2} \frac{2\pi}{\lambda} d_x \sin(\theta) \cos(\phi)\right)}
-\cdot 
-\frac{\sin\left(\frac{N}{2} \frac{2\pi}{\lambda} d_y \sin(\theta) \sin(\phi)\right)}{\sin\left(\frac{1}{2} \frac{2\pi}{\lambda} d_y \sin(\theta) \sin(\phi)\right)} 
-\]
-
-In this question, we set \(M = N = 5\). The spacing between adjacent antennas is half the wavelength:
-
-\[
-d_x = d_y = \frac{\lambda}{2} = \frac{c}{2f} \simeq 5.4 \, \text{mm}
-\]
-
-Now, using the product principle for the patterns, we multiply the given antenna pattern with the array factor to determine the final pattern, which will then be plotted in 3D. The maximum gain based on the resulting pattern is:
-
-\[
-G_{\text{max}} = 21.34 \, \text{dB} 
-\]
-
-
-
-In this section, we design an LOS link for a range of \(200 \, \text{m}\) with a central frequency of \(f_0 = 28 \, \text{GHz}\). Acceptable assumptions should be made for other parameters. The parameters used in question 2 can also be considered for a similar project.
-
-
-
-In most papers reporting the signal-to-noise ratio (SNR), the typical range of SNR is considered from \(-10 \, \text{dB}\) to \(10 \, \text{dB}\), especially in system-level studies. Therefore, we design the link for the required SNR, which is:
-
-\[
-\text{SNR} = 10 \, \text{dB} 
-\]
-
-
-
-the oxygen absorption loss at \(28 \, \text{GHz}\) is given by:
-
-\[
-L_{\text{per km}} = 0.2 \, \text{dB/km} 
-\]
-
-Given that the link range is \(200 \, \text{m}\), the total loss over this distance is:
-
-\[
-L = 0.2 \times 0.2 = 0.04 \, \text{dB} 
-\]
-
-
-
-The required bandwidth and data rate are interdependent; knowing one allows us to determine the other. the data rate is set to:
-
-\[
-R = 1.25 \, \text{Gbps}
-\]
-
-
-
-
-
-The required bandwidth was calculated as follows:
-\[
-B = 361 \, \text{MHz} 
-\]
-
-
-
-Given that the propagation is LOS and the weather conditions are clear with no rain, the path loss exponent is set to:
-\[
-n = 2 
-\]
-
-
-
-In general, the phase noise of RF components is considered to range between \(5 \, \text{dB}\) and \(10 \, \text{dB}\). For design purposes, we assume the worst-case scenario:
-\[
-F = 10 \, \text{dB} 
-\]
-
-
-
-
-
-
-Now, we need to determine the structure of the transmitter and receiver. It is important to consider the area where the antenna array will be placed. According to the problem, this area is:
-
-\[
-30 \, \text{mm} \times 60 \, \text{mm}.
-\]
-
-Both the transmitter and receiver structures need to fit within this area. The spacing between two antennas is set to:
-
-\[
-d = \frac{\lambda}{20} \approx 5.36 \, \text{mm}.
-\]
-
-This allows for a maximum array size of \(6 \times 12\) within the specified area. However, to balance efficiency and power constraints, we choose a \(4 \times 8\) array for the transmitter and a \(4 \times 4\) array for the receiver. This makes optimal use of the available area. Since the number of transmitting antennas has a greater impact on link quality, we allocate more antennas to the transmitter. Therefore, we have:
-
-\[
-N_t = 32, \quad N_r = 16 
-\]
-
-
-
-As mentioned earlier, the number of transmitting antennas is set to \(N_t = 32\). We simulate this structure and calculate the maximum gain. The radiation pattern of the transmitter is shown in Figure 5. Note that it is not plotted on a logarithmic scale. The maximum gain for the transmitter is:
-
-\[
-G_t = 22.42 \, \text{dB} 
-\]
-
-
-
-Similarly, the number of receiving antennas is set to \(N_r = 16\). We simulate this structure and calculate the maximum gain. The radiation pattern of the receiver is shown in Figure 6. Again, note that it is not plotted on a logarithmic scale. The maximum gain for the receiver is:
-
-\[
-G_r = 19.41 \, \text{dB} 
-\]
-
-
-Using the explanations provided in the previous sections and applying the link equation, we calculate the transmit power. The calculations are performed in MATLAB, and the transmit power per antenna is:
-
-\[
-P_t = 1.645 \times 10^{-5} \, \text{W} = -17.84 \, \text{dBm}.
-\]
-
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.7\linewidth]{Q3/results/Pattern-Plot-4x4}
-	\caption{}
-	\label{fig:pattern-plot-4x4}
-\end{figure}
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.7\linewidth]{Q3/results/Pattern-Plot-4x8}
-	\caption{}
-	\label{fig:pattern-plot-4x8}
-\end{figure}
-
-
-
-1. To divide a 16-element array into 4 subarrays, each containing 4 elements, we reduce the number of required power amplifiers (PAs) from 16 to 4. However, each PA must produce 4 times the power to feed the antennas within its subarray. Increasing the number of elements in a subarray leads to higher-powered PAs, which are more expensive and complex to build. Moreover, higher power might necessitate the use of heat sinks to manage thermal dissipation, which further increases cost and complexity.
-
-2. Beam steering allows us to direct the antenna's beam in a desired direction by applying proper weights to each antenna. As the number of antennas decreases (e.g., by grouping them into subarrays), the angular resolution of the beam steering reduces. This results in less precise control over the beam direction, which is a trade-off in subarray design.
-
-3. Subarray structures require combiners to connect multiple elements. These combiners introduce additional losses, which decrease overall system efficiency. For instance, each combiner may add around \(1.2 \, \text{dB}\) of loss, contributing to the total system losses.
-
-4. To implement the subarray structure effectively, we consider using 2 or 3 combiner stages. Each stage introduces \(1.2 \, \text{dB}\) of loss, so with three stages, the total loss is:
-
-\[
-\text{Total Loss} = 3 \times 1.2 = 3.6 \, \text{dB}.
-\]
-
-This loss corresponds to about \(3 \, \text{dB}\), or roughly half the transmitted power.
-
-5. For the transmitter, a three-stage combiner structure is recommended, while for the receiver, a two-stage combiner suffices. With 4 antennas per subarray on both the transmitter and receiver sides, the losses remain acceptable, and the design achieves the goal of reducing structural complexity while maintaining reasonable performance.
-
-
-%	\begin{note}
-%		Figure~\ref{fig:R1} and all similar figures in this question are generated automatically using the \texttt{tikz} package in \LaTeX. The procedure is as follows: the matrix $R$ in Equation~\eqref{eq:R1} is calculated in MATLAB and saved as a .csv file. Then, it is read in \LaTeX using the \texttt{csvsimple} package and plotted with the \texttt{tikz} package. This fully automates the entire process, which is worth mentioning.
-%	\end{note}
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\FloatBarrier\question[Dolph-Chebychev Tapering]
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-{\color{questioncolor}
-Study \textbf{Section 23.9} of the enclosed file entitles as \href{https://github.com/MohammadRaziei/phased-array-course/raw/HW02/HW/Array%20Design%20Methods.pdf}{Array Design Methods} to learn Dolph-Chebychev array weighting.\\
-
-Consider a standard 11-element linear array pointed at broadside.\\
-
-You should develop your own code in Matlab to calculate array weights. Zip your codes with your homework solution.
-}
-
-
-\subsection{Part a}
-{\color{questioncolor}
-	Calculate the Dolph-Chebychev weightings for sidelobe levels of -20 dB, -30 dB, and -40 dB. Write them in a Table.\\
-}
-
-
-\begin{table}
-	\begin{tabular}{c|c}
-		\toprule
-		\textbf{SLL} & \textbf{Weights}\\\midrule
-		-20 & \(\csvreader[head=false, after line={\ \ }]{Q4/results/w-sll-20.csv}{}{\num{\csvcoli}}\) \\\midrule
-		-30 & \(\csvreader[head=false, after line={\ \ }]{Q4/results/w-sll-30.csv}{}{\num{\csvcoli}}\) \\\midrule
-		-40 & \(\csvreader[head=false, after line={\ \ }]{Q4/results/w-sll-40.csv}{}{\num{\csvcoli}}\) \\
-		\bottomrule
-	\end{tabular}
-\end{table}
-
-
-
-	\begin{figure}[ht]
-		\centering
-		\begin{tikzpicture}
-			\begin{axis}[
-				width=\textwidth,
-				height=0.6\textwidth,
-				xlabel={Index $i$},
-				ylabel={$w_i$},
-				grid=both,
-				major grid style={line width=.2pt, draw=gray!50},
-				minor grid style={line width=.1pt, draw=gray!10},
-				ymin=0,
-				ymajorgrids=true,
-				xmajorgrids=true,
-				title={Stem Plot of $w_i$ from CSV Data},
-                legend style={
-					at={(0.5,-0.15)},
-					anchor=north,
-					legend columns=3
-				},
-				legend entries={
-					Sidelobe Level 20 dB,
-					Sidelobe Level 30 dB,
-					Sidelobe Level 40 dB
-				}
-				]
-				
-				% Read data from CSV and generate indices
-				\addplot+[
-				ycomb,
-				mark=*,
-				line width=0.8pt,
-				mark size=2.5pt,
-				] table[x expr=\coordindex+1, y index=0, col sep=comma] {Q4/results/w-sll-20.csv};
-				
-				\addplot+[
-				ycomb,
-				mark=*,
-				line width=0.8pt,
-				mark size=2.5pt, 
-				] table[x expr=\coordindex+1, y index=0, col sep=comma] {Q4/results/w-sll-30.csv};
-				
-				\addplot+[
-				ycomb,
-				mark=*,
-				line width=0.8pt,
-				mark size=2.5pt, 
-				] table[x expr=\coordindex+1, y index=0, col sep=comma] {Q4/results/w-sll-40.csv};
-				
-			\end{axis}
-		\end{tikzpicture}
-		\caption{Stem plot of $w_i$ values.}
-		\label{fig:stem-plot}
-	\end{figure}
-	
-
-
-
-
-\subsection{Part b}
-{\color{questioncolor}
-Plot the resulting beam pattern and compute the HPBW, BWNN, and the peal array gain for each weighting.\\
-}
-
-
-\begin{figure}[H]
-	\begin{subfigure}{.75\linewidth}
-		\includegraphics[width=\linewidth]{Q4/results/af-sll-20.pdf}
-		\caption{}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{.2\linewidth}
-		\includegraphics[width=\linewidth]{Q4/results/af-polar-sll-20.pdf}
-		\caption{}
-	\end{subfigure}
-	\caption{20 db}
-\end{figure}
-
-
-\begin{figure}[H]
-	\begin{subfigure}{.75\linewidth}
-		\includegraphics[width=\linewidth]{Q4/results/af-sll-30.pdf}
-		\caption{}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{.2\linewidth}
-		\includegraphics[width=\linewidth]{Q4/results/af-polar-sll-30.pdf}
-		\caption{}
-	\end{subfigure}
-	\caption{30 db}
-\end{figure}
-
-
-
-\begin{figure}[H]
-	\begin{subfigure}{.75\linewidth}
-		\includegraphics[width=\linewidth]{Q4/results/af-sll-40.pdf}
-		\caption{}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{.2\linewidth}
-		\includegraphics[width=\linewidth]{Q4/results/af-polar-sll-40.pdf}
-		\caption{}
-	\end{subfigure}
-	\caption{40 db}
-\end{figure}
-
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{cccc}
-		\toprule
-		\textbf{SLL} & \textbf{Peak Gain} & \textbf{HPBW} & \textbf{NNBW} \\\midrule
-		$-20\ \text{dB}$ & $18.7$ & $0.06\pi$ & $0.14\pi$ \\\midrule
-		$-30\ \text{dB}$ & $16.9$ & $0.07\pi$ & $0.18\pi$ \\\midrule
-		$-40\ \text{dB}$ & $15.8$ & $0.07\pi$ & $0.22\pi$ \\
-		\bottomrule
-	\end{tabular}
-\end{table}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\FloatBarrier\question[Array Factor]
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-{\color{questioncolor}
-For $f_0= 60$ GHz, $N=10$, and $d=\lambda_0/2$ plot array factor in $\theta$ plane (i.e. $\phi=0$) when:
-
-$\Delta\phi$ is the progressive phase shift. For each case determine the steering angle, sidelobe level, and HPBW. Assume all antennas are isotropic.
-}
-
+در حالی که سوال برای ۳۰ گیگ میخواهد طراحی کند. بنابراین مقدار های مورد نظر به صورت زیر باید باشد:
 
 
 
 \begin{equation}
-	\text{AF} = \sum_{n=0}^{N-1} e^{j \psi_n} = \sum_{n=0}^{N-1} e^{j \, n \left( 2 \pi \frac{d}{\lambda_0} \cos(\theta) + \Delta \phi \right) } 
+	f_0 = 30 \ \text{GHz}
+	\quad \implies C_1 = 256.2 \ \text{fF},\ \ L_1 = 187.6 \  \text{pH},\ \ L_2 = 265.3 \ \text{pH}
 \end{equation}
 
 
 
 
+
+
+
+ابتدا شکل \lr{a} را در نظر بگیرید:
+
+\begin{center}
+	\begin{circuitikz}
+		% Node for the variable capacitor
+		\node[circle, inner sep=1.3pt, fill=black] (start) at (0, 0) {};
+		\node at (start)[xshift=-1cm] {(a):};
+		\draw (start) to[variable capacitor, l_=$C_v$] (2, 0) 
+		to[short] (2, 0) 
+		node[ground, rotate=90]{};
+	\end{circuitikz}
+\end{center}
+
+امپدانس آن برابر است با:
+
+\begin{equation}
+	(Z_L)_a = \frac{1}{j\omega C_v}
+\end{equation}
+
+حال گاما را حساب میکنیم:
+\begin{equation}
+	\Gamma_a = \frac{\frac{1}{j\omega C_v} - Z_0}{\frac{1}{j\omega C_v} + Z_0} =
+	\frac{1- Z_0 \ {j\omega C_v} }{1 + Z_0 \ {j\omega C_v}}
+\end{equation}
+
+
+
+سپس فاز آن را در می‌آوریم:
+
+\begin{align}
+	\angle \Gamma_a &= \tan^{-1} (-Z_0 C_v \omega) - \tan^{-1}(Z_0 C_v \omega) 
+	\\ &=
+	- 2 \tan^{-1}(Z_0 C_v \omega)
+\end{align}
+
+می‌توان ثابت کرد که برای هر بار موهومی $Z_L$ مقدار فاز $\Gamma$ برابر است با:
+\begin{equation}
+	\angle\Gamma = -2 \tan\left(\frac{\mathcal{I}m\{Z_L\}}{Z_0}\right)
+\end{equation}
+
+باید شرط زیر برقرار باشد.
+\begin{equation}
+	0\ \le \ \tfrac{\pi}{2} + \angle \Gamma_a\ \le\  \tfrac{\pi}{2}
+\end{equation}
+
+در نتیجه داریم:
+
+\begin{gather}
+	-\tfrac{\pi}{4} \le\ -\tfrac{\pi}{4} + \tan^{-1}(Z_0 C_v \omega) \  \le\ 0  \\
+	0 \le\ -\tfrac{\pi}{4} + \tan^{-1}(Z_0 C_v \omega) \  \le\  \tfrac\pi4 \\
+	1 \le  Z_0 C_v \omega < \infty \\
+	\frac{1}{Z_0 \omega}=\num{\fpeval{1/(2*pi*\fo*50)*1e15}} \le   C_v  < \infty \\
+\end{gather}
+
+از طرف دیگر کمینه مقدار $C_v$ برابر است با:
+\begin{equation}
+	C_{v, \min} = \frac{C_1}{\sqrt3} = \num{\fpeval{\Cl/sqrt(3)*1e15}}
+\end{equation}
+
+
+با این میزان $C_v$ نمی‌توان به $90^\circ$ اختلاف فاز رسید. با این حال شبیه سازی چنین می‌گوید:
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{Q2/circuit-a}
+	\caption{}
+	\label{fig:circuit-a}
+\end{figure}
+
+%\begin{figure}[H]
+%	\centering
+%	\includegraphics[width=0.7\linewidth]{Q2/LC-a-phase-vs-cv}
+%	\caption{}
+%	\label{fig:lc-a-phase-vs-cv}
+%\end{figure}
+
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.4\linewidth]{Q5/results/AF-polarplot-beta-0}
+	\includegraphics[width=0.7\linewidth]{Q2/s21-vs-cv}
 	\caption{}
-	\label{fig:af-polarplot-beta-0}
+	\label{fig:s21-vs-cv}
 \end{figure}
 
-\begin{figure}[H] 
+که مقدار تغییرات فاز چنین است:
+
+
+\begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth]{Q5/results/AF-plot-beta-0}
+	\includegraphics[width=\linewidth]{Q2/s21-vs-cv-detail}
 	\caption{}
-	\label{fig:af-plot-beta-0}
+	\label{fig:s21-vs-cv-detail}
 \end{figure}
 
-\begin{figure}[H] 
+مشاهده می‌شود که با محدود کردن کمینه خازن متغیی، مقدار تغییرات فاز نیز کمتر شده است.
+
+
+
+\begin{equation}
+	\Gamma = \frac{Z_L - Z_0}{Z_L + Z_0}
+\end{equation}
+
+
+
+
+در مورد قسمت b نیز داریم:
+\begin{center}
+	\begin{circuitikz}
+		% Node for the starting point
+		\node[circle, inner sep=1.3pt, fill=black] (start) at (0, 0) {};
+		\node at (start)[xshift=-1cm] {(b):};
+		% Draw the variable capacitor
+		\draw (start) 
+		to[variable capacitor, l_=$C_v$] (2, 0)
+		
+		% Draw the inductor
+		to[inductor, l_=$L$] (4, 0)
+		
+		% Draw the short and ground
+		to[short] (4, 0)
+		node[ground, rotate=90]{};
+	\end{circuitikz}
+\end{center}
+
+
+\begin{equation}
+	(Z_L)_b = \frac{1}{j\omega C_v} + j\omega L
+\end{equation}
+
+\begin{equation}
+	\Gamma_b = \frac{\frac{1}{j\omega C_v} + j\omega L - Z_0}{\frac{1}{j\omega C_v} + j\omega L + Z_0} 
+	=
+	\frac{1 - \omega^2 L C_v - j \omega Z_0 C_v}{1 - \omega^2 L C_v + j \omega Z_0 C_v}
+\end{equation}
+
+\begin{align}
+	\angle \Gamma_b =  \tan^{-1}\left( \frac{-\omega Z_0 C_v}{1 - \omega^2 L C_v} \right)  -  \tan^{-1}\left( \frac{\omega Z_0 C_v}{1 - \omega^2 L C_v} \right) = 2 \tan^{-1}\left( \frac{\omega Z_0 C_v}{\omega^2 L C_v - 1} \right)  
+\end{align}
+
+حال میخواهیم تغییرات فاز به اندازه ۹۰ درجه باشد:
+
+\begin{equation}
+	2\phi\ \le \ \angle \Gamma_b\ \le\  2\phi + \tfrac{\pi}{2}
+\end{equation}
+
+لذا داریم:
+
+\begin{equation}
+	\phi\ \le \ \tan^{-1}\left( \frac{\omega Z_0 C_v}{\omega^2 L C_v - 1} \right)  \ \le\  \phi + \tfrac{\pi}{4}
+\end{equation}
+
+
+
+%\begin{gather}
+%	\tfrac{\pi}{4}  \le  \left.\tan^{-1}\left( \frac{\omega Z_0 C_v}{1 - \omega^2 L C_v} \right)\right.  \le \tfrac{\pi}{2} \\
+%	1 \le  \left.\frac{\omega Z_0 C_v}{1 - \omega^2 L C_v }\right. \le \infty
+%\end{gather}
+
+
+\begin{equation}
+	\omega Z_0 C_v = (\tan\phi)(\omega^2 L  C_v - 1)
+	\quad\implies\quad
+	 (C_v)_{\min} = \frac{1}{-\omega Z_0 \cot\phi + \omega^2 L } 
+\end{equation}
+
+
+\begin{equation}
+	(C_v)_{\min} = \frac{C_1}{\sqrt{3}} = \num{\fpeval{1e15*\Cl/sqrt(3)}}
+\end{equation}
+
+
+\def\myphi{pi/4}
+\begin{equation}
+	L = \frac{1 + \omega Z_0 C_v \cot\phi}{\omega^2 C_v} = \frac{\sqrt{3}}{C_1 \omega^2} + \frac{Z_0\cot\phi}{\omega}
+%	= 	\num{\fpeval{1e12*(sqrt(3)/(\Cl*((2*pi*\fo)^2)) + 50/(2*pi*\fo))}} \ \text{pH}
+	= 	\num{\fpeval{1e12*(sqrt(3)/(\Cl*((2*pi*\fo)^2)) + (50*cot(\myphi))/(2*pi*\fo))}} \ \text{pH}
+\end{equation}
+
+بنابراین 
+\begin{equation}
+	\frac{1}{\omega^2L} = \num{\fpeval{1e15/(455.68e-12*(2*pi*\fo)^2)}} \ \text{fF} \le C_v \le \frac{C_1}{\sqrt3}
+\end{equation}
+%
+%\begin{align}
+%	\omega Z_0 C_v &= (\tan\phi)(\omega^2 L  C_v - 1)
+%	\quad\implies\quad\\
+%	(C_v)_{\max} &= \frac{1}{-\omega Z_0 \cot(\phi+\tfrac{\pi}4) + \omega^2 L } 
+%	\\&= \frac{1}{\omega Z_0 (\cot(\phi) - \cot(\phi+\tfrac{\pi}4)) + \frac{\sqrt{3}}{C1}} =
+%	\num{\fpeval{1e15/(2*pi*\fo*(cot(\myphi)-cot(\myphi+pi/4))+sqrt(3)/\Cl)}}
+%\end{align}
+
+\begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth]{Q5/results/AF-plot-db-beta-0}
+	\includegraphics[width=0.7\linewidth]{Q2/circuit-b}
 	\caption{}
-	\label{fig:af-plot-db-beta-0}
+	\label{fig:circuit-b}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Q2/LC-b-phase-vs-cv}
+	\caption{}
+	\label{fig:lc-b-phase-vs-cv}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{Q2/s21-vs-cv-detail-b}
+	\caption{}
+	\label{fig:s21-vs-cv-detail-b}
 \end{figure}
 
 
-\begin{table}[H]
+حال شکل \lr{c} رو در نظر می‌گیریم:
+
+\begin{center}
+	\begin{circuitikz}
+		% Node for the starting point
+		\node[circle, inner sep=1.3pt, fill=black] (start) at (-.5, 0) {};
+		\node at (start)[xshift=-1cm] {(c):};
+		% Draw the variable capacitor
+		\draw (start) 
+		to[variable capacitor, l_=$C_v$] (3, 0)
+		
+		% Draw the inductor
+		to[inductor, l_=$L$] (5, 0)
+		
+		% Draw the short and ground
+		to[short] (5, 0)
+		node[ground, rotate=90]{};
+		
+		\draw (0, 0) 
+		to[capacitor, l_=$C_T$] (0, -2)
+		
+		% Draw the short and ground
+		to[short] (0, -2)
+		node[ground]{};
+		
+	\end{circuitikz}
+\end{center}
+
+
+\begin{equation}
+	j(\omega L - \frac{1}{C_v\omega}) \| \frac{1}{j C_T\omega} = \frac{j}{C_T\omega + \frac{C_v\omega}{C_v\omega^2L - 1}}  
+\end{equation}
+
+مخرج را مساوی صفر قرار می‌دهیم:
+\begin{equation}
+	C_T\omega = \frac{C_v\omega}{1 - C_v\omega^2 L}
+	\quad\implies\quad
+	1 - C_v\omega^2 L = \frac{C_v}{C_T}
+	\quad\implies\quad
+	C_v = \frac{1}{\omega^2 L+1/C_T}
+\end{equation}
+
+حال قسمت موهومی آن را با $Z_0$ مساوی قرار می‌دهیم:
+
+\begin{gather}
+	C_T\omega + \frac{C_v\omega}{C_v\omega^2 L - 1} = \frac{1}{Z_0} \\
+	C_v\omega = (C_v\omega^2L-1)(1/Z_0 -C_T\omega)
+%	\\ C_v(\omega - \omega^2L/Z_0)
+\end{gather}
+
+مقادیر سلف و خازن در 
+\begin{figure}[H]
 	\centering
-	\begin{tabular}{cc}
-		\toprule
-		\textbf{HPBW} & \textbf{SLL} \\
-		\midrule
-		$0.06 \pi$ & $12.97$ \\
-		\bottomrule
-	\end{tabular}
+	\includegraphics[width=0.7\linewidth]{Q2/circuit-c}
+	\caption{}
+	\label{fig:circuit-c}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Q2/s21-vs-cv-detail-c}
+	\caption{}
+	\label{fig:s21-vs-cv-detail-c}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Q2/s21-vs-cv-c}
+	\caption{}
+	\label{fig:s21-vs-cv-c}
+\end{figure}
+
+حال قسمت d را در نظر بگیرید.
+\begin{center}
+	\begin{circuitikz}
+		% Node for the starting point
+		\node[circle, inner sep=1.3pt, fill=black] (start) at (-.5, 0) {};
+		\node at (start)[xshift=-1cm] {(b):};
+		% Draw the variable capacitor
+		\draw (start) 
+		to[variable capacitor, l_=$C_v$] (2, 0)
+		
+		% Draw the inductor
+		to[inductor, l_=$L$] (4, 0)
+		
+		% Draw the short and ground
+		to[short] (4, 0)
+		node[ground, rotate=90]{};
+		
+		\draw (0,0) 
+		to[short] (0, -2)
+		to[variable capacitor, l_=$C_v$] (2, -2)
+		
+		% Draw the inductor
+		to[inductor, l_=$L$] (4, -2)
+		
+		% Draw the short and ground
+		to[short] (4, -2)
+		node[ground, rotate=90]{};
+	\end{circuitikz}
+\end{center}
+
+این در حقیقت همان قسمت b است با تغییر پارامتر است که مقادیر سلف آن نصف شده است.
+
+با شبیه سازی داریم:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Q2/circuit-d}
+	\caption{}
+	\label{fig:circuit-d}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Q2/circuit-d1}
+	\caption{}
+	\label{fig:circuit-d1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Q2/circuit-d2}
+	\caption{}
+	\label{fig:circuit-d2}
+\end{figure}
+
+
+
+نتایج برای مدار distribution نیز یکسان است منتها 90 درجه بیشتر است. مدار آن به صورت زیر خواهد بود.
+
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Q2/circuit-dist}
+	\caption{}
+	\label{fig:circuit-dist}
+\end{figure}
+
+که مقادیر زیر لایه آن ها در زیر است.
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|c|c|}
+			\hline
+			\textbf{Parameter} & \textbf{Value} \\ \hline
+			H & $\num{8} \ \text{mil}$ \\ \hline
+			Er &$\num{3.38}$ \\ \hline
+			Mur & $\num{1}$ \\ \hline
+			Cond & $\num{58.7E6}$ \\ \hline
+			Hu & $\num{1e+36}$ \\ \hline
+			T & $\num{35} \ \text{$\mu$m}$ \\ \hline
+			TanD & $\num{0.0027}$ \\ \hline
+			FreqForEpsrTanD & $\num{10} \ \text{GHz}$ \\ \hline
+		\end{tabular}
+	\caption{\lr{Parameter Table for the Substrate}}
+	\label{tab:parameters}
 \end{table}
 
 
-
-
-\subsection{Part a}
-{\color{questioncolor} $\Delta\phi$=$\pi/2$
-}
-
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\FloatBarrier\question[\lr{PHASE SHIFTERS IN LITERATURE}]%1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.4\linewidth]{Q5/results/AF-polarplot-beta-90}
+	\includegraphics[width=0.7\linewidth]{Q2/circuit-d4}
 	\caption{}
-	\label{fig:af-polarplot-beta-90}
+	\label{fig:circuit-d4}
 \end{figure}
 
-\begin{figure}[H] 
-	\centering
-	\includegraphics[width=\linewidth]{Q5/results/AF-plot-beta-90}
-	\caption{}
-	\label{fig:af-plot-beta-90}
-\end{figure}
+طبق شکل بالا، امپدانس ورودی برابر است با:
 
-\begin{figure}[H] 
-	\centering
-	\includegraphics[width=\linewidth]{Q5/results/AF-plot-db-beta-90}
-	\caption{}
-	\label{fig:af-plot-db-beta-90}
-\end{figure}
+\begin{equation}
+	Z_\text{in}(j\omega) = L_2 j\omega + \left( \frac{1}{C_v j\omega} + L_1 j\omega \right) \parallel \frac{1}{C_1 j\omega}
+\end{equation}
 
 
-\begin{table}[H]
-	\centering
-	\begin{tabular}{ccc}
-		\toprule
-		\textbf{HPBW} & \textbf{SLL} & \textbf{Steer$^\circ$}\\
-		\midrule
-		$0.07 \pi$ & $12.97$ & $\pm 120^\circ$\\
-		\bottomrule
-	\end{tabular}
-\end{table}
+\begin{equation}
+	\rightarrow Z_\text{in}(j\omega) = j \left( L_2 \omega + \frac{C_v L_1 \omega^2 - 1}{(C_1 + C_v) \omega - C_1 C_v L_1 \omega^3} \right)
+\end{equation}
 
+بنابراین، با استفاده از فرمول شیفت فاز که قبلاً به دست آورده‌ایم، داریم:
 
-\subsection{Part b}
-{\color{questioncolor}
-$\Delta\phi$=$\pi$\\
-}
+\begin{equation}
+	\phi = -\frac{\pi}{2} - 2 \tan^{-1} \left( \frac{\mathcal{I}m \{Z_\text{in}\}}{Z_0} \right)
+\end{equation}
 
+با جایگذاری مقاومت ورودی در فرمول شیفت فاز، فرمول بعد از ساده‌سازی به صورت زیر درمی‌آید:
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.4\linewidth]{Q5/results/AF-polarplot-beta-180}
-	\caption{}
-	\label{fig:af-polarplot-beta-180}
-\end{figure}
-
-\begin{figure}[H] 
-	\centering
-	\includegraphics[width=\linewidth]{Q5/results/AF-plot-beta-180}
-	\caption{}
-	\label{fig:af-plot-beta-180}
-\end{figure}
-
-\begin{figure}[H] 
-	\centering
-	\includegraphics[width=\linewidth]{Q5/results/AF-plot-db-beta-180}
-	\caption{}
-	\label{fig:af-plot-db-beta-180}
-\end{figure}
-
-
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{cc}
-		\toprule
-		\textbf{HPBW} & \textbf{SLL} \\
-		\midrule
-		$0.27 \pi$ & $12.97$ \\
-		\bottomrule
-	\end{tabular}
-\end{table}
+\begin{equation}
+	\phi = -\frac{\pi}{2} - 2 \tan^{-1} \left( L_2 \omega + \frac{1}{Z_0} \cdot \frac{C_v L_1 \omega^2 - 1}{(C_1 + C_v) \omega - C_1 C_v L_1 \omega^3} \right)
+\end{equation}
 
 
 
 
+در طراحی \lr{Hybrid Coupler} برای فرکانس مشخص، مقادیر پارامترهای کلیدی مدار به‌صورت زیر تعیین می‌شوند:
+
+
+\begin{equation}
+	f_0 = 60 \ \text{GHz}
+	\quad \implies C_1 = 128.1 \ \text{fF},\ \ L_1 = 93.78 \  \text{pH},\ \ L_2 = 132.6 \ \text{pH}
+\end{equation}
+
+
+سپس برای ساده‌سازی طراحی اجزا، فرض می‌شود که مقدار \( L_2 \) برابر صفر در نظر گرفته شود. در این حالت، فرمول شیفت فاز به شکل زیر ساده می‌شود:
+
+\begin{equation}
+	\phi = -\frac{\pi}{2} - 2 \tan^{-1} \left( \omega \frac{1}{Z_0} \cdot \frac{C_v L_1 \omega^2 - 1}{(C_1 + C_v) \omega - C_1 C_v L_1 \omega^3} \right)
+\end{equation}
 
 
 
-\subsection{Part c}
-{\color{questioncolor}
-For the same array, fix $\Delta\phi$ at $\pi/4$ and change the frequency from 50 to 70 GHz.\\  Plot steering angle (peak gain direction) versus frequency.\\}
+برای ادامه طراحی، مقادیر اولیه برای سلف \( L_1 \) و خازن \( C_1 \) به ترتیب زیر انتخاب می‌شوند:
+
+\[
+L_1 = 100 \, \text{pH}, \quad C_1 = 100 \, \text{fF}.
+\]
+
+
+
+برای اطمینان از عملکرد مناسب مدار، محدوده خازن متغیر \( C_v \) به صورت زیر تعیین می‌شود:
+
+\begin{equation}
+	C_{v,\min} = \frac{1}{\omega^2 L_1} \approx 70 \, \text{fF}
+\end{equation}
+
+\begin{equation}
+	C_{v,\max} = \frac{C_1}{\omega^2 L_1 C_1 - 1} \approx 237 \, \text{fF}
+\end{equation}
+
+
+
+با استفاده از این مقادیر و روابط به‌دست‌آمده، تمام شیفت فازهای موردنیاز در بازه \( 0^\circ \) تا \( 180^\circ \) امکان‌پذیر است. این مدار کامل شیفت‌دهنده فاز به‌علاوه سایر اجزای مدار \lr{Hybrid Coupler} در شکل زیر نمایش داده شده است.
 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.4\linewidth]{Q5/results/AF-polarplot-beta-45}
+	\includegraphics[width=0.7\linewidth]{Q2/circuit-d3}
 	\caption{}
-	\label{fig:af-polarplot-beta-45}
+	\label{fig:circuit-d3}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth]{Q5/results/AF-plot-db-beta-45}
+	\includegraphics[width=0.7\linewidth]{Q2/LC-a-phase-vs-cv}
 	\caption{}
-	\label{fig:af-plot-db-beta-45}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth]{Q5/results/AF-plot-beta-45}
-	\caption{}
-	\label{fig:af-plot-beta-45}
+	\label{fig:lc-a-phase-vs-cv}
 \end{figure}
 
 
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.6\linewidth]{Q5/results/streeing-45}
-	\caption{}
-	\label{fig:streeing-45}
-\end{figure}
+\subsection*{مزایا و معایب \lr{Hybrid Coupler}}
+
+\lr{Hybrid Coupler} به‌عنوان یک ابزار کلیدی در سیستم‌های مایکروویو و مخابراتی، با استفاده از خطوط انتقال و عناصر توزیع‌شده، مزایای متعددی را ارائه می‌دهد. این مدار نه‌تنها باعث کاهش مساحت اشغال‌شده می‌شود، بلکه پهنای باند وسیع‌تری نسبت به روش‌های سنتی فراهم می‌کند. بااین‌حال، استفاده از آن نیز محدودیت‌ها و چالش‌هایی دارد که باید در طراحی موردتوجه قرار گیرد.
+
+\noindent مزایای \lr{Hybrid Coupler} عبارت‌اند از:
+\begin{itemize}
+	\item کاهش مساحت کلی موردنیاز به‌واسطه حذف خطوط طولانی \(\lambda/4\) که باعث صرفه‌جویی در فضای فیزیکی مدار می‌شود.
+	\item ارائه پهنای باند وسیع‌تر نسبت به \lr{Branch Line Coupler} که عملکرد مدار را در بازه وسیع‌تری از فرکانس تضمین می‌کند.
+	\item کاهش تلفات انتقال سیگنال به دلیل کاهش طول خطوط و مقاومت داخلی آن‌ها.
+	\item افزایش انعطاف‌پذیری طراحی با امکان استفاده از خازن‌ها و القاگرهای موازی، که درجه آزادی بیشتری برای تنظیم مدار فراهم می‌کند.
+	\item کاهش اندازه ترانسفورمرها با استفاده از خازن‌های توزیع‌شده (\(C_c\)) که بهینه‌سازی فضای موردنیاز را تسهیل می‌کند.
+	\item بهبود امپدانس و تطبیق بهتر با سیگنال‌های ورودی و خروجی، که منجر به کارایی بیشتر مدار می‌شود.
+	\item تقویت ایزولاسیون میان خطوط و کاهش تداخل سیگنال که در سیستم‌های حساس مخابراتی بسیار مهم است.
+\end{itemize}
+
+\noindent با وجود این مزایا، معایب زیر نیز وجود دارد:
+\begin{itemize}
+	\item پیچیدگی در طراحی به دلیل نیاز به تنظیم دقیق فاصله و طول خطوط که می‌تواند زمان و هزینه طراحی را افزایش دهد.
+	\item افزایش نیاز به خازن‌های با ظرفیت بالا برای بهینه‌سازی عملکرد مدار، که ممکن است هزینه‌های اضافی را به همراه داشته باشد.
+\end{itemize}
+
+\noindent در مجموع، \lr{Hybrid Coupler} به دلیل انعطاف‌پذیری و کارایی بالا، یکی از ابزارهای مؤثر در طراحی مدارهای مایکروویو است، اما برای دستیابی به بهترین عملکرد، نیاز به دقت بالا و توجه به محدودیت‌های طراحی وجود دارد.
+
+
+
+\subsection*{تحلیل مدار Coupler در حالت متوالی (Cascade)}
+
+در این بخش به بررسی تأثیر اتصال متوالی \lr{Coupler} بر شیفت فاز، تلفات، پهنای باند و تأخیر گروهی پرداخته می‌شود.
+
+\noindent\textbf{شیفت فاز}
+در اتصال متوالی، میزان شیفت فاز کلی برابر با جمع شیفت فازهای هر \lr{Coupler} است. فرمول شیفت فاز به صورت زیر بیان می‌شود:
+\begin{equation}
+	\phi = -\frac{\pi}{2} - 2 \tan^{-1} \left( \frac{\mathcal{I}m \{Z_L\}}{Z_0} \right)
+\end{equation}
+برای \(n\) کوپلر متوالی، شیفت فاز کلی (\(\phi_\text{tot}\)) به صورت زیر محاسبه می‌شود:
+\begin{equation}
+	\phi_\text{tot} = \sum_{i=1}^{n} \Delta \phi_i = n \left( -\frac{\pi}{2} + 2 \tan^{-1} \left( \frac{\mathcal{I}m \{Z_L\}}{Z_0} \right) \right)
+\end{equation}
+
+\noindent\textbf{تلفات}
+تلفات کلی برای \(n\) طبقه کوپلر برابر است با:
+\begin{equation}
+	L_\text{Cascade} = 2 \cdot n \cdot L_\text{single} + n
+\end{equation}
+تلفات کلی با افزایش تعداد طبقات به دلیل اجزای اضافی در مدار افزایش می‌یابد.
+
+\noindent\textbf{پهنای باند}
+پهنای باند کلی (\(BW_\text{tot}\)) در اتصال متوالی برابر است با کمترین پهنای باند از طبقات منفرد:
+\begin{equation}
+	BW_\text{tot} = \min (BW_\text{single})
+\end{equation}
+این موضوع نشان می‌دهد که افزایش تعداد طبقات می‌تواند پهنای باند کلی سیستم را کاهش دهد.
+
+\noindent\textbf{تأخیر گروهی (\lr{Group Delay})}
+با افزایش تعداد طبقات، تأخیر گروهی کلی (\(delay_\text{tot}\)) به صورت زیر محاسبه می‌شود:
+\begin{equation}
+	delay_\text{tot} = n \cdot delay_\text{single}
+\end{equation}
+
+
+اتصال متوالی \lr{Coupler} می‌تواند شیفت فاز را به طور خطی افزایش دهد، اما همراه با تلفات، کاهش پهنای باند و افزایش تأخیر گروهی است. بنابراین، طراحی بهینه باید به نحوی انجام شود که تأثیرات منفی به حداقل برسد.
 
 
 
 
 
-\subsection{Part d}
-{\color{questioncolor}
-Now, consider the antenna shown in Fig. \ref{Fig3}. Assume antenna spacing is $\lambda_0/2$, and the inter-element feed section is  $\lambda_0$, where $\lambda_0$ is the wavelength at 60 GHz. Plot the steering angle when the frequency changes from 50 to 70 GHz. Compare your results with part (c) and discuss the differences.
-
-\begin{figure}[h]
-\centering
-\includegraphics[scale=0.4]{HW/Sfed}
-\caption{Series-Fed array}
-\label{Fig3}
-\end{figure}
-}
-	\begin{equation}
-		L = \lambda_0
-	\end{equation}
-	
-	\begin{equation}
-		\Delta\phi = \frac{2\pi}{\lambda}L = 2\pi \frac{\lambda_0}{\lambda}
-	\end{equation}
-	
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.6\linewidth]{Q5/results/streeing-d}
-		\caption{}
-		\label{fig:streeing-d}
-	\end{figure}
-	
-	As shown in Figure~\ref{fig:streeing-d}, the beam angle diagram is similar to the diagram in Figure~\ref{fig:streeing-45} and is also linear. However, the difference is that it supports a wider range of angles as the frequency varies.
-	
-	
-	
-	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\newpage
 	\bibliographystyle{plainnat}

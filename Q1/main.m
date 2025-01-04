@@ -1,131 +1,132 @@
 %% Q1
 clear; close all; clc;
 mkdir results
-addpath ../common/
+addpath ../common/ ../HW/
 % Initialize parameters
 
+run VGAS21
 
-M = 4;                 % Modulation order
-bps = log2(M);         % Bits per symbol
-N = 7;                 % RS codeword length
-K = 5;                 % RS message length
+voltage = S21(:,1);
+amplitude = S21(:,2);
+phases = S21(:,3);
 
-% Define simulation parameters
-ebnoVec = (0:0.006:15)'; % Range of Eb/N0 values in dB
-targetBER = 1e-5;      % Target BER threshold
+figure
+plot(voltage, amplitude, "LineWidth", 1, "Color", "red")
+xlabel("Control Voltage"); ylabel("Gain Amplitude")
+ylim([0,4])
+grid on
+exportgraphics(gca, "results/amplitude-vs-voltage.pdf", "Append", false);
 
-% Calculate BER with Reed-Solomon coding
-berwCoding = bercoding(ebnoVec, 'RS', 'hard', N, K, 'psk', M, 'nondiff');
+figure
+plot(voltage, phases, "LineWidth", 1, "Color", "blue")
+xlabel("Control Voltage"); ylabel("Phase (deg)")
+grid on
+exportgraphics(gca, "results/phase-vs-voltage.pdf", "Append", false);
 
-% Find the index of the last BER value above the threshold
-idx = max(find(berwCoding >= targetBER));
 
-% Plot results
-figure;
-hold on;
-set(gca, 'YScale', 'log');
-plot(ebnoVec, berwCoding, 'b', 'LineWidth', 1.5); % BER curve
-plot(ebnoVec(idx), berwCoding(idx), 'ro', 'MarkerSize', 5); % Threshold point
-yline(targetBER, 'r--', 'LineWidth', 1); % Target BER line
 
-% Annotate the threshold point
-text(ebnoVec(idx), berwCoding(idx)*10, ...
-     sprintf('(%g, %g)', ebnoVec(idx), berwCoding(idx)), ...
-     'FontSize', 10, 'HorizontalAlignment', 'left');
-
-% Labels and title
-xlabel('SNR or Eb/N0 (dB)');
-ylabel('Bit Error Rate (BER)');
-title('BER vs SNR with RS Coding');
-grid on;
-
-% Export the plot
-exportgraphics(gcf, 'results/ber-snr.pdf', 'Append', false);
-
+% Vc = VcI + 1i * VcQ;
 %%
-saver = [];
-snr_db = ebnoVec(idx);
-saver(1,:) = snr_db;
+% dG = min(abs(diff(amplitude)));
+indices = round(linspace(1, numel(amplitude), 8)); % Get indices of 8 elements
+% idx = numel(amplitude)-8+1:numel(amplitude);
+g = amplitude(indices);
 
-snr = db2pow(snr_db);
-saver(2,:) = snr;
+gI = g;
+gQ = g;
+[gI, gQ] = meshgrid(gI, gQ); 
+gain = gI + 1i * gQ;
 
-R = 1e9;
-C = 1.25*R;
-Bw = C / log2(1+snr);
-saver(3,:) = Bw;
+figure
+hold on
+xlim([0,3.2]); ylim([0, 3.2])
 
-d = 1.2e3;
-L_db = 18;
-L = db2mag(L_db);
-saver(4,:) = L;
-
-f = 60e9;
-lambda = 3e8 / f;
-saver(5,:) = lambda;
-
-Kb = 1.38e-23;
-T0 = 290;
-
-F = 5;
-Pt = 8;
-
-G2 = Kb * T0 * Bw * snr * L * db2pow(F) / db2pow(Pt) * (4 * pi * d / lambda)^2;
-saver(6,:) = G2;
-G = sqrt(G2);
-saver(7,:) = G;
-G_db = pow2db(G);
-saver(8,:) = G_db;
+scatter(real(gain), imag(gain), '.', "MarkerEdgeColor", "black");
+xlabel("Vc_I"); ylabel("Vc_Q")
 
 
+GainFlat = gain(:);
+a = abs(GainFlat);
+Rg = 3;
+dG = .52;
 
-Si = Kb * T0 * db2pow(F) * Bw * snr;
-saver(9,:) = Si;
+gI = 0:.02:1.5*max(gI(:));
+plot(gI, sqrt((Rg+dG)^2 - (gI).^2), ":b");
+plot(gI, sqrt((Rg-dG)^2 - (gI).^2), ":b");
 
-Si_db = pow2db(Si);
-saver(10,:) = Si_db;
 
-csvwrite("results/saver.csv", saver);
+idx = find(and(a < Rg + dG, a > Rg - dG));
 
+GainIdx = GainFlat(idx);
+n = numel(GainIdx);
+
+plot(real(GainIdx), imag(GainIdx), "or")
+plot([real(GainIdx) zeros(n,1)]', [imag(GainIdx) zeros(n,1)]', ":k")
+
+exportgraphics(gca, "results/vga-phase-map.pdf", "Append", false);
+
+disp(n)
+
+figure; hold on
+phase = (sort(angle(GainIdx)));
+phase = rad2deg(phase);
+plot(phase);
+plot(phase, ".");
+ylabel("Phase (deg)")
+exportgraphics(gca, "results/vga-phase-sort.pdf", "Append", false);
 
 
 
 
 
 %%
+indices = round(linspace(1, numel(amplitude), 8)); % Get indices of 8 elements
+g = amplitude(indices) .* exp(1i * deg2rad(phases(indices)));
 
-DeltaTheta = 3;
-Ld = 70 * lambda / DeltaTheta;
+gI = g;
+gQ = g;
+[gI, gQ] = meshgrid(gI, gQ); 
+gain = gI + 1i * gQ;
 
-saver(21,:) = Ld;
+figure
+hold on
+xlim([-3.2, 1.5]); ylim([0, 3.7])
 
-
-
-
-
-csvwrite("results/saver.csv", saver);
-
-
-%%
-
-G2_f = @(F, Pt) Kb * T0 * Bw * snr * L * db2pow(F) / db2pow(Pt) * (4 * pi * d / lambda)^2;
-
-F_range = 5:0.1:10;
-Pt_range = 0:.1:8;
-Gf = cell2mat(arrayfun(@(Pt) arrayfun(@(F) sqrt(G2_f(F, Pt)), F_range, "UniformOutput", true)', Pt_range, "UniformOutput", false));
+scatter(real(gain), imag(gain), '.', "MarkerEdgeColor", "black");
+xlabel("Vc_I"); ylabel("Vc_Q")
 
 
-imagesc(Pt_range, F_range, Gf); 
-xlabel("$P_t$", "Interpreter", "latex"); 
-ylabel("$F$", "Interpreter", "latex")
-colorbar
-exportgraphics(gcf, 'results/G-per-F-Pt.pdf', 'Append', false);
+GainFlat = gain(:);
+a = abs(GainFlat);
+Rg = 3;
+dG = .52;
 
-imagesc(Pt_range, F_range, pow2db(Gf)); 
-xlabel("$P_t$", "Interpreter", "latex"); 
-ylabel("$F$", "Interpreter", "latex")
-colorbar
-exportgraphics(gcf, 'results/G-per-F-Pt-db.pdf', 'Append', false);
+gI = -3.2:.02:3;
+plot(gI, sqrt((Rg+dG)^2 - (gI).^2), ":b");
+plot(gI, sqrt((Rg-dG)^2 - (gI).^2), ":b");
+
+
+idx = find(and(a < Rg + dG, a > Rg - dG));
+
+GainIdx = GainFlat(idx);
+n = numel(GainIdx);
+
+plot(real(GainIdx), imag(GainIdx), "or")
+plot([real(GainIdx) zeros(n,1)]', [imag(GainIdx) zeros(n,1)]', ":k")
+
+exportgraphics(gca, "results/vga-phase-map-nonideal.pdf", "Append", false);
+
+disp(n)
+
+figure; hold on
+phase = (sort(angle(GainIdx)));
+phase = rad2deg(phase);
+plot(phase);
+plot(phase, ".");
+ylabel("Phase (deg)")
+exportgraphics(gca, "results/vga-phase-sort-nonideal.pdf", "Append", false);
+
+
 
 
 
